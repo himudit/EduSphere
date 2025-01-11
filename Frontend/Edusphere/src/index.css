@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  background: linear-gradient(180deg, #000000 0%, #2a045e 50%, #43008c 100%);
+  min-height: 100vh;
+  margin: 0;
+  color: #fff;
+  position: relative;
+}
+
+
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
