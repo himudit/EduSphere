@@ -14,9 +14,76 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
+model students {
+  student_id String   @id @unique
+  first_name String
+  last_name  String?
+  email      String   @unique
+  password   String
+  createdAt  DateTime @default(now())
+
+  @@map("students") 
+}
+
+model purchased_courses {
+  student_id    String   @id
+  course_id     String
+  purchase_date DateTime
+  progress      Int
+
+  @@map("purchased_courses")
+}
+
+model teachers {
+  teacher_id Int      @id @default(autoincrement())
+  first_name String
+  last_name  String?
+  email      String   @unique
+  password   String
+  createdAt  DateTime @default(now())
+
+  @@map("teachers") 
+}
+
+model teacher_courses {
+  teacher_id String   @id
+  course_id  String
+  creation   DateTime
+
+  @@map("teacher_courses")
+}
+
+model courses {
+  course_id             String   @id @unique
+  course_title          String
+  course_description    String
+  course_price          Int
+  course_thumbnail      String
+  course_no_of_purchase Int      @default(0)
+  course_total_no_hours Int
+  rating                Int      @default(1)
+  creation              DateTime
+
+  @@map("courses") 
+}
+
+model lectures {
+  lecture_id             String   @id @unique
+  course_id              String
+  lecture_title          String
+  lecture_description    String
+  lecture_order          Int
+  lecture_total_no_hours Int
+  creation               DateTime
+
+  @@map("lectures") 
+}
+
+model videos {
+  video_id   String   @id @unique
+  lecture_id String
+  video_url  String
+  creation   DateTime
+
+  @@map("videos") 
 }
