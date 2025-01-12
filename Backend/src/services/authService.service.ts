@@ -19,7 +19,7 @@ export class AuthService {
     static generateAuthToken(student: any): string {
         return jwt.sign(
             {
-                id: student.student_id,
+                student_id: student.student_id,
                 email: student.email,
             },
             process.env.JWT_SECRET as string

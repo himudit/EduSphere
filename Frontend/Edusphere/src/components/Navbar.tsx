@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,7 +11,7 @@ const Navbar: React.FC = () => {
   return (
     <nav className="flex items-center justify-between bg-black px-6 py-4 text-white">
       {/* Logo */}
-      <div className="text-2xl font-bold">LOGO</div>
+      <Link to='/' className="text-2xl font-bold">LOGO</Link>
 
       {/* Hamburger for mobile */}
       <div className="md:hidden">

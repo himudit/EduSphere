@@ -7,7 +7,9 @@ const http_1 = __importDefault(require("http"));
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const students_routes_1 = __importDefault(require("./routes/students.routes"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const app = (0, express_1.default)();
+app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use('/api', (req, res) => {

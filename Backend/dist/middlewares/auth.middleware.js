@@ -12,31 +12,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AuthService = void 0;
+exports.authStudent = void 0;
 const client_1 = require("@prisma/client");
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const prisma = new client_1.PrismaClient();
-class AuthService {
-    // Hash password before saving
-    static hashPassword(password) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield bcrypt_1.default.hash(password, 10);
+const authStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const token = req.cookies.token;
+    if (!token) {
+        return res.status(401).json({ message: "Student Unauthorized" });
+    }
+    try {
+        const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
+        const student = yield prisma.students.findUnique({
+            where: { student_id: decoded.student_id },
+        });
+        req.student = student;
+        return next();
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(401).json({
+            message: "Student Unauthorized"
         });
     }
-    // Compare password
-    static comparePassword(password, hashedPassword) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield bcrypt_1.default.compare(password, hashedPassword);
-        });
-    }
-    // Generate JWT token
-    static generateAuthToken(student) {
-        return jsonwebtoken_1.default.sign({
-            student_id: student.student_id,
-            email: student.email,
-        }, process.env.JWT_SECRET);
-    }
-}
-exports.AuthService = AuthService;
-exports.default = AuthService;
+});
+exports.authStudent = authStudent;
