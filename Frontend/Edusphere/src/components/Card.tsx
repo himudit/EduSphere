@@ -20,19 +20,19 @@ const Card: React.FC<CardProps> = ({
   price,
 }) => {
   return (
-    <div className="max-w-[19rem] cursor-pointer bg-black text-white rounded-xl shadow-lg overflow-hidden hover:scale-105 transition-transform duration-300">
+    <div className="max-w-[19rem] sm:max-w-[16rem] cursor-pointer bg-black text-white rounded-xl shadow-lg overflow-hidden hover:scale-105 transition-transform duration-300">
       <img
         src={thumbnail}
         alt={title}
-        className="w-full h-40 object-cover"
+        className="w-full h-32 sm:h-40 object-cover"
       />
-      <div className="p-4">
-        <h2 className="text-lg sm:text-sm font-bold -mt-3 mb-1">{title}</h2>
-        <p className="text-sm sm:text-sm text-[#baf1ba] mb-2">{author}</p>
-        <p className="text-sm sm:text-sm text-gray-300 mb-4 overflow-hidden text-ellipsis whitespace-nowrap">{description}</p>
+      <div className="p-3 sm:p-4">
+        <h2 className="text-base sm:text-lg font-bold -mt-1 sm:-mt-3 mb-1 line-clamp-1">{title}</h2>
+        <p className="text-xs sm:text-sm text-[#baf1ba] mb-1 sm:mb-2">{author}</p>
+        <p className="text-xs sm:text-sm text-gray-300 mb-2 sm:mb-4 overflow-hidden text-ellipsis whitespace-nowrap">{description}</p>
 
-        <div className="flex items-center -mt-2">
-          <span className="text-yellow-400 text-sm sm:text-base font-bold mr-2">
+        <div className="flex items-center -mt-1 sm:-mt-2">
+          <span className="text-xs sm:text-sm text-yellow-400 font-bold mr-1 sm:mr-2">
             {rating.toFixed(1)}
           </span>
           <div className="flex items-center">
@@ -43,7 +43,7 @@ const Card: React.FC<CardProps> = ({
                 fill={index < Math.floor(rating) ? "currentColor" : "none"}
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                className={`w-4 h-4 ${index < Math.floor(rating) ? "text-yellow-400" : "text-gray-500"
+                className={`w-3 h-3 sm:w-4 sm:h-4 ${index < Math.floor(rating) ? "text-yellow-400" : "text-gray-500"
                   }`}
               >
                 <path
@@ -55,9 +55,9 @@ const Card: React.FC<CardProps> = ({
               </svg>
             ))}
           </div>
-          <span className="text-sm sm:text-base text-gray-400 ml-2">({reviews})</span>
+          <span className="text-xs sm:text-sm text-gray-400 ml-1 sm:ml-2">({reviews})</span>
         </div>
-        <p className="text-lg sm:text-xl mt-2 font-bold">{price}</p>
+        <p className="text-base sm:text-lg mt-1 sm:mt-2 font-bold">${price}</p>
       </div>
     </div>
   );
