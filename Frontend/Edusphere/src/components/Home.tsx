@@ -1,12 +1,39 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import FoodCarousel from "./FoodCarousel";
-// import { Swiper, SwiperSlide } from 'swiper/react';
-// import 'swiper/swiper-bundle.min.css'; // Import Swiper styles
-// import 'swiper/swiper-bundle.css'; // The newer version of the Swiper library uses this path
+// import FoodCarousel from "./FoodCarousel";
+import Card from "./Card";
+import axios from 'axios';
 
+interface Course {
+  course_id: string;
+  course_title: string;
+  course_description: string;
+  course_price: number;
+  course_thumbnail: string;
+  course_no_of_purchase: number;
+  course_total_no_hours: number;
+  rating: number;
+  creation: string;
+  course_author: string;
+}
 
 const Home: React.FC = () => {
+  const [courses, setCourses] = useState<Course[]>([]);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get<Course[]>(`${import.meta.env.VITE_BASE_URL}/rating`);
+        // console.log(response);
+        setCourses(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchCourses();
+
+  }, []);
+
   return (
     <>
       <div className="flex flex-col items-center justify-center min-h-screen text-white px-6">
@@ -62,7 +89,24 @@ const Home: React.FC = () => {
           </button>
         </motion.div>
       </div>
-      <FoodCarousel />
+      {/* <FoodCarousel /> */}
+      <div className="flex justify-center items-center min-h-screen  flex-wrap p-4 gap-8">
+        {
+          courses.map((it, index) => {
+            return <Card
+              key={index}
+              thumbnail={it.course_thumbnail}
+              title={it.course_title}
+              author={it.course_author}
+              description={it.course_description}
+              rating={it.rating}
+              reviews={146}
+              price={it.course_price}
+            />
+          })
+        }
+
+      </div>
     </>
   );
 };

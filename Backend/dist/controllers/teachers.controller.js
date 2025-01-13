@@ -12,14 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logoutStudent = exports.getStudentProfile = exports.loginStudent = exports.registerStudent = void 0;
+exports.logoutTeacher = exports.getTeacherProfile = exports.loginTeacher = exports.registerTeacher = void 0;
 const client_1 = require("@prisma/client");
-const students_service_1 = require("../services/students.service");
-const Authstudents_service_1 = __importDefault(require("../services/Authstudents.service"));
+const teachers_service_1 = require("../services/teachers.service");
+const Authteachers_service_1 = __importDefault(require("../services/Authteachers.service"));
 const uuid_1 = require("uuid");
 const express_validator_1 = require("express-validator");
 const prisma = new client_1.PrismaClient();
-const registerStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const registerTeacher = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
         if (!errors.isEmpty()) {
@@ -27,18 +27,18 @@ const registerStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         }
         console.log("controllers");
         const { first_name, last_name, email, password } = req.body;
-        const hashedPassword = yield Authstudents_service_1.default.hashPassword(password);
-        const student_id = (0, uuid_1.v4)();
-        const student = yield (0, students_service_1.createStudent)({ student_id, first_name, last_name, email, password: hashedPassword });
-        const token = Authstudents_service_1.default.generateAuthToken(student);
-        res.status(200).json({ message: "Student created successfully", token });
+        const hashedPassword = yield Authteachers_service_1.default.hashPassword(password);
+        const teacher_id = (0, uuid_1.v4)();
+        const teacher = yield (0, teachers_service_1.createTeacher)({ teacher_id, first_name, last_name, email, password: hashedPassword });
+        const teacher_token = Authteachers_service_1.default.generateAuthToken(teacher);
+        res.status(200).json({ message: "Teacher created successfully", teacher_token });
     }
     catch (err) {
         console.log(err);
     }
 });
-exports.registerStudent = registerStudent;
-const loginStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.registerTeacher = registerTeacher;
+const loginTeacher = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
         if (!errors.isEmpty()) {
@@ -46,33 +46,33 @@ const loginStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         }
         console.log("controllers");
         const { email, password } = req.body;
-        const student = yield prisma.students.findFirst({
+        const teacher = yield prisma.teachers.findFirst({
             where: {
                 email: email,
             }
         });
-        if (!student) {
+        if (!teacher) {
             return res.status(401).json({ message: "Invalid email or password" });
         }
-        const isMatch = yield Authstudents_service_1.default.comparePassword(password, student.password);
+        const isMatch = yield Authteachers_service_1.default.comparePassword(password, teacher.password);
         if (!isMatch) {
             return res.status(401).json({ message: "Invalid email or password" });
         }
-        const token = Authstudents_service_1.default.generateAuthToken(student);
-        res.cookie('token', token);
-        res.status(200).json({ token, student });
+        const teacher_token = Authteachers_service_1.default.generateAuthToken(teacher);
+        res.cookie('token', teacher_token);
+        res.status(200).json({ teacher_token, teacher });
     }
     catch (err) {
         console.log(err);
     }
 });
-exports.loginStudent = loginStudent;
-const getStudentProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    res.status(200).json(req.student);
+exports.loginTeacher = loginTeacher;
+const getTeacherProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    res.status(200).json(req.teacher);
 });
-exports.getStudentProfile = getStudentProfile;
-const logoutStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getTeacherProfile = getTeacherProfile;
+const logoutTeacher = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     res.clearCookie('token');
     res.status(200).json({ message: "Logged Out Successfully" });
 });
-exports.logoutStudent = logoutStudent;
+exports.logoutTeacher = logoutTeacher;

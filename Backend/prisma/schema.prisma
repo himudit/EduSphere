@@ -22,7 +22,7 @@ model students {
   password   String
   createdAt  DateTime @default(now())
 
-  @@map("students") 
+  @@map("students")
 }
 
 model purchased_courses {
@@ -35,14 +35,14 @@ model purchased_courses {
 }
 
 model teachers {
-  teacher_id Int      @id @default(autoincrement())
+  teacher_id String   @id @unique
   first_name String
   last_name  String?
   email      String   @unique
   password   String
   createdAt  DateTime @default(now())
 
-  @@map("teachers") 
+  @@map("teachers")
 }
 
 model teacher_courses {
@@ -57,6 +57,7 @@ model courses {
   course_id             String   @id @unique
   course_title          String
   course_description    String
+  course_author         String   @default("John Doe")
   course_price          Int
   course_thumbnail      String
   course_no_of_purchase Int      @default(0)
@@ -64,7 +65,7 @@ model courses {
   rating                Int      @default(1)
   creation              DateTime
 
-  @@map("courses") 
+  @@map("courses")
 }
 
 model lectures {
@@ -76,7 +77,7 @@ model lectures {
   lecture_total_no_hours Int
   creation               DateTime
 
-  @@map("lectures") 
+  @@map("lectures")
 }
 
 model videos {
@@ -85,5 +86,5 @@ model videos {
   video_url  String
   creation   DateTime
 
-  @@map("videos") 
+  @@map("videos")
 }

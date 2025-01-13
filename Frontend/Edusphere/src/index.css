@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  background: linear-gradient(180deg, #000000 0%, #2a045e 50%, #43008c 100%);
+  background: linear-gradient(180deg, #000000 0%, indigo  50%, purple 100%);
   min-height: 100vh;
   margin: 0;
   color: #fff;
