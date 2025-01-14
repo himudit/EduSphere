@@ -14,13 +14,23 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
 model students {
-  student_id String   @id @unique
-  first_name String
-  last_name  String?
-  email      String   @unique
-  password   String
-  createdAt  DateTime @default(now())
+  student_id              String   @id @unique
+  first_name              String
+  last_name               String?
+  email                   String   @unique
+  password                String
+  createdAt               DateTime @default(now())
+  student_about           String?  @default("This is default about")
+  student_profile_picture String?  @default("https://static.vecteezy.com/system/resources/previews/045/944/199/non_2x/male-default-placeholder-avatar-profile-gray-picture-isolated-on-background-man-silhouette-picture-for-user-profile-in-social-media-forum-chat-greyscale-illustration-vector.jpg")
+  student_skills          String[] @default([])
+  student_gender          Gender   @default(MALE)
 
   @@map("students")
 }
@@ -35,12 +45,16 @@ model purchased_courses {
 }
 
 model teachers {
-  teacher_id String   @id @unique
-  first_name String
-  last_name  String?
-  email      String   @unique
-  password   String
-  createdAt  DateTime @default(now())
+  teacher_id              String   @id @unique
+  first_name              String
+  last_name               String?
+  email                   String   @unique
+  password                String
+  createdAt               DateTime @default(now())
+  teacher_about           String?  @default("This is default about")
+  teacher_profile_picture String?  @default("https://www.saraswatiias.com/wp-content/uploads/2018/11/dummy-profile-pic-male1.jpg")
+  teacher_specilization   String[] @default([])
+  teacher_gender          Gender   @default(MALE)
 
   @@map("teachers")
 }
@@ -54,16 +68,18 @@ model teacher_courses {
 }
 
 model courses {
-  course_id             String   @id @unique
-  course_title          String
-  course_description    String
-  course_author         String   @default("John Doe")
-  course_price          Int
-  course_thumbnail      String
-  course_no_of_purchase Int      @default(0)
-  course_total_no_hours Int
-  rating                Int      @default(1)
-  creation              DateTime
+  course_id                  String   @id @unique
+  course_title               String
+  course_description         String
+  course_price               Int
+  course_thumbnail           String
+  course_no_of_purchase      Int      @default(0)
+  course_total_no_hours      Int
+  rating                     Int      @default(1)
+  creation                   DateTime
+  course_preview_video       String   @default("https://res.cloudinary.com/dy8jwwm6j/video/upload/v1736872825/12927954_1920_1080_24fps_szansr.mp4")
+  course_what_you_will_learn String[] @default([])
+  course_author              String   @default("John Doe")
 
   @@map("courses")
 }
@@ -81,10 +97,13 @@ model lectures {
 }
 
 model videos {
-  video_id   String   @id @unique
-  lecture_id String
-  video_url  String
-  creation   DateTime
+  video_id                String   @id @unique
+  lecture_id              String
+  video_title             String
+  video_url               String
+  video_order             Int
+  video_total_no_of_hours Int
+  creation                DateTime
 
   @@map("videos")
 }

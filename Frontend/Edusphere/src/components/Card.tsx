@@ -1,6 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 interface CardProps {
+  id: string;
   thumbnail: string;
   title: string;
   author: string;
@@ -11,6 +13,7 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({
+  id,
   thumbnail,
   title,
   author,
@@ -18,9 +21,15 @@ const Card: React.FC<CardProps> = ({
   rating,
   reviews,
   price,
-}) => {
+}
+) => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    const formattedTitle = id.replace(/\s+/g, "-");
+    navigate(`/course/${formattedTitle}`);
+  };
   return (
-    <div className="max-w-[19rem] sm:max-w-[16rem] cursor-pointer bg-black text-white rounded-xl shadow-lg overflow-hidden hover:scale-105 transition-transform duration-300">
+    <div onClick={handleClick} className="max-w-[19rem] sm:max-w-[16rem] cursor-pointer bg-black text-white rounded-xl shadow-lg overflow-hidden hover:scale-105 transition-transform duration-300">
       <img
         src={thumbnail}
         alt={title}
@@ -64,3 +73,13 @@ const Card: React.FC<CardProps> = ({
 };
 
 export default Card;
+
+// import React from 'react'
+
+// const Card = () => {
+//   return (
+//     <div>Card</div>
+//   )
+// }
+
+// export default Card

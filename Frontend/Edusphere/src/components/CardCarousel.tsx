@@ -43,6 +43,7 @@ const CardCarousel = () => {
 
     const Arr: JSX.Element[] = courses.map((it, index) => (
         <Card
+            id={it.course_id}
             key={index}
             thumbnail={it.course_thumbnail}
             title={it.course_title}
@@ -62,13 +63,19 @@ const CardCarousel = () => {
     };
 
     const getImageStyles = (position: string): string => {
+        const isMobile = window.innerWidth <= 768;
+
         switch (position) {
             case 'center':
-                return 'translate-x-0 scale-100 opacity-100 z-30';
+                return `translate-x-0 scale-100 opacity-100 z-30`;
             case 'left':
-                return '-translate-x-[50%] scale-90 opacity-70 z-20';
+                return isMobile
+                    ? '-translate-x-[20%] scale-90 opacity-70 z-20'
+                    : '-translate-x-[50%] scale-90 opacity-70 z-20';
             case 'right':
-                return 'translate-x-[50%] scale-90 opacity-70 z-20';
+                return isMobile
+                    ? 'translate-x-[20%] scale-90 opacity-70 z-20'
+                    : 'translate-x-[50%] scale-90 opacity-70 z-20';
             default:
                 return 'opacity-0 scale-75 z-10';
         }
