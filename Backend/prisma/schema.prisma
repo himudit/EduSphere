@@ -80,7 +80,7 @@ model courses {
   course_preview_video       String   @default("https://res.cloudinary.com/dy8jwwm6j/video/upload/v1736872825/12927954_1920_1080_24fps_szansr.mp4")
   course_what_you_will_learn String[] @default([])
   course_author              String   @default("John Doe")
-
+  course_keywords String[] @default([])
   @@map("courses")
 }
 
