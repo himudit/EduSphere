@@ -1,9 +1,59 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+
+interface Course {
+    course_id: string;
+    course_title: string;
+    course_description: string;
+    course_price: number;
+    course_thumbnail: string;
+    course_no_of_purchase: number;
+    course_total_no_hours: number;
+    rating: number;
+    creation: string;
+    course_author: string;
+    course_what_you_will_learn: string[];
+    course_keywords: string[];
+    course_preview_video: string;
+}
 
 const CourseDetails = () => {
     const [activeTab, setActiveTab] = useState('overview');
     const [expandedSection, setExpandedSection] = useState<string | null>('01');
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [courseData, setCourseData] = useState<Course>();
+    const { course_id } = useParams<{ course_id: string }>();
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                const response = await axios.get<Course>(`${import.meta.env.VITE_BASE_URL}/course/${course_id}`);
+                const data = response.data;
+                // console.log(data);
+                // console.log(typeof data);
+                setCourseData(
+                    {
+                        course_id: data.course_id,
+                        course_title: data.course_title,
+                        course_description: data.course_description,
+                        course_price: data.course_price,
+                        course_thumbnail: data.course_thumbnail,
+                        course_no_of_purchase: data.course_no_of_purchase,
+                        course_total_no_hours: data.course_total_no_hours,
+                        rating: data.rating,
+                        creation: data.creation,
+                        course_author: data.course_author,
+                        course_what_you_will_learn: data.course_what_you_will_learn,
+                        course_keywords: data.course_keywords,
+                        course_preview_video: data.course_preview_video
+                    }
+                )
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchCourses();
+    }, []);
 
     // Course sections data
     const courseSections = [
@@ -69,91 +119,79 @@ const CourseDetails = () => {
         <div className="flex min-h-screen bg-purple-400">
             {/* Main Content */}
             <div className="w-full lg:w-[65%] bg-black p-4 overflow-y-auto">
-                {/* Header Section */}
-                <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
-                    <button onClick={() => { }} className="hover:text-gray-900">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
-                        </svg>
-                    </button>
-                    <span>Figma from A to Z</span>
-                    <span className="text-gray-400">• UI/UX Design</span>
-                </div>
 
-                {/* Course Stats */}
-                <div className="flex items-center gap-6 text-sm text-gray-600 mb-4">
-                    <div className="flex items-center gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                            <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-                        </svg>
-                        <span>38 lessons</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-                        </svg>
-                        <span>4h 30min</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                        <span>4.5 (2K reviews)</span>
-                    </div>
-                </div>
 
                 {/* Video Preview */}
                 <div className="relative aspect-video bg-gray-100 rounded-lg mb-8 overflow-hidden">
-                    <img
-                        // src="https://images.unsplash.com/photo-1593697821028-7cc59cfd7399?ixlib=rb-4.0.3"
-                        alt="Course preview"
+                    <video
+                        src={courseData?.course_preview_video} // Replace with your video URL
                         className="w-full h-full object-cover"
-                    />
-                    <button className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 hover:bg-opacity-40 transition-opacity">
+                        autoPlay
+                        loop
+                        muted
+                        controls
+                    ></video>
+                    {/* <button className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 hover:bg-opacity-40 transition-opacity">
                         <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-purple-600" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-8 w-8 text-purple-600"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                    clipRule="evenodd"
+                                />
                             </svg>
                         </div>
-                    </button>
+                    </button> */}
                 </div>
 
-                {/* Navigation Tabs */}
-                {/* <div className="flex border-b mb-6 overflow-x-auto">
-                    {['Overview', 'Author', 'FAQ', 'Announcements', 'Reviews'].map((tab) => (
-                        <button
-                            key={tab}
-                            onClick={() => setActiveTab(tab.toLowerCase())}
-                            className={`px-4 sm:px-6 py-3 text-sm font-medium whitespace-nowrap ${activeTab === tab.toLowerCase()
-                                    ? 'text-purple-600 border-b-2 border-purple-600'
-                                    : 'text-gray-500 hover:text-gray-700'
-                                }`}
-                        >
-                            {tab}
-                        </button>
-                    ))}
-                </div> */}
+                {/* Header Section */}
+                <div className="mb-8">
+                    <h1 className="text-3xl md:text-3xl font-bold mb-4 text-white font-sans tracking-tight">
+                        {courseData?.course_title}
+                    </h1>
+                    <div className="flex flex-wrap items-center gap-4 md:gap-6 text-sm text-gray-600">
+                        <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                            </svg>
+                            <span className="font-medium">38 lessons</span>
+                        </div>
+
+                        <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                            </svg>
+                            <span className="font-medium">{courseData?.course_total_no_hours}</span>
+                        </div>
+
+                        <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                            <span className="font-medium">{courseData?.rating}</span>
+                        </div>
+                    </div>
+                </div>
 
                 {/* Course Content */}
                 <div className="mb-8">
                     <div className="mb-8">
                         <h2 className="text-xl font-semibold mb-4">About Course</h2>
-                        <p className="text-gray-600 mb-4">
-                            Unlock the power of Figma, the leading collaborative design tool, with our comprehensive online course.
-                            Whether you're a novice or looking to enhance your skills, this course will guide you through Figma's robust
-                            features and workflows.
-                        </p>
-                        <p className="text-gray-600">
-                            Perfect for UI/UX designers, product managers, and anyone interested in modern design tools. Join us to elevate
-                            your design skills and boost your productivity with Figma!
+                        <p className="text-white text-sm">
+                            {courseData?.course_description}
                         </p>
                     </div>
 
                     <div className="mb-8">
                         <h2 className="text-xl font-semibold mb-4">What You'll Learn</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            {learningPoints.map((point, index) => (
+                            {courseData?.course_what_you_will_learn.map((point, index) => (
                                 <div key={index} className="flex items-start gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
                                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />

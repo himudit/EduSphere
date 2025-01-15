@@ -30,6 +30,20 @@ app.get('/rating', async (req: Request, res: Response) => {
     }
 });
 
+app.get('/course/:course_id', async (req: Request, res: Response) => {
+    try {
+        const course = await prisma.courses.findUnique({
+            where: { course_id: req.params.course_id }
+        })
+        if (!course) {
+            return res.status(404).json({ error: 'Course not found' });
+        }
+        res.status(200).json(course);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch course' });
+    }
+})
+
 const port = process.env.PORT || 3000;
 
 const server = http.createServer(app);
