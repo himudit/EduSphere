@@ -19,7 +19,7 @@ interface Course {
 }
 
 const CourseDetails = () => {
-    const [activeTab, setActiveTab] = useState('overview');
+    // const [activeTab, setActiveTab] = useState('overview');
     const [expandedSection, setExpandedSection] = useState<string | null>('01');
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [courseData, setCourseData] = useState<Course>();
@@ -98,14 +98,14 @@ const CourseDetails = () => {
         },
     ];
 
-    const learningPoints = [
-        'Setting up the environment',
-        'Advanced HTML Practices',
-        'Build a portfolio website',
-        'Understand HTML Programming',
-        'Good HTML',
-        'Start building beautiful websites',
-    ];
+    // const learningPoints = [
+    //     'Setting up the environment',
+    //     'Advanced HTML Practices',
+    //     'Build a portfolio website',
+    //     'Understand HTML Programming',
+    //     'Good HTML',
+    //     'Start building beautiful websites',
+    // ];
 
     const toggleSection = (sectionId: string) => {
         setExpandedSection(expandedSection === sectionId ? null : sectionId);
