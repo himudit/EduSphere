@@ -41,7 +41,14 @@ app.get('/rating', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 app.get('/course/:course_id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const course = yield prisma.courses.findUnique({
-            where: { course_id: req.params.course_id }
+            where: { course_id: req.params.course_id },
+            include: {
+                lectures: {
+                    include: {
+                        videos: true,
+                    },
+                },
+            },
         });
         if (!course) {
             return res.status(404).json({ error: 'Course not found' });

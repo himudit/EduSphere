@@ -29,8 +29,7 @@ const CourseDetails = () => {
             try {
                 const response = await axios.get<Course>(`${import.meta.env.VITE_BASE_URL}/course/${course_id}`);
                 const data = response.data;
-                // console.log(data);
-                // console.log(typeof data);
+                console.log(data);
                 setCourseData(
                     {
                         course_id: data.course_id,
@@ -97,15 +96,6 @@ const CourseDetails = () => {
             ],
         },
     ];
-
-    // const learningPoints = [
-    //     'Setting up the environment',
-    //     'Advanced HTML Practices',
-    //     'Build a portfolio website',
-    //     'Understand HTML Programming',
-    //     'Good HTML',
-    //     'Start building beautiful websites',
-    // ];
 
     const toggleSection = (sectionId: string) => {
         setExpandedSection(expandedSection === sectionId ? null : sectionId);
@@ -275,14 +265,7 @@ const CourseDetails = () => {
                                 )}
                             </div>
                         ))}
-                        {/* </div>
-                </div>
-            </div>
-        </div>
-    );
-};
 
-export default CourseDetails; */}
                     </div>
 
                     {/* Author Section */}

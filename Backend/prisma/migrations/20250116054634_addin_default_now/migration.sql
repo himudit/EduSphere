@@ -1,0 +1,14 @@
+-- AlterTable
+ALTER TABLE "courses" ALTER COLUMN "creation" SET DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "lectures" ALTER COLUMN "creation" SET DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "purchased_courses" ALTER COLUMN "purchase_date" SET DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "teacher_courses" ALTER COLUMN "creation" SET DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "videos" ALTER COLUMN "creation" SET DEFAULT CURRENT_TIMESTAMP;

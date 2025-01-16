@@ -33,7 +33,14 @@ app.get('/rating', async (req: Request, res: Response) => {
 app.get('/course/:course_id', async (req: Request, res: Response) => {
     try {
         const course = await prisma.courses.findUnique({
-            where: { course_id: req.params.course_id }
+            where: { course_id: req.params.course_id },
+            include: {
+                lectures: {
+                    include: {
+                        videos: true, 
+                    },
+                },
+            },
         })
         if (!course) {
             return res.status(404).json({ error: 'Course not found' });
