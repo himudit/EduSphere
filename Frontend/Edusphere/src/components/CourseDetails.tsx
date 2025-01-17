@@ -73,7 +73,7 @@ const CourseDetails = () => {
     };
 
     return (
-        <div className="flex min-h-screen bg-purple-400">
+        <div className="flex min-h-screen">
             {/* Main Content */}
             <div className="w-full lg:w-[65%] bg-black p-4 overflow-y-auto">
 
@@ -193,7 +193,8 @@ const CourseDetails = () => {
                     <div className="space-y-2">
                         {courseData?.lectures?.map((lecture) => (
                             // <div key={lecture.lecture_id} className="  border-pink-200 border rounded-lg bg-red-400 overflow-hidden">
-                            <div key={lecture.lecture_id} className=" rounded-lg bg-gradient-to-r from-purple-900 to-purple-700 D overflow-hidden">
+                            // <div key={lecture.lecture_id} className=" rounded-lg bg-gradient-to-r from-purple-900 to-purple-700 D overflow-hidden">
+                            <div key={lecture.lecture_id} className=" rounded-lg bg-gradient-to-r from-purple-700 to-purple-400 D overflow-hidden">
 
                                 <button
                                     className="w-full px-4 py-3 flex items-center justify-between hover:bg-purple-500"

@@ -5,6 +5,7 @@ import { createBrowserRouter, createRoutesFromElements, RouterProvider, Route } 
 import Layout from './Layout.tsx'
 import Signup from './components/Signup.tsx';
 import CourseDetails from './components/CourseDetails.tsx';
+import Search from './components/Search.tsx';
 
 function App() {
   const router = createBrowserRouter(
@@ -14,6 +15,7 @@ function App() {
         <Route path='login' element={<Login />} />
         <Route path='signup' element={<Signup />} />
         <Route path="/course/:course_id" element={<CourseDetails />} />
+        <Route path="/search" element={<Search />} />
       </Route>
     )
   );

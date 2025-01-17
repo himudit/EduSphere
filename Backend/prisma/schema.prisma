@@ -88,6 +88,7 @@ model courses {
   course_what_you_will_learn String[]            @default([])
   course_author              String              @default("John Doe")
   course_keywords            String[]            @default([])
+  course_level                      String[]            @default(["Intermediate"])
   purchased_courses          purchased_courses[]
   teacher_courses            teacher_courses[]
   lectures                   lectures[]
