@@ -2,6 +2,11 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
+interface CourseData {
+    course: Course; // The course data
+    lectures: Lecture[]; // Array of all lectures
+}
+
 interface Course {
     course_id: string;
     course_title: string;
@@ -16,86 +21,48 @@ interface Course {
     course_what_you_will_learn: string[];
     course_keywords: string[];
     course_preview_video: string;
+    lectures: Lecture[];
+}
+
+interface Lecture {
+    lecture_id: string;
+    lecture_title: string;
+    lecture_description: string;
+    lecture_order: number;
+    lecture_total_no_hours: number;
+    videos: Video[];
+}
+
+interface Video {
+    video_id: string;
+    video_title: string;
+    lecture_order: number;
+    video_total_no_hours: number;
+    video_url: string;
 }
 
 const CourseDetails = () => {
-    // const [activeTab, setActiveTab] = useState('overview');
     const [expandedSection, setExpandedSection] = useState<string | null>('01');
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [courseData, setCourseData] = useState<Course>();
+    const [courseData, setCourseData] = useState<CourseData | undefined>(undefined);
     const { course_id } = useParams<{ course_id: string }>();
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const response = await axios.get<Course>(`${import.meta.env.VITE_BASE_URL}/course/${course_id}`);
-                const data = response.data;
-                console.log(data);
-                setCourseData(
-                    {
-                        course_id: data.course_id,
-                        course_title: data.course_title,
-                        course_description: data.course_description,
-                        course_price: data.course_price,
-                        course_thumbnail: data.course_thumbnail,
-                        course_no_of_purchase: data.course_no_of_purchase,
-                        course_total_no_hours: data.course_total_no_hours,
-                        rating: data.rating,
-                        creation: data.creation,
-                        course_author: data.course_author,
-                        course_what_you_will_learn: data.course_what_you_will_learn,
-                        course_keywords: data.course_keywords,
-                        course_preview_video: data.course_preview_video
-                    }
-                )
+                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/course/${course_id}`);
+                const data: CourseData = response.data;
+                // console.log(data);
+                // console.log(data.lectures[0]);
+                // console.log(data.lectures[0].videos[0]);
+                // console.log(data.lectures[0].videos[0].video_total_no_hours);
+                // console.log(data.lectures[0].videos[0].video_title);
+                setCourseData(data);
             } catch (err) {
                 console.log(err);
             }
         };
         fetchCourses();
-    }, []);
-
-    // Course sections data
-    const courseSections = [
-        {
-            id: '01',
-            title: 'Intro',
-            duration: '22min',
-            lessons: [
-                { title: 'Introduction', duration: '2 min' },
-                { title: 'What is Figma?', duration: '5 min' },
-                { title: 'Understanding Figma', duration: '12 min' },
-                { title: 'UI tour', duration: '3 min' },
-            ],
-        },
-        {
-            id: '02',
-            title: 'Intermediate Level Stuff',
-            duration: '1h 20min',
-            lessons: [
-                { title: 'Advanced Features', duration: '25 min' },
-                { title: 'Working with Components', duration: '30 min' },
-                { title: 'Layouts and Grids', duration: '25 min' },
-            ],
-        },
-        {
-            id: '03',
-            title: 'Advanced Stuff',
-            duration: '35min',
-            lessons: [
-                { title: 'Advanced Techniques', duration: '15 min' },
-                { title: 'Professional Workflows', duration: '20 min' },
-            ],
-        },
-        {
-            id: '04',
-            title: 'Imports & Graphics',
-            duration: '40min',
-            lessons: [
-                { title: 'Importing Assets', duration: '20 min' },
-                { title: 'Working with Graphics', duration: '20 min' },
-            ],
-        },
-    ];
+    }, [course_id]);
 
     const toggleSection = (sectionId: string) => {
         setExpandedSection(expandedSection === sectionId ? null : sectionId);
@@ -150,7 +117,7 @@ const CourseDetails = () => {
                                 <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                                 <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
                             </svg>
-                            <span className="font-medium">38 lessons</span>
+                            <span className="font-medium">{courseData?.lectures.length}</span>
                         </div>
 
                         <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-full">
@@ -215,6 +182,7 @@ const CourseDetails = () => {
                 </svg>
             </button>
 
+
             {/* Course Content Sidebar */}
             <div
                 className={`fixed lg:static lg:block w-full lg:w-[35%] h-full bg-black overflow-y-auto transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'
@@ -223,20 +191,22 @@ const CourseDetails = () => {
                 <div className="p-4">
                     <h2 className="text-lg font-semibold mb-4">Course content</h2>
                     <div className="space-y-2">
-                        {courseSections.map((section) => (
-                            <div key={section.id} className="border rounded-lg bg-purple-400 overflow-hidden">
+                        {courseData?.lectures?.map((lecture) => (
+                            // <div key={lecture.lecture_id} className="  border-pink-200 border rounded-lg bg-red-400 overflow-hidden">
+                            <div key={lecture.lecture_id} className=" rounded-lg bg-gradient-to-r from-purple-900 to-purple-700 D overflow-hidden">
+
                                 <button
-                                    className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50"
-                                    onClick={() => toggleSection(section.id)}
+                                    className="w-full px-4 py-3 flex items-center justify-between hover:bg-purple-500"
+                                    onClick={() => toggleSection(lecture.lecture_id)}
                                 >
                                     <div className="flex items-center gap-2">
-                                        <span className="text-sm font-medium">{section.id}. {section.title}</span>
+                                        <span className="text-sm font-medium">{lecture.lecture_id}. {lecture.lecture_title}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <span className="text-sm text-gray-500">{section.duration}</span>
+                                        <span className="text-sm text-white">{lecture.lecture_total_no_hours}</span>
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
-                                            className={`h-5 w-5 transition-transform ${expandedSection === section.id ? 'transform rotate-180' : ''
+                                            className={`h-5 w-5 transition-transform ${expandedSection === lecture.lecture_id ? 'transform rotate-180' : ''
                                                 }`}
                                             viewBox="0 0 20 20"
                                             fill="currentColor"
@@ -245,20 +215,21 @@ const CourseDetails = () => {
                                         </svg>
                                     </div>
                                 </button>
-                                {expandedSection === section.id && section.lessons && (
+                                {expandedSection === lecture.lecture_id && lecture.videos && (
                                     <div className="border-t">
-                                        {section.lessons.map((lesson, index) => (
+                                        {lecture.videos.map((video, index) => (
                                             <div
                                                 key={index}
-                                                className="px-4 py-2 flex items-center justify-between hover:bg-gray-50 cursor-pointer"
+                                                className="px-4 py-2 flex items-center justify-between hover:bg-purple-400 cursor-pointer"
                                             >
                                                 <div className="flex items-center gap-2">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white-400" viewBox="0 0 20 20" fill="currentColor">
                                                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
                                                     </svg>
-                                                    <span className="text-sm text-gray-600">{lesson.title}</span>
+                                                    <span className="text-sm text-white">{video.video_title}</span>
                                                 </div>
-                                                <span className="text-sm text-gray-500">{lesson.duration}</span>
+                                                <span className="text-sm text-black-500">
+                                                    {video.video_total_no_hours}</span>
                                             </div>
                                         ))}
                                     </div>

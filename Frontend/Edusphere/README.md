@@ -48,3 +48,28 @@ export default tseslint.config({
   },
 })
 ```
+
+
+
+ 
+    const [expandedSection, setExpandedSection] = useState<string | null>('01');
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [courseData, setCourseData] = useState<CourseData | undefined>(undefined);
+    const { course_id } = useParams<{ course_id: string }>();
+
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/course/${course_id}`);
+                const data: CourseData = response.data; 
+                console.log(data);
+                console.log(data.lectures);
+                console.log(data.lectures[0]?.videos); 
+
+                setCourseData(data);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchCourses();
+    }, [course_id]); 

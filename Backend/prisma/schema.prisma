@@ -81,7 +81,7 @@ model courses {
   course_price               Int
   course_thumbnail           String
   course_no_of_purchase      Int                 @default(0)
-  course_total_no_hours      Float
+  course_total_no_hours      Decimal  @db.Decimal(3,1)  
   rating                     Int                 @default(1)
   creation                   DateTime             @default(now())
   course_preview_video       String              @default("https://res.cloudinary.com/dy8jwwm6j/video/upload/v1736872825/12927954_1920_1080_24fps_szansr.mp4")
@@ -101,7 +101,7 @@ model lectures {
   lecture_title          String
   lecture_description    String
   lecture_order          Int
-  lecture_total_no_hours Float
+  lecture_total_no_hours Decimal  @db.Decimal(3,1)  
   creation               DateTime    @default(now())
 
   course courses  @relation(fields: [course_id], references: [course_id])
@@ -116,7 +116,7 @@ model videos {
   video_title             String
   video_url               String
   video_order             Int
-  video_total_no_of_hours Float
+  video_total_no_of_hours Decimal  @db.Decimal(10,2)  
   creation                DateTime   @default(now())
 
   lecture lectures @relation(fields: [lecture_id], references: [lecture_id])
