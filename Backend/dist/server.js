@@ -59,6 +59,18 @@ app.get('/course/:course_id', (req, res) => __awaiter(void 0, void 0, void 0, fu
         res.status(500).json({ error: 'Failed to fetch course' });
     }
 }));
+app.get('/search', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const course = yield prisma.courses.findMany();
+        if (!course) {
+            return res.status(404).json({ error: 'Course not found' });
+        }
+        res.status(200).json(course);
+    }
+    catch (err) {
+        res.status(500).json({ error: 'Failed to fetch course' });
+    }
+}));
 const port = process.env.PORT || 3000;
 const server = http_1.default.createServer(app);
 server.listen(port, () => {

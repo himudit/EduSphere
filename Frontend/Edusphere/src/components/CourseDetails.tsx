@@ -194,7 +194,7 @@ const CourseDetails = () => {
                         {courseData?.lectures?.map((lecture) => (
                             // <div key={lecture.lecture_id} className="  border-pink-200 border rounded-lg bg-red-400 overflow-hidden">
                             // <div key={lecture.lecture_id} className=" rounded-lg bg-gradient-to-r from-purple-900 to-purple-700 D overflow-hidden">
-                            <div key={lecture.lecture_id} className=" rounded-lg bg-gradient-to-r from-purple-700 to-purple-400 D overflow-hidden">
+                            <div key={lecture.lecture_id} className="rounded-lg bg-gradient-to-r from-purple-700 to-purple-400 D overflow-hidden">
 
                                 <button
                                     className="w-full px-4 py-3 flex items-center justify-between hover:bg-purple-500"

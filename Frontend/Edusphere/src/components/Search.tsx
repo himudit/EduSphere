@@ -1,14 +1,49 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import CardDisplay from './CardDisplay';
+
+interface Course {
+    course_id: string;
+    course_title: string;
+    course_description: string;
+    course_price: number;
+    course_thumbnail: string;
+    course_no_of_purchase: number;
+    course_total_no_hours: number;
+    rating: number;
+    creation: string;
+    course_author: string;
+    course_what_you_will_learn: string[];
+    course_keywords: string[];
+    course_preview_video: string;
+}
 
 const Search: React.FC = () => {
+    const navigate = useNavigate();
     const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [courseData, setCourseData] = useState<Course | undefined>(undefined);
+
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/search`);
+                const data: Course = response.data;
+                console.log(data);
+                setCourseData(data);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchCourses();
+    }, []);
 
     return (
         <div className="min-h-screen">
             <div className="max-w-7xl mx-auto ">
                 <div className="flex">
                     {/* Desktop Left Sidebar Filters */}
-                    <div className="hidden ml-1 mt-1 lg:block w-64 shrink-0 border border-[#212529] rounded-lg min-h-screen bg-[#212529]">
+                    <div className="hidden ml-1 mt-1 lg:block w-64 shrink-0 border border-[#212529] rounded-lg min-h-screen bg-[#161a1d]">
                         <div className="top-0 p-6 space-y-8">
                             <h2 className="text-lg font-semibold text-white">Filters</h2>
 
@@ -46,13 +81,13 @@ const Search: React.FC = () => {
                     {/* Main Content */}
                     <div className="flex-1">
                         {/* Mobile Filter Button */}
-                        <div className="top-0 z-50 bg-white shadow-sm lg:hidden">
+                        <div className="top-0 z-50 bg-[#161a1d] shadow-sm lg:hidden">
                             <div className="px-4 py-4">
                                 <button
                                     onClick={() => setIsFilterOpen(!isFilterOpen)}
-                                    className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md  text-white bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                                    className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md  text-white bg-black hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
                                 >
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="bg-white h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="bg-black h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                                         <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
                                     </svg>
                                     Filters
@@ -62,9 +97,18 @@ const Search: React.FC = () => {
 
                         {/* Course Cards Grid */}
                         <div className="p-4 sm:p-6 lg:p-8">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {/* Course cards will be mapped here */}
-                                {/* Example card structure in comments */}
+                            <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 gap-6">
+                                {courseData?.map((item: any, index: any) => {
+                                    return (
+                                        <div key={index} onClick={() => {
+                                            navigate(`/course/${item.course_id}`)
+                                        }}>
+                                            <CardDisplay image={item.course_thumbnail} creation={item.creation} title={item.course_title}
+                                                tags={item.course_keywords} />
+                                        </div>
+
+                                    )
+                                })}
                             </div>
                         </div>
                     </div>
@@ -78,12 +122,12 @@ const Search: React.FC = () => {
                 onClick={() => setIsFilterOpen(false)}
             >
                 <div
-                    className={`fixed inset-y-0 left-0 max-w-xs w-full bg-white shadow-xl transform transition-transform ease-in-out duration-300 ${isFilterOpen ? 'translate-x-0' : '-translate-x-full'
+                    className={`fixed inset-y-0 left-0 max-w-xs w-full bg-[#161a1d] shadow-xl transform transition-transform ease-in-out duration-300 ${isFilterOpen ? 'translate-x-0' : '-translate-x-full'
                         }`}
                     onClick={(e) => e.stopPropagation()}
                 >
                     <div className="h-full flex flex-col">
-                        <div className="px-4 py-6 bg-purple-400">
+                        <div className="px-4 py-6 bg-gradient-to-r from-purple-700 to-purple-400 D overflow-hidden">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-lg font-medium text-white">Filters</h2>
                                 <button
@@ -130,10 +174,10 @@ const FilterGroup: React.FC<{ title: string; items: { label: string; count: stri
     const [isOpen, setIsOpen] = useState(true);
 
     return (
-        <div className="border-b border-gray-200 pb-6 last:border-b-0">
+        <div className="border-b border-[#4a5661] pb-6 last:border-b-0">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full flex items-center justify-between text-sm font-medium text-white hover:text-gray-600"
+                className="w-full flex items-center justify-between text-sm font-medium text-white"
             >
                 <span className="text-base font-semibold">{title}</span>
                 <svg
@@ -151,7 +195,7 @@ const FilterGroup: React.FC<{ title: string; items: { label: string; count: stri
                     <label key={index} className="flex items-center group ">
                         <input
                             type="checkbox"
-                            className=" h-4 w-4 text-purple-400 focus:ring-purple-500 rounded"
+                            className=" h-4 w-4 text-purple-600 focus:ring-purple-500 rounded"
                         />
                         <span className="ml-3 text-sm text-white group-hover:text-white">{item.label}</span>
                         <span className="ml-auto text-xs text-white">({item.count})</span>

@@ -37,11 +37,24 @@ app.get('/course/:course_id', async (req: Request, res: Response) => {
             include: {
                 lectures: {
                     include: {
-                        videos: true, 
+                        videos: true,
                     },
                 },
             },
         })
+        if (!course) {
+            return res.status(404).json({ error: 'Course not found' });
+        }
+        res.status(200).json(course);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch course' });
+    }
+})
+
+
+app.get('/search', async (req: Request, res: Response) => {
+    try {
+        const course = await prisma.courses.findMany()
         if (!course) {
             return res.status(404).json({ error: 'Course not found' });
         }
