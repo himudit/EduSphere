@@ -29,8 +29,9 @@ interface FilterGroupProps {
     title: string;
     items: FilterItem[];
     type: 'radio' | 'checkbox';
-    selected?: string | string[];
-    setSelected: (value: any) => void;
+    selected: string | string[];
+    setSelected: (value: string | string[]) => void;
+    name: string; // Added name prop for radio groups
 }
 
 const Search: React.FC = () => {
@@ -38,11 +39,11 @@ const Search: React.FC = () => {
 
     // State management for filters and course data
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [courseData, setCourseData] = useState<Course[]>([]); // Fixed type to Course[]
-    const [rating, setRating] = useState<string>("");
-    const [duration, setDuration] = useState<string>("");
+    const [courseData, setCourseData] = useState<Course[]>([]);
+    const [rating, setRating] = useState<string>('');
+    const [duration, setDuration] = useState<string>('');
     const [topic, setTopic] = useState<string[]>([]);
-    const [level, setLevel] = useState<string>("");
+    const [level, setLevel] = useState<string>('');
 
     // Fetch courses on component mount
     useEffect(() => {
@@ -70,6 +71,7 @@ const Search: React.FC = () => {
                                 {/* Rating Filter */}
                                 <FilterGroup
                                     title="Ratings"
+                                    name="rating"
                                     items={[
                                         { label: '4.5 & up', count: '10,000+' },
                                         { label: '4.0 & up', count: '15,000+' },
@@ -78,12 +80,13 @@ const Search: React.FC = () => {
                                     ]}
                                     type="radio"
                                     selected={rating}
-                                    setSelected={setRating}
+                                    setSelected={(value) => setRating(value as string)}
                                 />
 
                                 {/* Duration Filter */}
                                 <FilterGroup
                                     title="Video Duration"
+                                    name="duration"
                                     items={[
                                         { label: '0-1 Hour', count: '1,473' },
                                         { label: '1-3 Hours', count: '2,286' },
@@ -92,12 +95,13 @@ const Search: React.FC = () => {
                                     ]}
                                     type="radio"
                                     selected={duration}
-                                    setSelected={setDuration}
+                                    setSelected={(value) => setDuration(value as string)}
                                 />
 
                                 {/* Topic Filter */}
                                 <FilterGroup
                                     title="Topic"
+                                    name="topic"
                                     items={[
                                         { label: 'Python', count: '586' },
                                         { label: 'JavaScript', count: '508' },
@@ -106,12 +110,13 @@ const Search: React.FC = () => {
                                     ]}
                                     type="checkbox"
                                     selected={topic}
-                                    setSelected={setTopic}
+                                    setSelected={(value) => setTopic(value as string[])}
                                 />
 
                                 {/* Level Filter */}
                                 <FilterGroup
                                     title="Level"
+                                    name="level"
                                     items={[
                                         { label: 'Beginner', count: '5,749' },
                                         { label: 'Intermediate', count: '3,678' },
@@ -119,7 +124,7 @@ const Search: React.FC = () => {
                                     ]}
                                     type="radio"
                                     selected={level}
-                                    setSelected={setLevel}
+                                    setSelected={(value) => setLevel(value as string)}
                                 />
                             </div>
                         </div>
@@ -128,7 +133,7 @@ const Search: React.FC = () => {
                     {/* Main Content Area */}
                     <div className="flex-1">
                         {/* Mobile Filter Button */}
-                        <div className="sticky top-0 z-50 bg-[#161a1d] shadow-sm lg:hidden">
+                        <div className="top-0 z-50 bg-[#161a1d] shadow-sm lg:hidden">
                             <div className="px-4 py-4">
                                 <button
                                     onClick={() => setIsFilterOpen(!isFilterOpen)}
@@ -145,7 +150,7 @@ const Search: React.FC = () => {
                         {/* Course Cards Grid */}
                         <div className="p-4 sm:p-6 lg:p-8">
                             <div className="grid grid-cols-1 gap-6">
-                                {courseData.map((item, index) => (
+                                {courseData.map((item) => (
                                     <div
                                         key={item.course_id}
                                         onClick={() => navigate(`/course/${item.course_id}`)}
@@ -197,6 +202,7 @@ const Search: React.FC = () => {
                             <div className="space-y-6">
                                 <FilterGroup
                                     title="Ratings"
+                                    name="rating-mobile"
                                     items={[
                                         { label: '4.5 & up', count: '10,000+' },
                                         { label: '4.0 & up', count: '15,000+' },
@@ -205,11 +211,12 @@ const Search: React.FC = () => {
                                     ]}
                                     type="radio"
                                     selected={rating}
-                                    setSelected={setRating}
+                                    setSelected={(value) => setRating(value as string)}
                                 />
                                 {/* Duration Filter */}
                                 <FilterGroup
                                     title="Video Duration"
+                                    name="duration"
                                     items={[
                                         { label: '0-1 Hour', count: '1,473' },
                                         { label: '1-3 Hours', count: '2,286' },
@@ -218,12 +225,13 @@ const Search: React.FC = () => {
                                     ]}
                                     type="radio"
                                     selected={duration}
-                                    setSelected={setDuration}
+                                    setSelected={(value) => setDuration(value as string)}
                                 />
 
                                 {/* Topic Filter */}
                                 <FilterGroup
                                     title="Topic"
+                                    name="topic"
                                     items={[
                                         { label: 'Python', count: '586' },
                                         { label: 'JavaScript', count: '508' },
@@ -232,12 +240,13 @@ const Search: React.FC = () => {
                                     ]}
                                     type="checkbox"
                                     selected={topic}
-                                    setSelected={setTopic}
+                                    setSelected={(value) => setTopic(value as string[])}
                                 />
 
                                 {/* Level Filter */}
                                 <FilterGroup
                                     title="Level"
+                                    name="level"
                                     items={[
                                         { label: 'Beginner', count: '5,749' },
                                         { label: 'Intermediate', count: '3,678' },
@@ -245,7 +254,7 @@ const Search: React.FC = () => {
                                     ]}
                                     type="radio"
                                     selected={level}
-                                    setSelected={setLevel}
+                                    setSelected={(value) => setLevel(value as string)}
                                 />
                             </div>
                         </div>
@@ -257,37 +266,40 @@ const Search: React.FC = () => {
 };
 
 // FilterGroup Component
-const FilterGroup: React.FC<FilterGroupProps> = ({ title, items, type, selected, setSelected }) => {
+const FilterGroup: React.FC<FilterGroupProps> = ({ title, items, type, selected, setSelected, name }) => {
     const handleSelect = (label: string) => {
+        console.log(selected);
         if (type === 'radio') {
             setSelected(label);
         } else if (type === 'checkbox') {
-            setSelected((prev: string[]) => {
-                if (prev.includes(label)) {
-                    return prev.filter(item => item !== label);
-                }
-                return [...prev, label];
-            });
+            const currentSelected = selected as string[];
+            if (currentSelected.includes(label)) {
+                setSelected(currentSelected.filter(item => item !== label));
+            } else {
+                setSelected([...currentSelected, label]);
+            }
         }
+        console.log(selected);
     };
 
     return (
         <div className="border-b border-[#4a5661] pb-6 last:border-b-0">
-            <button className="w-full flex items-center justify-between text-sm font-medium text-white">
+            <div className="w-full flex items-center justify-between text-sm font-medium text-white">
                 <span className="text-base font-semibold">{title}</span>
-            </button>
+            </div>
 
             <div className="mt-4 space-y-3">
                 {items.map((item, index) => (
                     <label key={index} className="flex items-center group cursor-pointer">
                         <input
                             type={type}
-                            name={title}
+                            name={name}
+                            value={item.label}
                             checked={type === 'radio'
                                 ? selected === item.label
-                                : (selected as string[])?.includes(item.label)}
+                                : (selected as string[]).includes(item.label)}
                             onChange={() => handleSelect(item.label)}
-                            className="h-4 w-4 text-purple-600 focus:ring-purple-500 rounded"
+                            className={`h-4 w-4 text-purple-600 focus:ring-purple-500 ${type === 'radio' ? 'rounded-full' : 'rounded'}`}
                         />
                         <span className="ml-3 text-sm text-white group-hover:text-gray-200 transition-colors">
                             {item.label}
