@@ -11,11 +11,13 @@ interface DecodedToken extends JwtPayload {
 }
 
 const authStudent = async (req: any, res: Response, next: NextFunction) => {
-    const token = req.cookies.token
-    if (!token) {
-        return res.status(401).json({ message: "Student Unauthorized" })
-    }
     try {
+        // const token = req.cookies.token
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: "Student Unauthorized" })
+        }
         const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as DecodedToken;
 
         const student = await prisma.students.findUnique({

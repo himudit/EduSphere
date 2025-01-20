@@ -44,7 +44,7 @@ const loginStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        console.log("controllers");
+        // console.log("controllers");
         const { email, password } = req.body;
         const student = yield prisma.students.findFirst({
             where: {

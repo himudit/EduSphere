@@ -17,11 +17,13 @@ const client_1 = require("@prisma/client");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const prisma = new client_1.PrismaClient();
 const authStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const token = req.cookies.token;
-    if (!token) {
-        return res.status(401).json({ message: "Student Unauthorized" });
-    }
     try {
+        // const token = req.cookies.token
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: "Student Unauthorized" });
+        }
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
         const student = yield prisma.students.findUnique({
             where: { student_id: decoded.student_id },

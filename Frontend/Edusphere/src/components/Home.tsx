@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import CardCarousel from "./CardCarousel";
+import axios from "axios";
 
 const Home: React.FC = () => {
-
   return (
     <>
       <div className="flex flex-col items-center justify-center min-h-screen text-white px-6">
