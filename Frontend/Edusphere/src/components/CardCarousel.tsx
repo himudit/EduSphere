@@ -34,6 +34,12 @@ const CardCarousel = () => {
             try {
                 const response = await axios.get<Course[]>(`${import.meta.env.VITE_BASE_URL}/rating`);
                 setCourses(response.data);
+                const course = response.data
+                    .sort((a, b) => b.rating - a.rating)
+                    .slice(0, 3);
+                setCourses(course);
+                console.log(response.data);
+                console.log(course);
             } catch (err) {
                 console.log(err);
             }

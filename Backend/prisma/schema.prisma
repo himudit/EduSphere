@@ -39,7 +39,7 @@ model students {
 model purchased_courses {
   student_id    String   @id
   course_id     String
-  purchase_date DateTime  @default(now())
+  purchase_date DateTime @default(now())
   progress      Int
 
   student students @relation(fields: [student_id], references: [student_id])
@@ -67,7 +67,7 @@ model teachers {
 model teacher_courses {
   teacher_id String   @id
   course_id  String
-  creation   DateTime  @default(now())
+  creation   DateTime @default(now())
   teacher    teachers @relation(fields: [teacher_id], references: [teacher_id])
   course     courses  @relation(fields: [course_id], references: [course_id])
 
@@ -81,14 +81,14 @@ model courses {
   course_price               Int
   course_thumbnail           String
   course_no_of_purchase      Int                 @default(0)
-  course_total_no_hours      Decimal  @db.Decimal(3,1)  
-  rating                     Int                 @default(1)
-  creation                   DateTime             @default(now())
+  course_total_no_hours      Decimal             @db.Decimal(3, 1)
+  rating                     Decimal             @default(1.0) @db.Decimal(3, 1)
+  creation                   DateTime            @default(now())
   course_preview_video       String              @default("https://res.cloudinary.com/dy8jwwm6j/video/upload/v1736872825/12927954_1920_1080_24fps_szansr.mp4")
   course_what_you_will_learn String[]            @default([])
   course_author              String              @default("John Doe")
   course_keywords            String[]            @default([])
-  course_level                      String[]            @default(["Intermediate"])
+  course_level               String[]            @default(["Intermediate"])
   purchased_courses          purchased_courses[]
   teacher_courses            teacher_courses[]
   lectures                   lectures[]
@@ -102,8 +102,8 @@ model lectures {
   lecture_title          String
   lecture_description    String
   lecture_order          Int
-  lecture_total_no_hours Decimal  @db.Decimal(3,1)  
-  creation               DateTime    @default(now())
+  lecture_total_no_hours Decimal  @db.Decimal(3, 1)
+  creation               DateTime @default(now())
 
   course courses  @relation(fields: [course_id], references: [course_id])
   videos videos[]
@@ -117,8 +117,8 @@ model videos {
   video_title             String
   video_url               String
   video_order             Int
-  video_total_no_of_hours Decimal  @db.Decimal(10,2)  
-  creation                DateTime   @default(now())
+  video_total_no_of_hours Decimal  @db.Decimal(10, 2)
+  creation                DateTime @default(now())
 
   lecture lectures @relation(fields: [lecture_id], references: [lecture_id])
 

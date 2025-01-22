@@ -64,9 +64,7 @@ const Profile: React.FC = () => {
             <div className="p-5 border-t border-gray-700">
                 <h2 className="text-lg font-bold mb-2 text-center md:text-left">About</h2>
                 <p className="text-sm leading-relaxed text-center md:text-left">
-                    Hi, I am Midhun! As a UI/UX Designer, I blend creativity with user-centric design principles.
-                    With expertise in wireframing, prototyping, and UI branding, I craft engaging digital experiences.
-                    Let's collaborate and create exceptional user journeys together. Let's iterate.
+                    {studentData.student_about}
                 </p>
             </div>
         </div>

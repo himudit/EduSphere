@@ -42,7 +42,7 @@ const Card: React.FC<CardProps> = ({
 
         <div className="flex items-center -mt-1 sm:-mt-2">
           <span className="text-xs sm:text-sm text-yellow-400 font-bold mr-1 sm:mr-2">
-            {rating.toFixed(1)}
+            {rating}
           </span>
           <div className="flex items-center">
             {Array.from({ length: 5 }, (_, index) => (
