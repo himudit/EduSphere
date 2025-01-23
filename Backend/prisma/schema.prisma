@@ -31,6 +31,11 @@ model students {
   student_profile_picture String?             @default("https://static.vecteezy.com/system/resources/previews/045/944/199/non_2x/male-default-placeholder-avatar-profile-gray-picture-isolated-on-background-man-silhouette-picture-for-user-profile-in-social-media-forum-chat-greyscale-illustration-vector.jpg")
   student_skills          String[]            @default([])
   student_gender          Gender              @default(MALE)
+  student_twiter          String?
+  student_linkedin        String?
+  student_address         String?
+  student_university      String?
+  student_mobile          String?
   purchased_courses       purchased_courses[]
 
   @@map("students")
