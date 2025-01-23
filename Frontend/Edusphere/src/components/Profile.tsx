@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import logo from '../assets/logo1.png'
-import axios from 'axios'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEnvelope, faCheckCircle, faMobile } from '@fortawesome/free-solid-svg-icons';
+import logo from '../assets/logo1.png';
+import axios from 'axios';
 
 const Profile: React.FC = () => {
-    const [studentData, setStudentData] = useState({});
+    const [studentData, setStudentData] = useState<any>({});
+
     useEffect(() => {
         const fetchProfile = async () => {
             const token = localStorage.getItem("token");
@@ -16,60 +15,85 @@ const Profile: React.FC = () => {
                     }
                 });
                 setStudentData(response.data);
-                console.log(response.data);  // This will contain the data returned by the server
+                console.log(response.data); // This will contain the data returned by the server
             } catch (error) {
                 console.error("Error fetching profile:", error);
             }
         };
         fetchProfile();
     }, []);
+
     return (
         <>
-            <div className="max-w-[50rem] mx-auto mt-10 bg-black text-white rounded-lg shadow-md">
+            <div className="max-w-4xl mx-auto mt-10 bg-black text-white rounded-lg shadow-md">
                 {/* Header Section */}
-                <div className="p-5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-t-lg h-[8rem]">
-                </div>
-
-                <div className="-mt-16 lg:ml-[4rem] md:ml-[0rem] flex flex-col md:flex-row items-center md:items-start md:justify-star ">
-                    <img
-                        src={studentData.student_profile_picture
-                        }
-                        alt="Profile"
-                        className="w-[9rem] h-9rem] rounded-full border-4 border-white mb-4 md:mb-0"
-                    />
-                </div>
-
-                <div className="lg:ml-[3rem] md:ml-2 p-5 grid grid-cols-1 md:grid-cols-2 gap-2 ">
-                    <div className="text-center md:text-left md:ml-4">
-                        <h1 className="text-xl md:text-2xl font-bold">{studentData.first_name}</h1>
-                        <p className="text-sm mt-1 flex items-center justify-center md:justify-start">
-                            <span className="mr-2">📁</span> Working at Adobe
-                        </p>
-                        <p className="text-sm mt-1 flex items-center justify-center md:justify-start">
-                            <span className="mr-2">📍</span> Bangalore, India
-                        </p>
-                    </div>
-                    <div className="p-5 md:grid-cols-2 gap-2">
-                        <div className="flex items-center justify-center md:justify-end ">
-                            <span className="mr-2"><FontAwesomeIcon icon={faMobile}></FontAwesomeIcon></span>
-                            <p className="text-sm">+91987654321</p>
+                <div className="flex flex-wrap items-start gap-6 p-5">
+                    {/* Profile Info - 65% */}
+                    <div className="flex-[65%] min-w-[65%] bg-black">
+                        <div className="p-5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-t-lg h-24"></div>
+                        <div className="-mt-14 lg:ml-[1rem] flex justify-center md:justify-start">
+                            <img
+                                src={studentData.student_profile_picture || logo}
+                                alt="Profile"
+                                className="w-[9rem] h-[9rem] rounded-full border-4 border-white"
+                            />
                         </div>
-                        <div className="flex items-center justify-center md:justify-end ">
-                            <span className="mr-2"><FontAwesomeIcon icon={faEnvelope}></FontAwesomeIcon></span>
-                            <p className="text-sm">{studentData.email}</p>
+                        <div className="mt-4 text-center md:text-left">
+                            <h1 className="text-2xl lg:ml-[2rem] font-bold">{studentData.first_name || "John Doe"}</h1>
+                            <p className="text-sm lg:ml-[2rem] text-gray-400">{studentData.student_designation || "Software Developer"}</p>
                         </div>
                     </div>
-                </div>
-                {/* Contact Section */}
 
+                    {/* Intro Section - 35% */}
+                    <div className="flex-[30%] min-w-[30%] bg-[#212529] rounded-lg p-4">
+                        <h2 className="text-lg font-semibold mb-4">Intro</h2>
+                        <hr className="border-gray-700 mb-4" />
+                        <ul className="space-y-3">
+                            <li className="flex items-center">
+                                <i className="fas fa-briefcase mr-2 text-blue-500"></i>
+                                <span>CMO at SingleFire</span>
+                            </li>
+                            <li className="flex items-center">
+                                <i className="fas fa-graduation-cap mr-2 text-blue-500"></i>
+                                <span>Went to Oxford International</span>
+                            </li>
+                            <li className="flex items-center">
+                                <i className="fas fa-map-marker-alt mr-2 text-blue-500"></i>
+                                <span>Lives in Virginia, NY</span>
+                            </li>
+                            <li className="flex items-center">
+                                <i className="fas fa-users mr-2 text-blue-500"></i>
+                                <span>Followed by 12.5k people</span>
+                            </li>
+                            <li className="flex items-center">
+                                <i className="fas fa-envelope mr-2 text-blue-500"></i>
+                                <span>Email: <a href="mailto:jhon@contact.com" className="text-blue-400 underline">jhon@contact.com</a></span>
+                            </li>
+                            <li className="flex items-center">
+                                <i className="fab fa-linkedin mr-2 text-blue-500"></i>
+                                <span>LinkedIn: <a href="#" className="text-blue-400 underline">@jhon_S</a></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
+
             {/* About Section */}
-            <div className="max-w-[50rem] mx-auto mt-2 bg-black text-white rounded-lg shadow-md">
-                <div className="p-5 border-t border-gray-700 ">
-                    <h2 className="text-lg font-bold mb-2 text-center md:text-left">About</h2>
-                    <p className="text-sm leading-relaxed text-center md:text-left">
-                        {studentData.student_about}
-                    </p>
+            <div className="max-w-4xl mx-auto mt-6 bg-black text-white rounded-lg shadow-md">
+                <div className="flex flex-wrap gap-6 p-5">
+                    {/* About Info - 65% */}
+                    <div className="flex-[65%] min-w-[65%]">
+                        <h2 className="text-lg font-bold mb-2">About</h2>
+                        <p className="text-sm text-gray-400">
+                            {studentData.student_about || "No additional information provided."}
+                        </p>
+                    </div>
+
+                    {/* Extra Section - 35% */}
+                    <div className="flex-[35%] min-w-[35%] bg-[#212529] rounded-lg p-4">
+                        <h3 className="text-lg font-semibold text-center">More Info</h3>
+                        {/* Add extra content or components here */}
+                    </div>
                 </div>
             </div>
         </>

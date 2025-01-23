@@ -33,6 +33,7 @@ model students {
   student_gender          Gender              @default(MALE)
   student_twiter          String?
   student_linkedin        String?
+  student_github          String?
   student_address         String?
   student_university      String?
   student_mobile          String?
