@@ -1,6 +1,14 @@
 import React from 'react';
+import { useForm } from 'react-hook-form';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGithub, faLinkedin, faTwitter } from '@fortawesome/free-brands-svg-icons';
 
 const UserProfile = () => {
+    const { register, handleSubmit, formState: { errors } } = useForm();
+
+    const onSubmit = (data: any) => {
+        console.log(data); // This is where you handle the form submission
+    };
     return (
         <div className="max-w-7xl mx-auto p-6">
             {/* Main Container */}
@@ -17,24 +25,33 @@ const UserProfile = () => {
                             />
                         </div>
                         <p className="text-center text-gray-600">Your Photo</p>
-                        <button className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Upload New</button>
+                        {/* #9F86FF */}
+                        {/* #D1C4FF */}
+                        <button className="mt-4 px-6 py-2 bg-[#A48AFB] text-white rounded-lg hover:bg-[#D1C4FF]">Upload New</button>
                         <button className="mt-2 px-6 py-2 border rounded-lg">Save</button>
                     </div>
 
                     {/* Personal Information */}
                     <div className="bg-[#212529] shadow-md rounded-lg p-6">
-                        <h3 className="text-lg font-semibold text-gray-700 mb-4">Personal Information</h3>
+                        <h3 className="text-lg font-semibold text-gray-400 mb-4">Personal Information</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="flex items-center">
-                                <i className="fas fa-user text-gray-500 mr-3"></i>
-                                <input
+                                <i className="fas fa-user text-gray-400 mr-3"></i>
+                                {/* <input
                                     type="text"
                                     placeholder="First Name"
                                     className="w-full border rounded-lg p-2 focus:ring focus:ring-blue-300"
+                                /> */}
+                                <input
+                                    type="text"
+                                    placeholder="First Name"
+                                    {...register("fullName", { required: "Full Name is required" })}
+                                    className="w-full border rounded-lg p-2"
                                 />
+                                {errors.fullName && <p className="text-red-500 text-sm">{errors.fullName.message}</p>}
                             </div>
                             <div className="flex items-center">
-                                <i className="fas fa-user text-gray-500 mr-3"></i>
+                                <i className="fas fa-user text-gray-400 mr-3"></i>
                                 <input
                                     type="text"
                                     placeholder="Last Name"
@@ -42,24 +59,35 @@ const UserProfile = () => {
                                 />
                             </div>
                             <div className="flex items-center">
-                                <i className="fas fa-phone-alt text-gray-500 mr-3"></i>
+                                <i className="fas fa-phone-alt text-gray-400 mr-3"></i>
                                 <input
                                     type="text"
                                     placeholder="Mobile Number"
                                     className="w-full border rounded-lg p-2 focus:ring focus:ring-blue-300"
                                 />
                             </div>
-                            <div className="flex items-center">
-                                <i className="fas fa-envelope text-gray-500 mr-3"></i>
-                                <input
-                                    type="text"
-                                    placeholder="Gender"
-                                    className="w-full border rounded-lg p-2 focus:ring focus:ring-blue-300"
-                                />
+
+                            <div className="flex flex-col space-y-2">
+                                <label className="text-gray-400 font-medium">Gender</label>
+                                <div className="flex items-center space-x-4">
+                                    <label className="flex items-center">
+                                        <input type="radio" name="gender" value="MALE" className="mr-2" />
+                                        Male
+                                    </label>
+                                    <label className="flex items-center">
+                                        <input type="radio" name="gender" value="FEMALE" className="mr-2" />
+                                        Female
+                                    </label>
+                                    <label className="flex items-center">
+                                        <input type="radio" name="gender" value="OTHER" className="mr-2" />
+                                        Other
+                                    </label>
+                                </div>
                             </div>
+
                             {/* Address Field */}
                             <div className="flex items-center col-span-1 md:col-span-2">
-                                <i className="fas fa-envelope text-gray-500 mr-3"></i>
+                                <i className="fas fa-envelope text-gray-400 mr-3"></i>
                                 <input
                                     type="text"
                                     placeholder="Address"
@@ -68,7 +96,7 @@ const UserProfile = () => {
                             </div>
                             {/* University Field */}
                             <div className="flex items-center col-span-1 md:col-span-2">
-                                <i className="fas fa-envelope text-gray-500 mr-3"></i>
+                                <i className="fas fa-envelope text-gray-400 mr-3"></i>
                                 <input
                                     type="text"
                                     placeholder="University"
@@ -84,7 +112,7 @@ const UserProfile = () => {
                 <div className="flex flex-col gap-6">
                     {/* Bio Section */}
                     <div className="bg-[#212529] shadow-md rounded-lg p-6">
-                        <h3 className="text-lg font-semibold text-gray-700 mb-4">About</h3>
+                        <h3 className="text-lg font-semibold text-gray-400 mb-4">About</h3>
                         <textarea
                             rows="6"
                             placeholder="Write your bio here..."
@@ -94,7 +122,7 @@ const UserProfile = () => {
 
                     {/* Industry/Interests Section */}
                     <div className="bg-[#212529] shadow-md rounded-lg p-6">
-                        <h3 className="text-lg font-semibold text-gray-700 mb-4">Skills/Interest</h3>
+                        <h3 className="text-lg font-semibold text-gray-400 mb-4">Skills/Interest</h3>
                         <div className="flex flex-wrap gap-2">
                             {['UI Design', 'Framer', 'Startups', 'UX', 'Crypto', 'Mobile Apps', 'Webflow'].map((interest) => (
                                 <span
@@ -110,10 +138,10 @@ const UserProfile = () => {
 
                     {/* Social Media Accounts Section */}
                     <div className="bg-[#212529] shadow-md rounded-lg p-6">
-                        <h3 className="text-lg font-semibold text-gray-700 mb-4">Social Media Accounts</h3>
+                        <h3 className="text-lg font-semibold text-gray-400 mb-4">Social Media Accounts</h3>
                         <div className="space-y-4">
                             <div className="flex items-center">
-                                <i className="fab fa-linkedin text-blue-700 mr-3"></i>
+                                <FontAwesomeIcon icon={faLinkedin} />
                                 <input
                                     type="url"
                                     placeholder="https://linkedin.com/in/YourUsername"
@@ -121,7 +149,7 @@ const UserProfile = () => {
                                 />
                             </div>
                             <div className="flex items-center">
-                                <i className="fab fa-instagram text-pink-500 mr-3"></i>
+                                <FontAwesomeIcon icon={faGithub} />
                                 <input
                                     type="url"
                                     placeholder="https://github.com/YourUsername"
@@ -129,7 +157,7 @@ const UserProfile = () => {
                                 />
                             </div>
                             <div className="flex items-center">
-                                <i className="fab fa-twitter text-blue-500 mr-3"></i>
+                                <FontAwesomeIcon icon={faTwitter} />
                                 <input
                                     type="url"
                                     placeholder="https://twitter.com/YourUsername"
