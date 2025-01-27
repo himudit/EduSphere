@@ -15,7 +15,7 @@ const Profile: React.FC = () => {
                     }
                 });
                 setStudentData(response.data);
-                console.log(response.data); // This will contain the data returned by the server
+                console.log(response.data);
             } catch (error) {
                 console.error("Error fetching profile:", error);
             }
