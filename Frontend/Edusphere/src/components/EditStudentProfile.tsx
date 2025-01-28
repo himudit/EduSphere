@@ -5,15 +5,12 @@ import { faGithub, faLinkedin, faTwitter } from '@fortawesome/free-brands-svg-ic
 import axios from 'axios';
 import '../index.css'
 interface Student {
-    email: string,
     first_name: string,
     last_name: string,
-    password: string,
     student_about: string,
     student_address: string,
     student_gender: string,
     student_github: string,
-    student_id: string,
     student_linkedin: string,
     student_mobile: string,
     student_profile_picture: string,
@@ -25,8 +22,22 @@ interface Student {
 const UserProfile = () => {
     const { register, handleSubmit, formState: { errors }, setValue } = useForm();
     const [studentData, setStudentData] = useState<Student | undefined>();
-    const onSubmit = (data: any) => {
-        console.log(data);
+
+    const onSubmit = async (data: any) => {
+        try {
+            const response = await axios.patch(
+                `${import.meta.env.VITE_BASE_URL}/students/profile/edit`,
+                data,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}` // Send the JWT token
+                    }
+                }
+            );
+            console.log('Profile updated successfully:', response.data);
+        } catch (err) {
+            console.error('Failed to update profile:', err.response?.data || err.message);
+        }
     };
 
     useEffect(() => {
@@ -171,15 +182,19 @@ const UserProfile = () => {
 
                     {/* Second Column */}
                     <div className="flex flex-col gap-6">
-                        {/* Bio Section */}
+                        {/* About Section */}
                         <div className="bg-[#212529] shadow-md rounded-lg p-6">
                             <h3 className="text-lg font-semibold text-gray-400 mb-4">About</h3>
                             <textarea
                                 rows={6}
                                 placeholder="Write your bio here..."
                                 className="w-full border border-gray-600 rounded-lg p-3 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                {...register("student_about")}
+                                {...register("student_about", {
+                                    minLength: { value: 3, message: "Minimum length is 3 characters" },
+                                    maxLength: { value: 300, message: "Maximum length is 300 characters" }
+                                })}
                             ></textarea>
+                            {errors.student_about && <p className="text-red-500 text-sm">{errors.student_about.message}</p>}
                         </div>
 
                         {/* Industry/Interests Section */}
@@ -208,7 +223,12 @@ const UserProfile = () => {
                                         type="url"
                                         placeholder="https://linkedin.com/in/YourUsername"
                                         className="w-full border border-gray-600 rounded-lg p-3 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        {...register("student_linkedin", {
+                                            minLength: { value: 10, message: "Minimum length is 10 characters" },
+                                            maxLength: { value: 50, message: "Maximum length is 50 characters" }
+                                        })}
                                     />
+                                    {errors.student_linkedin && <p className="text-red-500 text-sm">{errors.student_linkedin.message}</p>}
                                 </div>
                                 <div className="flex items-center gap-4">
                                     <FontAwesomeIcon icon={faGithub} className="text-gray-300" />
@@ -216,7 +236,12 @@ const UserProfile = () => {
                                         type="url"
                                         placeholder="https://github.com/YourUsername"
                                         className="w-full border border-gray-600 rounded-lg p-3 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        {...register("student_github", {
+                                            minLength: { value: 10, message: "Minimum length is 10 characters" },
+                                            maxLength: { value: 50, message: "Maximum length is 50 characters" }
+                                        })}
                                     />
+                                    {errors.student_github && <p className="text-red-500 text-sm">{errors.student_github.message}</p>}
                                 </div>
                                 <div className="flex items-center gap-4">
                                     <FontAwesomeIcon icon={faTwitter} className="text-blue-400" />
@@ -224,7 +249,12 @@ const UserProfile = () => {
                                         type="url"
                                         placeholder="https://twitter.com/YourUsername"
                                         className="w-full border border-gray-600 rounded-lg p-3 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        {...register("student_twitter", {
+                                            minLength: { value: 10, message: "Minimum length is 10 characters" },
+                                            maxLength: { value: 50, message: "Maximum length is 50 characters" }
+                                        })}
                                     />
+                                    {errors.student_twitter && <p className="text-red-500 text-sm">{errors.student_twitter.message}</p>}
                                 </div>
                             </div>
                         </div>
@@ -233,7 +263,7 @@ const UserProfile = () => {
                     </div>
                 </div>
             </div>
-        </form>
+        </form >
     );
 };
 

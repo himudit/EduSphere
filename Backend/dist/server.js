@@ -19,6 +19,7 @@ const students_routes_1 = __importDefault(require("./routes/students.routes"));
 const teachers_routes_1 = __importDefault(require("./routes/teachers.routes"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const client_1 = require("@prisma/client");
+const auth_middleware_1 = require("./middlewares/auth.middleware");
 const app = (0, express_1.default)();
 const prisma = new client_1.PrismaClient();
 app.use((0, cookie_parser_1.default)());
@@ -71,6 +72,42 @@ app.get('/search', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
     catch (err) {
         res.status(500).json({ error: 'Failed to fetch course' });
+    }
+}));
+app.patch('/students/profile/edit', auth_middleware_1.authStudent, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // Destructure fields from the request body
+    const { first_name, last_name, student_about, student_address, student_gender, student_github, student_linkedin, student_mobile, student_profile_picture, student_skills, student_twitter, student_university } = req.body;
+    const student_id = req.student.student_id;
+    // Validate required fields
+    if (!student_id) {
+        return res.status(400).json({ error: 'Student ID is required' });
+    }
+    try {
+        // Update the student profile in the database
+        const updatedStudent = yield prisma.students.update({
+            where: { student_id }, // Use the student_id to find the record
+            data: {
+                first_name,
+                last_name,
+                student_about,
+                student_address,
+                student_gender,
+                student_github,
+                student_linkedin,
+                student_mobile,
+                student_profile_picture,
+                student_skills,
+                student_twitter,
+                student_university
+            }
+        });
+        // Return the updated student profile
+        res.status(200).json(updatedStudent);
+    }
+    catch (err) {
+        console.error('Error updating student profile:', err);
+        // Generic error response
+        res.status(500).json({ error: 'Failed to update profile', details: err });
     }
 }));
 const port = process.env.PORT || 3000;
