@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub, faLinkedin, faTwitter } from '@fortawesome/free-brands-svg-icons';
@@ -25,16 +25,19 @@ const UserProfile = () => {
 
     const onSubmit = async (data: any) => {
         try {
+            const payload = {
+                ...data,
+                student_skills: skills // Add skills array to the payload
+            };
             const response = await axios.patch(
                 `${import.meta.env.VITE_BASE_URL}/students/profile/edit`,
-                data,
+                payload,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}` // Send the JWT token
                     }
                 }
             );
-            console.log('Profile updated successfully:', response.data);
         } catch (err) {
             console.error('Failed to update profile:', err.response?.data || err.message);
         }
@@ -62,13 +65,65 @@ const UserProfile = () => {
                     setValue("student_github", response.data.student_github);
                     setValue("student_linkedin", response.data.student_linkedin);
                     setValue("student_twitter", response.data.student_twitter);
+                    setSkills(response.data.student_skills);
                 }
             } catch (error) {
                 console.error("Error fetching profile:", error);
             }
         };
         fetchProfile();
-    }, [setValue]);
+    }, []);
+
+
+    const [showAddSkillModal, setShowAddSkillModal] = useState(false);
+    const [newSkill, setNewSkill] = useState('');
+    const [skills, setSkills] = useState<string[]>([]);
+
+    const handleAddSkill = () => {
+        if (newSkill.trim()) {
+            setSkills([...skills, newSkill.trim()]);
+            setNewSkill('');
+            setShowAddSkillModal(false);
+        }
+    };
+
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);;
+    const [preview, setPreview] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setSelectedFile(file);
+            setPreview(URL.createObjectURL(file)); // Create preview URL
+        }
+    };
+
+    const handleUpload = async () => {
+        if (!selectedFile) return;
+
+        const formData = new FormData();
+        formData.append("image", selectedFile);
+
+        try {
+            const response = await axios.post<{ imageUrl: string }>(
+                `${import.meta.env.VITE_BASE_URL}/students/profile/upload/image`,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",  // Required for file upload
+                        Authorization: `Bearer ${localStorage.getItem('token')}`  // Authorization token
+                    }
+                }
+            );
+
+            alert("Image uploaded successfully!");
+        } catch (error) {
+            console.error("Upload error:", error);
+            alert("Failed to upload image.");
+        }
+    };
+
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="max-w-7xl mx-auto p-6">
@@ -81,14 +136,38 @@ const UserProfile = () => {
                         <div className="bg-[#212529] shadow-md rounded-lg p-6 flex flex-col items-center">
                             <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-gray-300 mb-4">
                                 <img
-                                    src={studentData?.student_profile_picture}
+                                    src={preview || studentData?.student_profile_picture || '/default-avatar.png'}
                                     alt="Profile"
                                     className="w-full h-full object-cover"
                                 />
                             </div>
-                            <p className="text-center text-gray-600">Your Photo</p>
-                            <button className="mt-4 px-6 py-2 bg-[#A48AFB] text-white rounded-lg hover:bg-[#D1C4FF]">Upload New</button>
-                            <button className="mt-2 px-6 py-2 border rounded-lg">Save</button>
+                            <p className="text-center text-gray-600">
+                                {selectedFile ? "New Photo Selected" : "Your Photo"}
+                            </p>
+
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleFileSelect}
+                                ref={fileInputRef}
+                                className="hidden"
+                            />
+
+                            <button
+                                className="mt-4 px-6 py-2 bg-[#A48AFB] text-white rounded-lg hover:bg-[#D1C4FF]"
+                                onClick={() => fileInputRef.current.click()}
+                            >
+                                {selectedFile ? "Change File" : "Upload New"}
+                            </button>
+
+                            {selectedFile && (
+                                <button
+                                    className="mt-2 px-6 py-2 border rounded-lg hover:bg-gray-100"
+                                    onClick={handleUpload}
+                                >
+                                    Save Changes
+                                </button>
+                            )}
                         </div>
 
                         {/* Personal Information */}
@@ -197,20 +276,87 @@ const UserProfile = () => {
                             {errors.student_about && <p className="text-red-500 text-sm">{errors.student_about.message}</p>}
                         </div>
 
-                        {/* Industry/Interests Section */}
-                        <div className="bg-[#212529] shadow-md rounded-lg p-6">
-                            <h3 className="text-lg font-semibold text-gray-400 mb-4">Skills/Interest</h3>
+                        {/* Skill Section */}
+                        <div className="bg-[#212529] shadow-md rounded-lg p-6 relative">
+                            <h3 className="text-lg font-semibold text-gray-400 mb-4">Skills</h3>
                             <div className="flex flex-wrap gap-2">
-                                {['UI Design', 'Framer', 'Startups', 'UX', 'Crypto', 'Mobile Apps', 'Webflow'].map((interest) => (
-                                    <span
-                                        key={interest}
-                                        className="px-3 py-1 bg-blue-100 text-blue-600 rounded-lg text-sm"
+                                {skills.length > 0 && skills?.map((skill) => (
+                                    <div
+                                        key={skill}
+                                        className="group relative inline-flex items-center px-3 py-1 bg-blue-100 text-blue-600 rounded-lg text-sm hover:bg-blue-200 transition-colors"
                                     >
-                                        {interest}
-                                    </span>
+                                        <span>{skill}</span>
+                                        <button
+                                            onClick={() => setSkills(skills.filter(s => s !== skill))}
+                                            className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                                        >
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="h-4 w-4 text-black "
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M6 18L18 6M6 6l12 12"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </div>
                                 ))}
-                                <button className="text-blue-500 underline mt-2">+ Add more</button>
+                                <button
+                                    className="text-blue-500 mt-2 hover:text-blue-600 transition-colors"
+                                    onClick={() => setShowAddSkillModal(true)}
+                                >
+                                    + Add more
+                                </button>
                             </div>
+
+                            {/* Modal Overlay */}
+                            {showAddSkillModal && (
+                                <div
+                                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+                                    onClick={() => {
+                                        setShowAddSkillModal(false);
+                                        setNewSkill('');
+                                    }}
+                                >
+                                    <div
+                                        className="bg-black rounded-lg p-6 w-96 border border-white"
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        <h3 className="text-lg font-semibold mb-4">Add New Skill</h3>
+                                        <input
+                                            type="text"
+                                            placeholder="Add your skill"
+                                            className="w-full p-2 border rounded-lg mb-4 text-black"
+                                            value={newSkill}
+                                            onChange={(e) => setNewSkill(e.target.value)}
+                                            onKeyPress={(e) => e.key === 'Enter' && handleAddSkill()}
+                                        />
+                                        <div className="flex justify-end gap-2">
+                                            <button
+                                                className="px-4 py-2 text-gray-400 hover:bg-gray-100 rounded-lg"
+                                                onClick={() => {
+                                                    setShowAddSkillModal(false);
+                                                    setNewSkill('');
+                                                }}
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                                                onClick={handleAddSkill}
+                                            >
+                                                Add Skill
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         {/* Social Media Accounts Section */}
