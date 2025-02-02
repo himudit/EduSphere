@@ -8,6 +8,7 @@ import CourseDetails from './components/CourseDetails.tsx';
 import Search from './components/Search.tsx';
 import Profile from './components/Profile.tsx';
 import EditStudentProfile from './components/EditStudentProfile.tsx';
+import CourseUpload from './components/CourseUpload';
 
 function App() {
   const router = createBrowserRouter(
@@ -20,6 +21,7 @@ function App() {
         <Route path="/search" element={<Search />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/edit" element={<EditStudentProfile />} />
+        <Route path="/teacher/courseupload" element={<CourseUpload />} />
       </Route>
     )
   );
