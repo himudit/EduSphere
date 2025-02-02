@@ -63,6 +63,15 @@ const CourseUpload = () => {
         }));
     };
 
+    const [course_price, setCoursePrice] = useState(""); // Initialize as an empty string
+    const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // Only set value if it's a valid number or empty string
+        const value = e.target.value;
+        if (value === "" || !isNaN(Number(value))) {
+            setCoursePrice(value); // Update the course_price state with the value
+        }
+    };
+
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -105,7 +114,13 @@ const CourseUpload = () => {
         }
     };
 
-    const [textPoints, setTextPoints] = useState([1]);  // Track the number of text-points
+    const [course_level, setCourseLevel] = useState("Intermediate"); 
+
+    const handleChangeLevel = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setCourseLevel(e.target.value); 
+    };
+
+    const [textPoints, setTextPoints] = useState([1]);  
 
     // Function to add a new text-point input
     const addTextPoint = () => {
@@ -225,25 +240,27 @@ const CourseUpload = () => {
             {/* Step 3: Pricing & Prerequisites */}
             {step === 3 && (
                 <div>
-                    <label className="block mb-2">Course Price</label>
+                    <label className="block mt-4 mb-2">Course Price</label>
                     <input
                         name="course_price"
-                        value={formData.course_price}
-                        onChange={handleChange}
+                        value={course_price}
+                        onChange={handlePriceChange} // Handle value change
                         className="w-full p-2 bg-gray-800 rounded"
                         placeholder="Enter price"
+                        type="text" // Allows numeric input and prevents unexpected behavior in the input field
                     />
+
 
                     <label className="block mt-4 mb-2">Course Level</label>
                     <select
                         name="course_level"
-                        value={formData.course_level[0]} // Bind the value to the first element of the array
-                        onChange={handleChange} // Handle value change
+                        value={course_level} // Bind the value to the course_level state
+                        onChange={handleChangeLevel} // Handle value change
                         className="w-full p-2 bg-gray-800 rounded"
                     >
-                        <option>Beginner</option>
-                        <option>Intermediate</option>
-                        <option>Advanced</option>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
                     </select>
 
                     <div className="mt-8 bg-gray-800 shadow-md rounded-lg p-6 relative">
