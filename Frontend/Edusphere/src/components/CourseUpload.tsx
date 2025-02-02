@@ -93,6 +93,28 @@ const CourseUpload = () => {
         }
     };
 
+    const [showAddSkillModal, setShowAddSkillModal] = useState(false);
+    const [newSkill, setNewSkill] = useState('');
+    const [skills, setSkills] = useState<string[]>([]);
+
+    const handleAddSkill = () => {
+        if (newSkill.trim()) {
+            setSkills([...skills, newSkill.trim()]);
+            setNewSkill('');
+            setShowAddSkillModal(false);
+        }
+    };
+
+    const [textPoints, setTextPoints] = useState([1]);  // Track the number of text-points
+
+    // Function to add a new text-point input
+    const addTextPoint = () => {
+        setTextPoints([...textPoints, textPoints.length + 1]);
+    };
+    const removeTextPoint = (index: number) => {
+        setTextPoints(textPoints.filter((_, i) => i !== index));
+    };
+
     return (
         <div className="max-w-3xl mx-auto p-6 bg-gray-900 text-white rounded-lg shadow-lg">
             {/* Step Indicator */}
@@ -122,7 +144,7 @@ const CourseUpload = () => {
                             name="course_title"
                             value={formData.course_title}
                             onChange={handleChange}
-                            className={`w-full p-2 bg-gray-800 rounded ${titleSize === 0 ? 'border-red-500' : ''}`}
+                            className={`w-full p-2 bg-gray-800 rounded`}
                             placeholder="Enter course title"
                         />
                         <span className="absolute right-4 bottom-2 text-sm text-gray-300">{titleSize}</span>
@@ -134,7 +156,7 @@ const CourseUpload = () => {
                             name="course_description"
                             value={formData.course_description}
                             onChange={handleChange}
-                            className={`w-full p-2 bg-gray-800 rounded ${descriptionSize === 0 ? 'border-red-500' : ''}`}
+                            className={`w-full p-2 bg-gray-800 rounded`}
                             placeholder="Enter description"
                         />
                         <span className="absolute right-4 bottom-2 text-sm text-gray-300">{descriptionSize}</span>
@@ -143,11 +165,26 @@ const CourseUpload = () => {
                     {/* Course Image Upload */}
                     <label className="block mt-4 mb-2">Course Image</label>
                     <div className="mb-4">
+                        <div className="w-full h-48 bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden">
+                            {courseImage ? (
+                                <img
+                                    src={URL.createObjectURL(courseImage)}
+                                    alt="Course Thumbnail"
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                <img
+                                    src="https://via.placeholder.com/750x422"
+                                    alt="Placeholder Thumbnail"
+                                    className="w-full h-full object-cover"
+                                />
+                            )}
+                        </div>
                         <input
                             type="file"
                             accept=".jpg, .jpeg, .gif, .png"
                             onChange={handleImageUpload}
-                            className="w-full p-2 bg-gray-800 rounded"
+                            className="w-full p-2 bg-gray-800 rounded mt-2"
                         />
                         {imageError && <p className="text-red-500 text-sm mt-1">{imageError}</p>}
                     </div>
@@ -155,23 +192,30 @@ const CourseUpload = () => {
                     {/* Promotional Video Upload */}
                     <label className="block mt-4 mb-2">Promotional Video</label>
                     <div className="mb-4">
+                        <div className="w-full h-48 bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden">
+                            {promoVideo ? (
+                                <video
+                                    src={URL.createObjectURL(promoVideo)}
+                                    controls
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                <video
+                                    src="https://res.cloudinary.com/dy8jwwm6j/video/upload/v1736872825/12927954_1920_1080_24fps_szansr.mp4"
+                                    controls
+                                    className="w-full h-full object-cover"
+                                />
+                            )}
+                        </div>
                         <input
                             type="file"
                             accept="video/*"
                             onChange={handleVideoUpload}
-                            className="w-full p-2 bg-gray-800 rounded"
+                            className="w-full p-2 bg-gray-800 rounded mt-2"
                         />
                         {videoError && <p className="text-red-500 text-sm mt-1">{videoError}</p>}
                     </div>
 
-                    <label className="block mt-4 mb-2">What You Will Learn (One per line)</label>
-                    <textarea
-                        name="course_what_you_will_learn"
-                        value={formData.course_what_you_will_learn.join("\n")}
-                        onChange={(e) => handleArrayChange(e, "course_what_you_will_learn")}
-                        className="w-full p-2 bg-gray-800 rounded"
-                        placeholder="Enter bullet points"
-                    />
                 </div>
             )}
 
@@ -193,14 +237,128 @@ const CourseUpload = () => {
                     <label className="block mt-4 mb-2">Course Level</label>
                     <select
                         name="course_level"
-                        value={formData.course_level[0]}
-                        onChange={handleChange}
+                        value={formData.course_level[0]} // Bind the value to the first element of the array
+                        onChange={handleChange} // Handle value change
                         className="w-full p-2 bg-gray-800 rounded"
                     >
                         <option>Beginner</option>
                         <option>Intermediate</option>
                         <option>Advanced</option>
                     </select>
+
+                    <div className="mt-8 bg-gray-800 shadow-md rounded-lg p-6 relative">
+                        <h3 className="text-lg text-white mb-5">Keywords</h3>
+                        <div className="flex flex-wrap gap-2">
+                            {skills.length > 0 && skills?.map((skill) => (
+                                <div
+                                    key={skill}
+                                    className="group relative inline-flex items-center px-3 py-1 bg-blue-100 text-blue-600 rounded-lg text-sm hover:bg-blue-200 transition-colors"
+                                >
+                                    <span>{skill}</span>
+                                    <button
+                                        onClick={() => setSkills(skills.filter(s => s !== skill))}
+                                        className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-4 w-4 text-black "
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M6 18L18 6M6 6l12 12"
+                                            />
+                                        </svg>
+                                    </button>
+                                </div>
+                            ))}
+                            <button
+                                className="text-blue-500 mt-2 hover:text-blue-600 transition-colors"
+                                onClick={() => setShowAddSkillModal(true)}
+                            >
+                                + Add more
+                            </button>
+                        </div>
+
+                        {/* Modal Overlay */}
+                        {showAddSkillModal && (
+                            <div
+                                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+                                onClick={() => {
+                                    setShowAddSkillModal(false);
+                                    setNewSkill('');
+                                }}
+                            >
+                                <div
+                                    className="bg-black rounded-lg p-6 w-96 border border-white"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    <h3 className="text-lg font-semibold mb-4">Add New Skill</h3>
+                                    <input
+                                        type="text"
+                                        placeholder="Add your skill"
+                                        className="w-full p-2 border rounded-lg mb-4 text-black"
+                                        value={newSkill}
+                                        onChange={(e) => setNewSkill(e.target.value)}
+                                        onKeyPress={(e) => e.key === 'Enter' && handleAddSkill()}
+                                    />
+                                    <div className="flex justify-end gap-2">
+                                        <button
+                                            className="px-4 py-2 text-gray-400 hover:bg-gray-100 rounded-lg"
+                                            onClick={() => {
+                                                setShowAddSkillModal(false);
+                                                setNewSkill('');
+                                            }}
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                                            onClick={handleAddSkill}
+                                        >
+                                            Add Skill
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Course What You will Learn */}
+                    <div className="mt-8 bg-gray-800 shadow-md rounded-lg p-6 relative">
+                        <label className="block text-lg font-medium mt-6 text-white">What You Will Learn</label>
+                        <div className="space-y-4 mt-2">
+                            {textPoints.map((point, index) => (
+                                <div key={index} className="flex items-center space-x-2">
+                                    <input
+                                        type="text"
+                                        className="p-2 w-full bg-gray-500 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                                        placeholder={`Text Point ${point}`}
+                                    />
+                                    {/* Delete Button (SVG) */}
+                                    <button
+                                        onClick={() => removeTextPoint(index)}
+                                        className="text-white focus:outline-none"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 448 512" fill="currentColor" aria-hidden="true">
+                                            <path d="M135.2 17.7L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-7.2-14.3C307.4 6.8 296.3 0 284.2 0L163.8 0c-12.1 0-23.2 6.8-28.6 17.7zM416 128L32 128 53.2 467c1.6 25.3 22.6 45 47.9 45l245.8 0c25.3 0 46.3-19.7 47.9-45L416 128z" /></svg>
+                                    </button>
+                                </div>
+                            ))}
+                            {/* Add Button */}
+                            <button
+                                onClick={addTextPoint}
+                                className="mt-2 text-blue-500 hover:text-blue-700 focus:outline-none"
+                            >
+                                + Add another point
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
             )}
 
