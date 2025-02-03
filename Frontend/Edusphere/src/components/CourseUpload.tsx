@@ -6,7 +6,7 @@ const CourseUpload = () => {
         course_id: "",
         course_title: "",
         course_description: "",
-        course_price: 0,
+        course_price: "",
         course_no_of_purchase: 0,
         course_total_no_hours: 0,
         rating: 1.0,
@@ -53,6 +53,18 @@ const CourseUpload = () => {
                 }));
             }
         }
+
+        if (name === "course_price") {
+            if (value === "" || !isNaN(Number(value))) {
+                setFormData((prev) => ({
+                    ...prev,
+                    [name]: value,
+                }));
+            }
+        }
+
+
+
     };
 
     const handleArrayChange = (e: React.ChangeEvent<HTMLTextAreaElement>, field: keyof typeof formData) => {
@@ -63,14 +75,6 @@ const CourseUpload = () => {
         }));
     };
 
-    const [course_price, setCoursePrice] = useState(""); // Initialize as an empty string
-    const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // Only set value if it's a valid number or empty string
-        const value = e.target.value;
-        if (value === "" || !isNaN(Number(value))) {
-            setCoursePrice(value); // Update the course_price state with the value
-        }
-    };
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -112,15 +116,23 @@ const CourseUpload = () => {
             setNewSkill('');
             setShowAddSkillModal(false);
         }
+        setFormData((prev) => ({
+            ...prev,
+            ["course_keywords"]: []
+        }));
     };
 
-    const [course_level, setCourseLevel] = useState("Intermediate"); 
+    const [course_level, setCourseLevel] = useState("Intermediate");
 
     const handleChangeLevel = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setCourseLevel(e.target.value); 
+        setCourseLevel(e.target.value);
+        setFormData((prev) => ({
+            ...prev,
+            [course_level]: e.target.value,
+        }));
     };
 
-    const [textPoints, setTextPoints] = useState([1]);  
+    const [textPoints, setTextPoints] = useState([1]);
 
     // Function to add a new text-point input
     const addTextPoint = () => {
@@ -243,11 +255,11 @@ const CourseUpload = () => {
                     <label className="block mt-4 mb-2">Course Price</label>
                     <input
                         name="course_price"
-                        value={course_price}
-                        onChange={handlePriceChange} // Handle value change
+                        value={formData.course_price}
+                        onChange={handleChange}
                         className="w-full p-2 bg-gray-800 rounded"
                         placeholder="Enter price"
-                        type="text" // Allows numeric input and prevents unexpected behavior in the input field
+                        type="text"
                     />
 
 
@@ -385,7 +397,10 @@ const CourseUpload = () => {
                 {step < 3 ? (
                     <button onClick={nextStep} className="px-4 py-2 bg-purple-500 rounded">Next</button>
                 ) : (
-                    <button className="px-4 py-2 bg-green-500 rounded">Submit</button>
+                    <button onClick={(e) => {
+                        e.preventDefault();
+                        console.log(formData);
+                    }} className="px-4 py-2 bg-green-500 rounded">Submit</button>
                 )}
             </div>
         </div>
