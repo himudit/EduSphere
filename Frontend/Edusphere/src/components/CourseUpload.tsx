@@ -1,8 +1,24 @@
 import { useState } from "react";
 
+interface CourseFormData {
+    course_id: string;
+    course_title: string;
+    course_description: string;
+    course_price: string;
+    course_no_of_purchase: number;
+    course_total_no_hours: number;
+    rating: number;
+    creation: Date;
+    course_preview_video: string;
+    course_what_you_will_learn: string[];
+    course_author: string;
+    course_keywords: string[]; // ✅ Explicitly typed as an array of strings
+    course_level: string;
+}
+
 const CourseUpload = () => {
     const [step, setStep] = useState(1);
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<CourseFormData>({
         course_id: "",
         course_title: "",
         course_description: "",
@@ -15,7 +31,7 @@ const CourseUpload = () => {
         course_what_you_will_learn: [],
         course_author: "John Doe",
         course_keywords: [],
-        course_level: ["Intermediate"],
+        course_level: "Intermediate",
     });
 
     const [titleSize, setTitleSize] = useState(20); // 20 chars limit for course title
@@ -63,16 +79,6 @@ const CourseUpload = () => {
             }
         }
 
-
-
-    };
-
-    const handleArrayChange = (e: React.ChangeEvent<HTMLTextAreaElement>, field: keyof typeof formData) => {
-        const { value } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [field]: value.split("\n"),
-        }));
     };
 
 
@@ -107,19 +113,20 @@ const CourseUpload = () => {
     };
 
     const [showAddSkillModal, setShowAddSkillModal] = useState(false);
-    const [newSkill, setNewSkill] = useState('');
+    const [newSkill, setNewSkill] = useState<string>('');
     const [skills, setSkills] = useState<string[]>([]);
 
     const handleAddSkill = () => {
         if (newSkill.trim()) {
-            setSkills([...skills, newSkill.trim()]);
+            const updatedSkills = [...skills, newSkill.trim()];
+            setSkills(updatedSkills);
             setNewSkill('');
             setShowAddSkillModal(false);
+            setFormData((prev) => ({
+                ...prev,
+                course_keywords: updatedSkills,
+            }));
         }
-        setFormData((prev) => ({
-            ...prev,
-            ["course_keywords"]: []
-        }));
     };
 
     const [course_level, setCourseLevel] = useState("Intermediate");
@@ -132,15 +139,28 @@ const CourseUpload = () => {
         }));
     };
 
-    const [textPoints, setTextPoints] = useState([1]);
-
-    // Function to add a new text-point input
     const addTextPoint = () => {
-        setTextPoints([...textPoints, textPoints.length + 1]);
+        setFormData((prev) => ({
+            ...prev,
+            course_what_you_will_learn: [...prev.course_what_you_will_learn, ""],
+        }));
     };
+
     const removeTextPoint = (index: number) => {
-        setTextPoints(textPoints.filter((_, i) => i !== index));
+        setFormData((prev) => ({
+            ...prev,
+            course_what_you_will_learn: prev.course_what_you_will_learn.filter((_, i) => i !== index),
+        }));
     };
+
+    const handleInputChangePoints = (index: number, value: string) => {
+        setFormData((prev) => {
+            const updatedPoints = [...prev.course_what_you_will_learn];
+            updatedPoints[index] = value;
+            return { ...prev, course_what_you_will_learn: updatedPoints };
+        });
+    };
+
 
     return (
         <div className="max-w-3xl mx-auto p-6 bg-gray-900 text-white rounded-lg shadow-lg">
@@ -361,21 +381,26 @@ const CourseUpload = () => {
                     <div className="mt-8 bg-gray-800 shadow-md rounded-lg p-6 relative">
                         <label className="block text-lg font-medium mt-6 text-white">What You Will Learn</label>
                         <div className="space-y-4 mt-2">
-                            {textPoints.map((point, index) => (
+                            {formData.course_what_you_will_learn.map((point, index) => (
                                 <div key={index} className="flex items-center space-x-2">
                                     <input
                                         type="text"
                                         className="p-2 w-full bg-gray-500 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-                                        placeholder={`Text Point ${point}`}
+                                        placeholder={`Text Point ${index + 1}`}
+                                        value={point}
+                                        onChange={(e) => handleInputChangePoints(index, e.target.value)} // ✅ Update state
                                     />
-                                    {/* Delete Button (SVG) */}
-                                    <button
-                                        onClick={() => removeTextPoint(index)}
-                                        className="text-white focus:outline-none"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 448 512" fill="currentColor" aria-hidden="true">
-                                            <path d="M135.2 17.7L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-7.2-14.3C307.4 6.8 296.3 0 284.2 0L163.8 0c-12.1 0-23.2 6.8-28.6 17.7zM416 128L32 128 53.2 467c1.6 25.3 22.6 45 47.9 45l245.8 0c25.3 0 46.3-19.7 47.9-45L416 128z" /></svg>
-                                    </button>
+                                    {/* Delete Button */}
+                                    {formData.course_what_you_will_learn.length > 1 && (
+                                        <button
+                                            onClick={() => removeTextPoint(index)}
+                                            className="text-white focus:outline-none"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 448 512" fill="currentColor" aria-hidden="true">
+                                                <path d="M135.2 17.7L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-7.2-14.3C307.4 6.8 296.3 0 284.2 0L163.8 0c-12.1 0-23.2 6.8-28.6 17.7zM416 128L32 128 53.2 467c1.6 25.3 22.6 45 47.9 45l245.8 0c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                                            </svg>
+                                        </button>
+                                    )}
                                 </div>
                             ))}
                             {/* Add Button */}
