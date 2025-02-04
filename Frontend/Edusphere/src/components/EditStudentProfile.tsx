@@ -52,7 +52,7 @@ const UserProfile = () => {
                         "Authorization": `Bearer ${token}`
                     }
                 });
-                console.log(response.data);
+                // console.log(response.data);
                 setStudentData(response.data);
                 if (response.data) {
                     setValue("first_name", response.data.first_name);

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import logo from '../assets/logo1.png'
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../app/store"; // Import RootState from your store
+import { RootState } from "../app/store";
 import { fetchUserProfile, addUser, removeUser } from "../features/userSlice";
 
 
@@ -15,7 +15,7 @@ const Navbar: React.FC = () => {
   const { user, loading, error } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(fetchUserProfile()); // This will trigger API logs
+    dispatch(fetchUserProfile());
   }, [dispatch]);
 
   return (
