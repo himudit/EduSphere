@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import logo from '../assets/logo1.png'
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
@@ -17,6 +17,8 @@ const Navbar: React.FC = () => {
   useEffect(() => {
     dispatch(fetchUserProfile());
   }, [dispatch]);
+
+  const navigate = useNavigate();
 
   return (
     <nav className="relative bg-black text-white">
@@ -43,7 +45,7 @@ const Navbar: React.FC = () => {
             {/* Desktop Navigation */}
             <ul className="flex items-center gap-8">
               <li>
-                <Link to="#courses" className="text-sm font-medium hover:text-purple-400 transition-colors">
+                <Link to="/search" className="text-sm font-medium hover:text-purple-400 transition-colors">
                   Explore Courses
                 </Link>
               </li>
@@ -110,33 +112,25 @@ const Navbar: React.FC = () => {
             {/* Profile Section */}
             <div className="flex items-center gap-3">
               {/* Notifications */}
-              <button className="hidden md:block hover:text-purple-400 transition-colors">
+              {/* <button className="hidden md:block hover:text-purple-400 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                 </svg>
-              </button>
+              </button> */}
 
               {/* Profile Picture */}
               <div className="relative group">
                 <button className="flex items-center gap-2">
                   <img
-                    src="https://ui-avatars.com/api/?name=John+Doe&background=6366f1&color=fff"
+                    src={user?.student_profile_picture || logo || user?.teacher_profile_picture}
                     alt="Profile"
-                    className="w-8 h-8 rounded-full border-2 border-purple-500"
+                    className="w-14 h-14 rounded-full border-2 border-purple-500"
+                    onClick={() => {
+                      navigate('/profile');
+                    }}
                   />
-                  <svg xmlns="http://www.w3.org/2000/svg" className="hidden md:block h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                  </svg>
                 </button>
 
-                {/* Dropdown Menu */}
-                <div className="hidden group-hover:block absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                  <div className="py-1">
-                    <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</Link>
-                    <Link to="/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</Link>
-                    <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</button>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -177,9 +171,9 @@ const Navbar: React.FC = () => {
           {/* Profile Section in Sidebar */}
           <div className="px-6 mb-6 flex items-center gap-3">
             <img
-              src="https://ui-avatars.com/api/?name=John+Doe&background=6366f1&color=fff"
+              src={user?.student_profile_picture || logo || user?.teacher_profile_picture}
               alt="Profile"
-              className="w-10 h-10 rounded-full border-2 border-purple-500"
+              className="w-[5rem] h-[5rem] rounded-full border-2 border-purple-500"
             />
             <div>
               <h3 className="font-medium">{user?.first_name} {user?.last_name}</h3>
@@ -190,7 +184,7 @@ const Navbar: React.FC = () => {
           <ul className="space-y-2">
             <li>
               <Link
-                to="#courses"
+                to="/search"
                 className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
               >
                 <svg
@@ -232,7 +226,7 @@ const Navbar: React.FC = () => {
             </li>
             <li>
               <Link
-                to="#profile"
+                to="/profile"
                 className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
               >
                 <svg
