@@ -12,7 +12,7 @@ interface CourseFormData {
     course_preview_video: string;
     course_what_you_will_learn: string[];
     course_author: string;
-    course_keywords: string[]; // ✅ Explicitly typed as an array of strings
+    course_keywords: string[];
     course_level: string;
 }
 
@@ -85,7 +85,6 @@ const CourseUpload = () => {
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            // Validate image size (750x422px)
             const img = new Image();
             img.src = URL.createObjectURL(file);
             img.onload = () => {

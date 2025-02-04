@@ -95,35 +95,31 @@ const UserProfile = () => {
         const file = event.target.files?.[0];
         if (file) {
             setSelectedFile(file);
-            setPreview(URL.createObjectURL(file)); // Create preview URL
+            setPreview(URL.createObjectURL(file));
         }
     };
 
     const handleUpload = async () => {
         if (!selectedFile) return;
-
         const formData = new FormData();
         formData.append("image", selectedFile);
-
         try {
             const response = await axios.post<{ imageUrl: string }>(
                 `${import.meta.env.VITE_BASE_URL}/students/profile/upload/image`,
                 formData,
                 {
                     headers: {
-                        "Content-Type": "multipart/form-data",  // Required for file upload
-                        Authorization: `Bearer ${localStorage.getItem('token')}`  // Authorization token
+                        "Content-Type": "multipart/form-data", 
+                        Authorization: `Bearer ${localStorage.getItem('token')}` 
                     }
                 }
             );
-
             alert("Image uploaded successfully!");
         } catch (error) {
             console.error("Upload error:", error);
             alert("Failed to upload image.");
         }
     };
-
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="max-w-7xl mx-auto p-6">

@@ -109,11 +109,9 @@ app.patch('/students/profile/edit', authStudent, async (req: Request, res: Respo
             }
         });
 
-        // Return the updated student profile
         res.status(200).json(updatedStudent);
     } catch (err) {
         console.error('Error updating student profile:', err);
-        // Generic error response
         res.status(500).json({ error: 'Failed to update profile', details: err });
     }
 });
@@ -123,16 +121,13 @@ app.post("/students/profile/upload/image", upload.single("image"), authStudent, 
         if (!req.file) {
             return res.status(400).json({ error: "No file uploaded" });
         }
-
-        // Upload image to Cloudinary
         cloudinary.uploader.upload_stream({ folder: "profile_pictures" }, async (error, result) => {
             if (error) {
                 return res.status(500).json({ error: "Cloudinary upload failed" });
             }
             const student_id = req.student.student_id;
-            // Update student record in PostgreSQL
             const updatedStudent = await prisma.students.update({
-                where: { student_id: student_id }, // Ensure student_id is sent from frontend
+                where: { student_id: student_id },
                 data: { student_profile_picture: result?.secure_url },
             });
 

@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import logo from '../assets/logo1.png'
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../app/store"; // Import RootState from your store
+import { fetchUserProfile, addUser, removeUser } from "../features/userSlice";
+
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,6 +12,11 @@ const Navbar: React.FC = () => {
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+  const { user, loading, error } = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchUserProfile()); // This will trigger API logs
+  }, [dispatch]);
 
   return (
     <nav className="relative bg-black text-white">
@@ -173,8 +182,8 @@ const Navbar: React.FC = () => {
               className="w-10 h-10 rounded-full border-2 border-purple-500"
             />
             <div>
-              <h3 className="font-medium">John Doe</h3>
-              <p className="text-sm text-gray-400">john@example.com</p>
+              <h3 className="font-medium">{user?.first_name} {user?.last_name}</h3>
+              <p className="text-sm text-gray-400">{user?.email}</p>
             </div>
           </div>
 
