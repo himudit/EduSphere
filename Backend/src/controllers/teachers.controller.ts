@@ -9,16 +9,18 @@ const prisma = new PrismaClient();
 
 const registerTeacher = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        console.log("controllers");
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        console.log("controllers");
         const { first_name, last_name, email, password } = req.body;
         const hashedPassword = await AuthService.hashPassword(password);
         const teacher_id = uuidv4();
         const teacher = await createTeacher({ teacher_id, first_name, last_name, email, password: hashedPassword });
         const teacher_token = AuthService.generateAuthToken(teacher);
+        console.log(teacher_token);
+        res.cookie('tacher_token', teacher_token);
         res.status(200).json({ message: "Teacher created successfully", teacher_token });
     } catch (err) {
         console.log(err);

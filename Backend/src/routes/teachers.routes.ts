@@ -5,7 +5,6 @@ import { body } from 'express-validator';
 import { Request, Response, NextFunction } from "express";
 import { authTeacher } from '../middlewares/auth.middleware'
 
-
 router.post(
     '/register',
     [

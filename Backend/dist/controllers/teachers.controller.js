@@ -21,16 +21,18 @@ const express_validator_1 = require("express-validator");
 const prisma = new client_1.PrismaClient();
 const registerTeacher = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        console.log("controllers");
         const errors = (0, express_validator_1.validationResult)(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        console.log("controllers");
         const { first_name, last_name, email, password } = req.body;
         const hashedPassword = yield Authteachers_service_1.default.hashPassword(password);
         const teacher_id = (0, uuid_1.v4)();
         const teacher = yield (0, teachers_service_1.createTeacher)({ teacher_id, first_name, last_name, email, password: hashedPassword });
         const teacher_token = Authteachers_service_1.default.generateAuthToken(teacher);
+        console.log(teacher_token);
+        res.cookie('tacher_token', teacher_token);
         res.status(200).json({ message: "Teacher created successfully", teacher_token });
     }
     catch (err) {
