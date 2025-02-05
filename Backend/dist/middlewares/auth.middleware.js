@@ -40,7 +40,11 @@ const authStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
 });
 exports.authStudent = authStudent;
 const authTeacher = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const teacher_token = req.cookies.token;
+    const authHeader = req.headers['authorization'];
+    const teacher_token = authHeader && authHeader.split(' ')[1];
+    if (!teacher_token) {
+        return res.status(401).json({ message: "Teacher Unauthorized" });
+    }
     if (!teacher_token) {
         return res.status(401).json({ message: "Teacher Unauthorized" });
     }

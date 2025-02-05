@@ -9,24 +9,6 @@ const Profile: React.FC = () => {
     const [studentData, setStudentData] = useState<any>({});
     const { user, loading, error } = useSelector((state: RootState) => state.user);
 
-    // useEffect(() => {
-    //     const fetchProfile = async () => {
-    //         const token = localStorage.getItem("token");
-    //         try {
-    //             const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/students/profile`, {
-    //                 headers: {
-    //                     "Authorization": `Bearer ${token}`
-    //                 }
-    //             });
-    //             setStudentData(response.data);
-    //             console.log(response.data);
-    //         } catch (error) {
-    //             console.error("Error fetching profile:", error);
-    //         }
-    //     };
-    //     fetchProfile();
-    // }, []);
-
     return (
         <>
             <div className="max-w-4xl mx-auto mt-10 bg-black text-white rounded-lg shadow-md">
