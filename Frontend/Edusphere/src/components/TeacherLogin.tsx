@@ -10,7 +10,7 @@ function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    
+
     const dispatch = useDispatch();
 
     const formSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -24,6 +24,7 @@ function Login() {
             if (response.status === 200) {
                 const data = response.data;
                 localStorage.setItem('teacher_token', data.teacher_token);
+                dispatch(fetchUserProfile());
                 dispatch(fetchUserProfile());
                 navigate('/');
             }

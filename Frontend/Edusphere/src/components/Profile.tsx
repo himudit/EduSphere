@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import logo from '../assets/logo1.png';
-import axios from 'axios';
+imp dispatch(fetchUserProfile());ort logo from '../assets/logo1.png';
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { fetchUserProfile, addUser, removeUser } from "../features/userSlice";
@@ -11,9 +10,6 @@ const Profile: React.FC = () => {
     const { user, loading, error } = useSelector((state: RootState) => state.user);
 
     const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(removeUser());
-    }, [dispatch]);
 
     const navigate = useNavigate();
 
@@ -52,6 +48,7 @@ const Profile: React.FC = () => {
                                 else {
                                     console.log("No token found in local storage.");
                                 }
+                                dispatch(removeUser());
                                 navigate('/');
                             }} className="bg-blue-300  w-[6rem] h-[3rem] border border-white rounded-lg text-white font-bold">Logout</button>
                         </div>
