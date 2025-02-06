@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import CardCarousel from "./CardCarousel";
 import axios from "axios";
+import MiddleSection from './students/MiddleSection';
 
 const Home: React.FC = () => {
   return (
@@ -106,6 +107,8 @@ const Home: React.FC = () => {
           <CardCarousel />
         </div>
       </div>
+
+      <MiddleSection />
 
     </>
   );
