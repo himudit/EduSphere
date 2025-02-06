@@ -1,4 +1,5 @@
 import { useState } from "react";
+import CurriculumUploader from "./CurriculumUpload";
 
 interface CourseFormData {
     course_id: string;
@@ -14,6 +15,24 @@ interface CourseFormData {
     course_author: string;
     course_keywords: string[];
     course_level: string;
+}
+
+interface LectureFormData {
+    lecture_id: string;
+    lecture_title: string;
+    lecture_description: string;
+    lecture_order: number;
+    lecture_total_no_of_hours: number;
+    creation: Date;
+}
+
+interface VideoFormData {
+    video_id: string;
+    lecture_id: string;
+    video_title: string;
+    video_url: string;
+    video_order: number;
+    video_total_no_of_hours: number;
 }
 
 const CourseUpload = () => {
@@ -34,13 +53,13 @@ const CourseUpload = () => {
         course_level: "Intermediate",
     });
 
-    const [titleSize, setTitleSize] = useState(20); // 20 chars limit for course title
-    const [descriptionSize, setDescriptionSize] = useState(150); // 150 chars limit for course description
+    const [titleSize, setTitleSize] = useState(20);
+    const [descriptionSize, setDescriptionSize] = useState(150);
 
-    const [courseImage, setCourseImage] = useState<File | null>(null); // State for course image
-    const [promoVideo, setPromoVideo] = useState<File | null>(null); // State for promotional video
-    const [imageError, setImageError] = useState(""); // Error message for course image
-    const [videoError, setVideoError] = useState(""); // Error message for promotional video
+    const [courseImage, setCourseImage] = useState<File | null>(null);
+    const [promoVideo, setPromoVideo] = useState<File | null>(null);
+    const [imageError, setImageError] = useState("");
+    const [videoError, setVideoError] = useState("");
 
     const nextStep = () => setStep((prev) => Math.min(prev + 1, 3));
     const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
@@ -48,7 +67,6 @@ const CourseUpload = () => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
 
-        // Course title size limit validation
         if (name === "course_title") {
             if (value.length <= 20) {
                 setTitleSize(20 - value.length); // Update remaining characters
@@ -59,7 +77,6 @@ const CourseUpload = () => {
             }
         }
 
-        // Course description size limit validation
         if (name === "course_description") {
             if (value.length <= 150) {
                 setDescriptionSize(150 - value.length); // Update remaining characters
@@ -78,7 +95,6 @@ const CourseUpload = () => {
                 }));
             }
         }
-
     };
 
 
@@ -160,6 +176,16 @@ const CourseUpload = () => {
         });
     };
 
+    // mark
+    const [form2Data, setForm2Data] = useState<LectureFormData>({
+        lecture_id: "",
+        lecture_title: "",
+        lecture_description: "",
+        lecture_order: 0,
+        lecture_total_no_of_hours: 0,
+        creation: new Date(),
+    });
+    const [count_lecture, set_count_lecture] = useState(1);
 
     return (
         <div className="max-w-3xl mx-auto p-6 bg-gray-900 text-white rounded-lg shadow-lg">
@@ -265,8 +291,38 @@ const CourseUpload = () => {
                 </div>
             )}
 
+            {/* mark */}
             {/* Step 2: Lectures (Placeholder for now) */}
-            {step === 2 && <div className="h-40 flex justify-center items-center text-gray-500">Lecture Upload Section (Coming Soon)</div>}
+            {step === 2 && <div className="h-40 flex justify-center items-center text-gray-500 mt-[5rem]">
+                {/* <div className="w-[60rem] bg-slate-700 border border-transparent rounded-xl">
+                    <div>Curriculam</div>
+                    <hr className="bg-white" />
+                    <div className="border border-red-400">
+                        <div className="flex justify-start items-center">
+                            <div>Lecture {count_lecture} : </div>
+                            <input type='text' placeholder="Enter Lecture Title" className="ml-4 border border-purple-400 rounded-md " />
+                        </div>
+                        <div> <input type='text' placeholder="Enter Lecture Description" className="ml-4 border border-purple-400 rounded-md " /></div>
+
+                        <div className="border border-purple-400">
+                            <div className="flex justify-start items-center">
+                                <div>Video {count_lecture} : </div>
+                                <input type='text' placeholder="Enter Video Title" className="ml-4 border border-purple-400 rounded-md " />
+                            </div>
+                            <div> <input type='text' placeholder="Upload Video" className="ml-4 border border-purple-400 rounded-md " /></div>
+                            <div className="flex justify-start items-center">
+                                <div>Video {count_lecture} : </div>
+                                <input type='text' placeholder="Enter Video Title" className="ml-4 border border-purple-400 rounded-md " />
+                            </div>
+                            <div> <input type='text' placeholder="Upload Video" className="ml-4 border border-purple-400 rounded-md " /></div>
+                        </div>
+                    </div>
+                  
+
+                </div> */}
+                <div className="mt-5"> <CurriculumUploader /></div>
+
+            </div>}
 
             {/* Step 3: Pricing & Prerequisites */}
             {step === 3 && (
@@ -387,7 +443,7 @@ const CourseUpload = () => {
                                         className="p-2 w-full bg-gray-500 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                                         placeholder={`Text Point ${index + 1}`}
                                         value={point}
-                                        onChange={(e) => handleInputChangePoints(index, e.target.value)} // ✅ Update state
+                                        onChange={(e) => handleInputChangePoints(index, e.target.value)}
                                     />
                                     {/* Delete Button */}
                                     {formData.course_what_you_will_learn.length > 1 && (

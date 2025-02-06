@@ -68,6 +68,7 @@ app.get('/search', async (req: Request, res: Response) => {
     }
 })
 
+
 app.patch('/students/profile/edit', authStudent, async (req: Request, res: Response) => {
     // Destructure fields from the request body
     const {

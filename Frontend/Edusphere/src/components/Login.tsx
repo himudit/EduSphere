@@ -12,7 +12,6 @@ function Login() {
     const [password, setPassword] = useState('');
     const dispatch = useDispatch();
 
-
     const formSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
