@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-imp dispatch(fetchUserProfile());ort logo from '../assets/logo1.png';
+import logo from '../assets/logo1.png';
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { fetchUserProfile, addUser, removeUser } from "../features/userSlice";
