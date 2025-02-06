@@ -4,10 +4,18 @@ import axios from 'axios';
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { fetchUserProfile, addUser, removeUser } from "../features/userSlice";
+import { useNavigate } from 'react-router-dom';
 
 const Profile: React.FC = () => {
     const [studentData, setStudentData] = useState<any>({});
     const { user, loading, error } = useSelector((state: RootState) => state.user);
+
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(removeUser());
+    }, [dispatch]);
+
+    const navigate = useNavigate();
 
     return (
         <>
@@ -27,6 +35,25 @@ const Profile: React.FC = () => {
                         <div className="mt-4 text-center md:text-left">
                             <h1 className="text-2xl lg:ml-[2rem] font-bold">{user?.first_name || "John Doe"}</h1>
                             <p className="text-sm lg:ml-[2rem] text-gray-400">{"Software Developer"}</p>
+                        </div>
+                        <div className='flex items-center justify-evenly'>
+                            <button onClick={() => {
+                                navigate('/profile/edit')
+                            }} className="bg-black w-[6rem] h-[3rem] border border-white rounded-lg text-white font-bold">Edit Profile</button>
+                            <button onClick={() => {
+                                if (localStorage.getItem('token')) {
+                                    localStorage.removeItem('token');
+                                    console.log("'token' has been deleted from local storage.");
+                                }
+                                else if (localStorage.getItem('teacher_token')) {
+                                    localStorage.removeItem('teacher_token');
+                                    console.log("'teacher_token' has been deleted from local storage.");
+                                }
+                                else {
+                                    console.log("No token found in local storage.");
+                                }
+                                navigate('/');
+                            }} className="bg-blue-300  w-[6rem] h-[3rem] border border-white rounded-lg text-white font-bold">Logout</button>
                         </div>
                     </div>
 
@@ -74,12 +101,6 @@ const Profile: React.FC = () => {
                             {user?.student_about || "No additional information provided."}
                         </p>
                     </div>
-
-                    {/* Extra Section - 35% */}
-                    {/* <div className="flex-[35%] min-w-[35%] bg-[#212529] rounded-lg p-4">
-                        <h3 className="text-lg font-semibold text-center">More Info</h3>
-                        
-                    </div> */}
                 </div>
             </div>
         </>

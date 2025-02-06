@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../app/store";
+import { fetchUserProfile, addUser, removeUser } from "../features/userSlice";
 
 function Signup() {
     const navigate = useNavigate();
@@ -9,6 +12,7 @@ function Signup() {
     const [password, setPassword] = useState('');
     const [first_name, setFirstName] = useState('');
     const [last_name, setLastName] = useState('');
+    const dispatch = useDispatch();
 
     const formSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -24,6 +28,7 @@ function Signup() {
             if (response.status === 200) {
                 const data = response.data;
                 localStorage.setItem('teacher_token', data.teacher_token);
+                dispatch(fetchUserProfile());
                 navigate('/');
             }
         } catch (error) {

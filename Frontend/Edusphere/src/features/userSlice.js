@@ -1,34 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// ✅ Async thunk to fetch user profile from API
-// export const fetchUserProfile = createAsyncThunk(
-//     "user/fetchProfile",
-//     async (_, { rejectWithValue }) => {
-//         try {
-//             const token = localStorage.getItem("token");
-//             const response1 = await axios.get(
-//                 `${import.meta.env.VITE_BASE_URL}/students/profile`,
-//                 {
-//                     headers: { Authorization: `Bearer ${token}` },
-//                 }
-//             );
-
-//             const teacher_token = localStorage.getItem("teacher_token");
-//             const response2 = await axios.get(
-//                 `${import.meta.env.VITE_BASE_URL}/teachers/profile`,
-//                 {
-//                     headers: { Authorization: `Bearer ${teacher_token}` },
-//                 }
-//             );
-
-//             return response1.data || response2.data;
-//         } catch (error) {
-//             console.error("Error fetching profile:", error.response?.data); // Debugging log
-//             return rejectWithValue(error.response?.data || "Failed to fetch profile");
-//         }
-//     }
-// );
 export const fetchUserProfile = createAsyncThunk(
     "user/fetchProfile",
     async (_, { rejectWithValue }) => {
@@ -49,7 +21,6 @@ export const fetchUserProfile = createAsyncThunk(
                 })
                 : null;
 
-            // Execute API calls in parallel
             const [studentResponse, teacherResponse] = await Promise.allSettled([
                 studentRequest,
                 teacherRequest,
@@ -69,15 +40,12 @@ export const fetchUserProfile = createAsyncThunk(
     }
 );
 
-
-// ✅ Initial state
 const initialState = {
-    user: null,  // Stores the logged-in user profile
+    user: null, 
     loading: false,
     error: null,
 };
 
-// ✅ Create user slice
 export const userSlice = createSlice({
     name: "user",
     initialState,
@@ -107,8 +75,6 @@ export const userSlice = createSlice({
     },
 });
 
-// ✅ Export actions
 export const { addUser, removeUser } = userSlice.actions;
 
-// ✅ Export reducer
 export default userSlice.reducer;

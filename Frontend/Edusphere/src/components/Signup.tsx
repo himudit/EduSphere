@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../app/store";
+import { fetchUserProfile, addUser, removeUser } from "../features/userSlice";
 
 function Signup() {
     const navigate = useNavigate();
@@ -24,6 +27,7 @@ function Signup() {
             if (response.status === 200) {
                 const data = response.data;
                 localStorage.setItem('token', data.token);
+                dispatch(fetchUserProfile());
                 navigate('/');
             }
         } catch (error) {

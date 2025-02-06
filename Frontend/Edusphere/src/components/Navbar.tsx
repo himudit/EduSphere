@@ -12,6 +12,7 @@ const Navbar: React.FC = () => {
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+  
   const { user, loading, error } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -124,7 +125,7 @@ const Navbar: React.FC = () => {
                   <img
                     src={user?.student_profile_picture || logo || user?.teacher_profile_picture}
                     alt="Profile"
-                    className="w-14 h-14 rounded-full border-2 border-purple-500"
+                    className="w-12 h-12 rounded-full border-2 border-purple-500"
                     onClick={() => {
                       navigate('/profile');
                     }}
