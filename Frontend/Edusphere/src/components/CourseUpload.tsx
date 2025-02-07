@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Key, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { fetchUserProfile, addUser, removeUser } from "../features/userSlice";
@@ -20,22 +20,25 @@ interface CourseFormData {
     course_level: string;
 }
 
-interface LectureFormData {
-    lecture_id: string;
-    lecture_title: string;
-    lecture_description: string;
-    lecture_order: number;
-    lecture_total_no_of_hours: number;
-    creation: Date;
-}
-
-interface VideoFormData {
+interface Video {
     video_id: string;
     lecture_id: string;
     video_title: string;
     video_url: string;
     video_order: number;
-    video_total_no_of_hours: number;
+    video_total_no_hours?: string;
+    creation: string;
+}
+
+interface Lecture {
+    lecture_id: string;
+    course_id?: string;
+    lecture_title: string;
+    lecture_description: string;
+    lecture_order: number;
+    lecture_total_no_of_hours?: string;
+    creation: number;
+    videos: Video[];
 }
 
 const CourseUpload = () => {
@@ -186,19 +189,10 @@ const CourseUpload = () => {
     };
 
     // mark
-    const [form2Data, setForm2Data] = useState<LectureFormData>({
-        lecture_id: "",
-        lecture_title: "",
-        lecture_description: "",
-        lecture_order: 0,
-        lecture_total_no_of_hours: 0,
-        creation: new Date(),
-    });
+    const [lectureOrder, setLectureOrder] = useState<number>(0);
+    const [videoOrder, setVideoOrder] = useState<number>(1);
 
-    const [lectureOrder, setLectureOrder] = useState(1);
-    const [videoOrder, setVideoOrder] = useState(1);
-
-    const [lectures, setLectures] = useState([
+    const [lectures, setLectures] = useState<Lecture[]>([
         {
             lecture_id: nanoid(),
             course_id: formData.course_id,
@@ -220,28 +214,57 @@ const CourseUpload = () => {
     ]);
 
     const addLecture = () => {
-        setLectures([...lectures, { lecture_id: nanoid(), lecture_title: "", lecture_description: "", lecture_order: lectureOrder, videos: [{ video_id: nanoid(), video_title: "", video_url: "" }] }]);
+        const order = lectureOrder + 1;
+        setLectures([...lectures, {
+            lecture_id: nanoid(),
+            course_id: formData.course_id,
+            lecture_title: "",
+            lecture_description: "",
+            lecture_order: lectureOrder,
+            lecture_total_no_of_hours: "",
+            creation: Date.now(),
+            videos: [
+                {
+                    video_id: nanoid(),
+                    lecture_id: '',
+                    video_title: "",
+                    video_url: "",
+                    video_order: videoOrder,
+                    video_total_no_hours: "",
+                    creation: new Date().toISOString()
+                }
+            ]
+        }]);
         setLectureOrder((prev) => prev + 1);
     };
 
-    const addVideo = (lectureIndex) => {
+    const addVideo = (lectureIndex: number) => {
         const newLectures = [...lectures];
-        newLectures[lectureIndex].videos.push({ video_id: nanoid(), video_title: "", video_url: "", lecture_id: lectures[lectureIndex]['lecture_id'] });
+        newLectures[lectureIndex].videos.push(
+            {
+                video_id: nanoid(),
+                video_title: "",
+                video_url: "",
+                lecture_id: lectures[lectureIndex]['lecture_id'],
+                video_order: videoOrder,
+                video_total_no_hours: "",
+                creation: new Date().toISOString()
+            }
+        );
         setLectures(newLectures);
     };
 
-    const handleInputChange = (lectureIndex, field, value) => {
+    const handleInputChange = (lectureIndex: number, field: keyof Lecture, value: string) => {
         const newLectures = [...lectures];
         newLectures[lectureIndex][field] = value;
         setLectures(newLectures);
     };
 
-    const handleVideoChange = (lectureIndex, videoIndex, field, value) => {
+    const handleVideoChange = (lectureIndex: number, videoIndex: number, field: keyof Video, value: string) => {
         const newLectures = [...lectures];
         newLectures[lectureIndex].videos[videoIndex][field] = value;
         newLectures[lectureIndex].videos[videoIndex]['lecture_id'] = lectures[lectureIndex].lecture_id;
-        newLectures[lectureIndex].videos[videoIndex]['creation'] = Date.now();
-        // newLectures[lectureIndex].videos[videoIndex]['creation'] = Date.now();
+        newLectures[lectureIndex].videos[videoIndex]['video_order'] = videoIndex;
         setLectures(newLectures);
     };
 
