@@ -4,6 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub, faLinkedin, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import axios from 'axios';
 import '../index.css'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 interface Student {
     first_name: string,
     last_name: string,
@@ -20,6 +23,7 @@ interface Student {
 }
 
 const UserProfile = () => {
+    const notify = () => toast.success("Profile updated Successfully!");
     const { register, handleSubmit, formState: { errors }, setValue } = useForm();
     const [studentData, setStudentData] = useState<Student | undefined>();
 
@@ -38,6 +42,7 @@ const UserProfile = () => {
                     }
                 }
             );
+            notify();
         } catch (err) {
             console.error('Failed to update profile:', err.response?.data || err.message);
         }
@@ -109,8 +114,8 @@ const UserProfile = () => {
                 formData,
                 {
                     headers: {
-                        "Content-Type": "multipart/form-data", 
-                        Authorization: `Bearer ${localStorage.getItem('token')}` 
+                        "Content-Type": "multipart/form-data",
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
                 }
             );
@@ -402,6 +407,7 @@ const UserProfile = () => {
                         </div>
 
                         <button type='submit' className='w-20 h-15 bg-blue-500 border rounded-lg'>Save Changes</button>
+                        <ToastContainer />
                     </div>
                 </div>
             </div>

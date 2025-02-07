@@ -186,7 +186,7 @@ const Navbar: React.FC = () => {
             <img
               src={user?.student_profile_picture || logo || user?.teacher_profile_picture}
               alt="Profile"
-              className="w-[5rem] h-[5rem] rounded-full border-2 border-purple-500"
+              className="w-[4rem] h-[4rem] rounded-full border-2 border-purple-500"
             />
             <div>
               <h3 className="font-medium">{user?.first_name} {user?.last_name}</h3>
