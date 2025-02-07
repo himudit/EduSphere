@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CurriculumUploader from "./CurriculumUpload";
+// import CurriculumUploader from "./CurriculumUpload";
 
 interface CourseFormData {
     course_id: string;
@@ -185,7 +185,40 @@ const CourseUpload = () => {
         lecture_total_no_of_hours: 0,
         creation: new Date(),
     });
-    const [count_lecture, set_count_lecture] = useState(1);
+
+    const [lectures, setLectures] = useState([
+        {
+            lectureTitle: "",
+            lectureDescription: "",
+            videos: [{ videoTitle: "", videoFile: "" }]
+        }
+    ]);
+
+    // Function to add a new lecture
+    const addLecture = () => {
+        setLectures([...lectures, { lectureTitle: "", lectureDescription: "", videos: [{ videoTitle: "", videoFile: "" }] }]);
+    };
+
+    // Function to add a new video within a lecture
+    const addVideo = (lectureIndex) => {
+        const newLectures = [...lectures];
+        newLectures[lectureIndex].videos.push({ videoTitle: "", videoFile: "" });
+        setLectures(newLectures);
+    };
+
+    // Function to handle input changes
+    const handleInputChange = (lectureIndex, field, value) => {
+        const newLectures = [...lectures];
+        newLectures[lectureIndex][field] = value;
+        setLectures(newLectures);
+    };
+
+    // Function to handle video input changes
+    const handleVideoChange = (lectureIndex, videoIndex, field, value) => {
+        const newLectures = [...lectures];
+        newLectures[lectureIndex].videos[videoIndex][field] = value;
+        setLectures(newLectures);
+    };
 
     return (
         <div className="max-w-3xl mx-auto p-6 bg-gray-900 text-white rounded-lg shadow-lg">
@@ -293,34 +326,81 @@ const CourseUpload = () => {
 
             {/* mark */}
             {/* Step 2: Lectures (Placeholder for now) */}
-            {step === 2 && <div className="h-40 flex justify-center items-center text-gray-500 mt-[5rem]">
-                {/* <div className="w-[60rem] bg-slate-700 border border-transparent rounded-xl">
-                    <div>Curriculam</div>
-                    <hr className="bg-white" />
-                    <div className="border border-red-400">
-                        <div className="flex justify-start items-center">
-                            <div>Lecture {count_lecture} : </div>
-                            <input type='text' placeholder="Enter Lecture Title" className="ml-4 border border-purple-400 rounded-md " />
-                        </div>
-                        <div> <input type='text' placeholder="Enter Lecture Description" className="ml-4 border border-purple-400 rounded-md " /></div>
+            {step === 2 && <div>
+                <div className="mt-[-1rem]">
+                    <div className="flex justify-center items-center text-gray-500 p-4">
+                        <div className="w-[60rem] bg-slate-700 border border-transparent rounded-xl p-4">
+                            <div className="text-white text-lg font-bold mb-2">Curriculum</div>
+                            <hr className="bg-white mb-4" />
 
-                        <div className="border border-purple-400">
-                            <div className="flex justify-start items-center">
-                                <div>Video {count_lecture} : </div>
-                                <input type='text' placeholder="Enter Video Title" className="ml-4 border border-purple-400 rounded-md " />
-                            </div>
-                            <div> <input type='text' placeholder="Upload Video" className="ml-4 border border-purple-400 rounded-md " /></div>
-                            <div className="flex justify-start items-center">
-                                <div>Video {count_lecture} : </div>
-                                <input type='text' placeholder="Enter Video Title" className="ml-4 border border-purple-400 rounded-md " />
-                            </div>
-                            <div> <input type='text' placeholder="Upload Video" className="ml-4 border border-purple-400 rounded-md " /></div>
+                            {lectures.map((lecture, lectureIndex) => (
+                                <div key={lectureIndex} className="border border-gray-400 p-4 mb-4 rounded-md">
+                                    <div className="flex items-center mb-2">
+                                        <div className="text-white mr-2 font-bold">Lecture {lectureIndex + 1} :</div>
+                                        <input
+                                            type="text"
+                                            placeholder="Enter Lecture Title"
+                                            className="ml-2 border border-transparent rounded-lg px-3 py-2 bg-gray-800 text-white focus:outline-none focus:ring-transparent w-full sm:w-3/4"
+                                            value={lecture.lectureTitle}
+                                            onChange={(e) => handleInputChange(lectureIndex, "lectureTitle", e.target.value)}
+                                        />
+
+                                    </div>
+                                    <div>
+                                        <input
+                                            type="text"
+                                            placeholder="Enter Lecture Description"
+                                            className="ml-2 border border-transparent rounded-lg px-3 py-2 bg-gray-800 text-white focus:outline-none focus:ring-transparent w-full sm:w-3/4"
+                                            value={lecture.lectureDescription}
+                                            onChange={(e) => handleInputChange(lectureIndex, "lectureDescription", e.target.value)}
+                                        />
+                                    </div>
+
+                                    {/* Videos Section */}
+                                    <div className="border border-white p-2 mt-4 rounded-md">
+                                        {lecture.videos.map((video, videoIndex) => (
+                                            <div key={videoIndex} className="mb-2">
+                                                <div className="flex items-center mb-2">
+                                                    <div className="text-white mr-2">Video {videoIndex + 1} :</div>
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Enter Video Title"
+                                                        className="ml-2 border border-transparent rounded-lg px-3 py-2 bg-gray-800 text-white focus:outline-none focus:ring-transparent w-full sm:w-3/4"
+                                                        value={video.videoTitle}
+                                                        onChange={(e) => handleVideoChange(lectureIndex, videoIndex, "videoTitle", e.target.value)}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <input
+                                                        type="file"
+                                                        className="ml-2 border border-transparent rounded-lg px-3 py-2 bg-gray-800 text-white focus:outline-none focus:ring-transparent w-full sm:w-3/4"
+                                                        onChange={(e) => handleVideoChange(lectureIndex, videoIndex, "videoFile", e.target.files[0])}
+                                                    />
+                                                </div>
+                                            </div>
+                                        ))}
+
+                                        {/* Add Video Button */}
+                                        <button
+                                            onClick={() => addVideo(lectureIndex)}
+                                            className="mt-2 px-3 py-1 bg-green-500 text-white rounded-md text-sm"
+                                        >
+                                            + Add Video
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+
+                            {/* Add Lecture Button */}
+                            <button
+                                onClick={addLecture}
+                                className="mt-2 px-3 py-1 bg-blue-500 text-white rounded-md text-sm"
+                            >
+                                + Add Lecture
+                            </button>
                         </div>
                     </div>
-                  
-
-                </div> */}
-                <div className="mt-5"> <CurriculumUploader /></div>
+                </div>
 
             </div>}
 
@@ -336,7 +416,6 @@ const CourseUpload = () => {
                         placeholder="Enter price"
                         type="text"
                     />
-
 
                     <label className="block mt-4 mb-2">Course Level</label>
                     <select

@@ -42,29 +42,30 @@ export default function CurriculumUploader() {
                 <hr className="bg-white mb-4" />
 
                 {lectures.map((lecture, lectureIndex) => (
-                    <div key={lectureIndex} className="border border-red-400 p-4 mb-4 rounded-md">
+                    <div key={lectureIndex} className="border border-gray-400 p-4 mb-4 rounded-md">
                         <div className="flex items-center mb-2">
-                            <div className="text-white mr-2">Lecture {lectureIndex + 1} :</div>
+                            <div className="text-white mr-2 font-bold">Lecture {lectureIndex + 1} :</div>
                             <input
                                 type="text"
                                 placeholder="Enter Lecture Title"
-                                className="ml-2 border border-purple-400 rounded-md px-2 py-1"
+                                className="ml-2 border border-transparent rounded-lg px-3 py-2 bg-gray-800 text-white focus:outline-none focus:ring-transparent w-full sm:w-3/4"
                                 value={lecture.lectureTitle}
                                 onChange={(e) => handleInputChange(lectureIndex, "lectureTitle", e.target.value)}
                             />
+
                         </div>
                         <div>
                             <input
                                 type="text"
                                 placeholder="Enter Lecture Description"
-                                className="ml-2 border border-purple-400 rounded-md px-2 py-1 w-full"
+                                className="ml-2 border border-transparent rounded-lg px-3 py-2 bg-gray-800 text-white focus:outline-none focus:ring-transparent w-full sm:w-3/4"
                                 value={lecture.lectureDescription}
                                 onChange={(e) => handleInputChange(lectureIndex, "lectureDescription", e.target.value)}
                             />
                         </div>
 
                         {/* Videos Section */}
-                        <div className="border border-purple-400 p-2 mt-4 rounded-md">
+                        <div className="border border-white p-2 mt-4 rounded-md">
                             {lecture.videos.map((video, videoIndex) => (
                                 <div key={videoIndex} className="mb-2">
                                     <div className="flex items-center mb-2">
@@ -72,7 +73,7 @@ export default function CurriculumUploader() {
                                         <input
                                             type="text"
                                             placeholder="Enter Video Title"
-                                            className="ml-2 border border-purple-400 rounded-md px-2 py-1"
+                                            className="ml-2 border border-transparent rounded-lg px-3 py-2 bg-gray-800 text-white focus:outline-none focus:ring-transparent w-full sm:w-3/4"
                                             value={video.videoTitle}
                                             onChange={(e) => handleVideoChange(lectureIndex, videoIndex, "videoTitle", e.target.value)}
                                         />
@@ -80,7 +81,7 @@ export default function CurriculumUploader() {
                                     <div>
                                         <input
                                             type="file"
-                                            className="ml-2 border border-purple-400 rounded-md px-2 py-1 w-full"
+                                            className="ml-2 border border-transparent rounded-lg px-3 py-2 bg-gray-800 text-white focus:outline-none focus:ring-transparent w-full sm:w-3/4"
                                             onChange={(e) => handleVideoChange(lectureIndex, videoIndex, "videoFile", e.target.files[0])}
                                         />
                                     </div>
