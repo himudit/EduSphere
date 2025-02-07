@@ -1,5 +1,8 @@
 import { useState } from "react";
-// import CurriculumUploader from "./CurriculumUpload";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../app/store";
+import { fetchUserProfile, addUser, removeUser } from "../features/userSlice";
+import { nanoid } from "nanoid";
 
 interface CourseFormData {
     course_id: string;
@@ -36,9 +39,11 @@ interface VideoFormData {
 }
 
 const CourseUpload = () => {
+    const { user, loading, error } = useSelector((state: RootState) => state.user);
+    // const authorname = user?.first_name;
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState<CourseFormData>({
-        course_id: "",
+        course_id: nanoid(),
         course_title: "",
         course_description: "",
         course_price: "",
@@ -48,7 +53,7 @@ const CourseUpload = () => {
         creation: new Date(),
         course_preview_video: "https://res.cloudinary.com/dy8jwwm6j/video/upload/v1736872825/12927954_1920_1080_24fps_szansr.mp4",
         course_what_you_will_learn: [],
-        course_author: "John Doe",
+        course_author: "",
         course_keywords: [],
         course_level: "Intermediate",
     });
@@ -69,12 +74,16 @@ const CourseUpload = () => {
 
         if (name === "course_title") {
             if (value.length <= 20) {
-                setTitleSize(20 - value.length); // Update remaining characters
+                setTitleSize(20 - value.length);
                 setFormData((prev) => ({
                     ...prev,
                     [name]: value,
                 }));
             }
+            setFormData((prev) => ({
+                ...prev,
+                ['course_author']: user?.first_name,
+            }));
         }
 
         if (name === "course_description") {
@@ -186,37 +195,53 @@ const CourseUpload = () => {
         creation: new Date(),
     });
 
+    const [lectureOrder, setLectureOrder] = useState(1);
+    const [videoOrder, setVideoOrder] = useState(1);
+
     const [lectures, setLectures] = useState([
         {
-            lectureTitle: "",
-            lectureDescription: "",
-            videos: [{ videoTitle: "", videoFile: "" }]
+            lecture_id: nanoid(),
+            course_id: formData.course_id,
+            lecture_title: "",
+            lecture_description: "",
+            lecture_order: lectureOrder,
+            lecture_total_no_of_hours: "",
+            creation: Date.now(),
+            videos: [{
+                video_id: nanoid(),
+                lecture_id: '',
+                video_title: "",
+                video_url: "",
+                video_order: videoOrder,
+                video_total_no_hours: "",
+                creation: new Date().toISOString()
+            }]
         }
     ]);
 
-    // Function to add a new lecture
     const addLecture = () => {
-        setLectures([...lectures, { lectureTitle: "", lectureDescription: "", videos: [{ videoTitle: "", videoFile: "" }] }]);
+        setLectures([...lectures, { lecture_id: nanoid(), lecture_title: "", lecture_description: "", lecture_order: lectureOrder, videos: [{ video_id: nanoid(), video_title: "", video_url: "" }] }]);
+        setLectureOrder((prev) => prev + 1);
     };
 
-    // Function to add a new video within a lecture
     const addVideo = (lectureIndex) => {
         const newLectures = [...lectures];
-        newLectures[lectureIndex].videos.push({ videoTitle: "", videoFile: "" });
+        newLectures[lectureIndex].videos.push({ video_id: nanoid(), video_title: "", video_url: "", lecture_id: lectures[lectureIndex]['lecture_id'] });
         setLectures(newLectures);
     };
 
-    // Function to handle input changes
     const handleInputChange = (lectureIndex, field, value) => {
         const newLectures = [...lectures];
         newLectures[lectureIndex][field] = value;
         setLectures(newLectures);
     };
 
-    // Function to handle video input changes
     const handleVideoChange = (lectureIndex, videoIndex, field, value) => {
         const newLectures = [...lectures];
         newLectures[lectureIndex].videos[videoIndex][field] = value;
+        newLectures[lectureIndex].videos[videoIndex]['lecture_id'] = lectures[lectureIndex].lecture_id;
+        newLectures[lectureIndex].videos[videoIndex]['creation'] = Date.now();
+        // newLectures[lectureIndex].videos[videoIndex]['creation'] = Date.now();
         setLectures(newLectures);
     };
 
@@ -279,7 +304,7 @@ const CourseUpload = () => {
                                 />
                             ) : (
                                 <img
-                                    src="https://via.placeholder.com/750x422"
+                                    src="https://www.payoja.org/wp-content/plugins/tutor/assets/images/placeholder.svg"
                                     alt="Placeholder Thumbnail"
                                     className="w-full h-full object-cover"
                                 />
@@ -289,7 +314,7 @@ const CourseUpload = () => {
                             type="file"
                             accept=".jpg, .jpeg, .gif, .png"
                             onChange={handleImageUpload}
-                            className="w-full p-2 bg-gray-800 rounded mt-2"
+                            className="w-full p-2 rounded mt-2"
                         />
                         {imageError && <p className="text-red-500 text-sm mt-1">{imageError}</p>}
                     </div>
@@ -324,7 +349,6 @@ const CourseUpload = () => {
                 </div>
             )}
 
-            {/* mark */}
             {/* Step 2: Lectures (Placeholder for now) */}
             {step === 2 && <div>
                 <div className="mt-[-1rem]">
@@ -341,8 +365,8 @@ const CourseUpload = () => {
                                             type="text"
                                             placeholder="Enter Lecture Title"
                                             className="ml-2 border border-transparent rounded-lg px-3 py-2 bg-gray-800 text-white focus:outline-none focus:ring-transparent w-full sm:w-3/4"
-                                            value={lecture.lectureTitle}
-                                            onChange={(e) => handleInputChange(lectureIndex, "lectureTitle", e.target.value)}
+                                            value={lecture.lecture_title}
+                                            onChange={(e) => handleInputChange(lectureIndex, "lecture_title", e.target.value)}
                                         />
 
                                     </div>
@@ -351,12 +375,11 @@ const CourseUpload = () => {
                                             type="text"
                                             placeholder="Enter Lecture Description"
                                             className="ml-2 border border-transparent rounded-lg px-3 py-2 bg-gray-800 text-white focus:outline-none focus:ring-transparent w-full sm:w-3/4"
-                                            value={lecture.lectureDescription}
-                                            onChange={(e) => handleInputChange(lectureIndex, "lectureDescription", e.target.value)}
+                                            value={lecture.lecture_description}
+                                            onChange={(e) => handleInputChange(lectureIndex, "lecture_description", e.target.value)}
                                         />
                                     </div>
 
-                                    {/* Videos Section */}
                                     <div className="border border-white p-2 mt-4 rounded-md">
                                         {lecture.videos.map((video, videoIndex) => (
                                             <div key={videoIndex} className="mb-2">
@@ -366,21 +389,20 @@ const CourseUpload = () => {
                                                         type="text"
                                                         placeholder="Enter Video Title"
                                                         className="ml-2 border border-transparent rounded-lg px-3 py-2 bg-gray-800 text-white focus:outline-none focus:ring-transparent w-full sm:w-3/4"
-                                                        value={video.videoTitle}
-                                                        onChange={(e) => handleVideoChange(lectureIndex, videoIndex, "videoTitle", e.target.value)}
+                                                        value={video.video_title}
+                                                        onChange={(e) => handleVideoChange(lectureIndex, videoIndex, "video_title", e.target.value)}
                                                     />
                                                 </div>
                                                 <div>
                                                     <input
                                                         type="file"
                                                         className="ml-2 border border-transparent rounded-lg px-3 py-2 bg-gray-800 text-white focus:outline-none focus:ring-transparent w-full sm:w-3/4"
-                                                        onChange={(e) => handleVideoChange(lectureIndex, videoIndex, "videoFile", e.target.files[0])}
+                                                        onChange={(e) => handleVideoChange(lectureIndex, videoIndex, "video_url", e.target.files[0])}
                                                     />
                                                 </div>
                                             </div>
                                         ))}
 
-                                        {/* Add Video Button */}
                                         <button
                                             onClick={() => addVideo(lectureIndex)}
                                             className="mt-2 px-3 py-1 bg-green-500 text-white rounded-md text-sm"
@@ -391,7 +413,6 @@ const CourseUpload = () => {
                                 </div>
                             ))}
 
-                            {/* Add Lecture Button */}
                             <button
                                 onClick={addLecture}
                                 className="mt-2 px-3 py-1 bg-blue-500 text-white rounded-md text-sm"
@@ -558,7 +579,9 @@ const CourseUpload = () => {
                 ) : (
                     <button onClick={(e) => {
                         e.preventDefault();
+                        // console.log(user?.first_name);
                         console.log(formData);
+                        console.log(lectures);
                     }} className="px-4 py-2 bg-green-500 rounded">Submit</button>
                 )}
             </div>

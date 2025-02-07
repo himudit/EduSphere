@@ -37,7 +37,7 @@ interface Video {
     video_id: string;
     video_title: string;
     lecture_order: number;
-    video_total_no_hours: number;
+    video_total_no_of_hours: number;
     video_url: string;
 }
 
@@ -230,7 +230,7 @@ const CourseDetails = () => {
                                                     <span className="text-sm text-white">{video.video_title}</span>
                                                 </div>
                                                 <span className="text-sm text-black-500">
-                                                    {video.video_total_no_hours}</span>
+                                                    {video.video_total_no_of_hours}</span>
                                             </div>
                                         ))}
                                     </div>
