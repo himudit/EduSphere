@@ -6,7 +6,7 @@ import teacherRoutes from './routes/teachers.routes'
 import cookieParser from 'cookie-parser'
 import { Request, Response, NextFunction } from "express";
 import { PrismaClient } from "@prisma/client";
-import { authStudent } from './middlewares/auth.middleware';
+import { authStudent, authTeacher } from './middlewares/auth.middleware';
 import upload from './multerConfig';
 import cloudinary from "./cloudinaryConfig";
 const app = express();
@@ -131,7 +131,6 @@ app.post("/students/profile/upload/image", upload.single("image"), authStudent, 
                 where: { student_id: student_id },
                 data: { student_profile_picture: result?.secure_url },
             });
-
             return res.status(200).json({ imageUrl: result?.secure_url });
         }).end(req.file.buffer);
     } catch (error) {
@@ -139,6 +138,51 @@ app.post("/students/profile/upload/image", upload.single("image"), authStudent, 
         res.status(500).json({ error: "Internal server error" });
     }
 });
+
+app.post('/teachers/course/upload', authTeacher, async (req, res) => {
+    try {
+        const {
+            course_id,
+            course_title,
+            course_description,
+            course_price,
+            course_thumbnail = " ",
+            course_no_of_purchase,
+            course_total_no_hours,
+            rating,
+            creation,
+            course_preview_video,
+            course_what_you_will_learn,
+            course_author,
+            course_keywords,
+            course_level
+        } = req.body;
+        console.log(typeof (course_price));
+        const teaccher_id = req.teacher.teacher_id;
+        const response = await prisma.courses.create({
+            data: {
+                course_id,
+                course_title,
+                course_description,
+                course_price,
+                course_thumbnail,
+                course_no_of_purchase,
+                course_total_no_hours,
+                rating,
+                creation,
+                course_preview_video,
+                course_what_you_will_learn,
+                course_author,
+                course_keywords,
+                course_level
+            }
+        })
+        return response;
+    } catch (err) {
+        console.error("Error uploading Course Data:", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+})
 
 const port = process.env.PORT || 3000;
 

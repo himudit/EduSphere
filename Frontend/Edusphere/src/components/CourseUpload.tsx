@@ -3,16 +3,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { fetchUserProfile, addUser, removeUser } from "../features/userSlice";
 import { nanoid } from "nanoid";
+import axios from "axios";
 
 interface CourseFormData {
     course_id: string;
     course_title: string;
     course_description: string;
-    course_price: string;
+    course_price: number;
     course_no_of_purchase: number;
     course_total_no_hours: number;
     rating: number;
     creation: Date;
+    course_thumbnail: String,
     course_preview_video: string;
     course_what_you_will_learn: string[];
     course_author: string;
@@ -43,17 +45,17 @@ interface Lecture {
 
 const CourseUpload = () => {
     const { user, loading, error } = useSelector((state: RootState) => state.user);
-    // const authorname = user?.first_name;
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState<CourseFormData>({
         course_id: nanoid(),
         course_title: "",
         course_description: "",
-        course_price: "",
+        course_price: 0,
         course_no_of_purchase: 0,
         course_total_no_hours: 0,
         rating: 1.0,
         creation: new Date(),
+        course_thumbnail: "",
         course_preview_video: "https://res.cloudinary.com/dy8jwwm6j/video/upload/v1736872825/12927954_1920_1080_24fps_szansr.mp4",
         course_what_you_will_learn: [],
         course_author: "",
@@ -100,25 +102,80 @@ const CourseUpload = () => {
         }
 
         if (name === "course_price") {
-            if (value === "" || !isNaN(Number(value))) {
+            if (!isNaN(Number(value)) && Number(value) >= 0) {
                 setFormData((prev) => ({
                     ...prev,
-                    [name]: value,
+                    [name]: Number(value),
                 }));
             }
         }
     };
 
 
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     const file = e.target.files?.[0];
+    //     if (file) {
+    //         const formData = new FormData();
+    //         formData.append("file", file);
+    //         formData.append("upload_preset", "my_preset_123");
+    //         const img = new Image();
+    //         img.src = URL.createObjectURL(file);
+    //         img.onload = async () => {
+    //             if (img.width >= 750 && img.height >= 422) {
+    //                 try {
+    //                     setCourseImage(file);
+    //                     setImageError("");
+    //                     const response = await fetch("https://api.cloudinary.com/v1_1/dy8jwwm6j/upload", {
+    //                         method: "POST",
+    //                         body: formData,
+    //                     });
+    //                     const data = await response.json();
+    //                     if (data.secure_url) {
+    //                         setFormData((prev) => ({
+    //                             ...prev,
+    //                             ['course_thumbnail']: data.secure_url, // Update formData with Cloudinary URL
+    //                         }));
+    //                     }
+    //                 } catch (error) {
+    //                     console.error("Error uploading file:", error);
+    //                 }
+    //             } else {
+    //                 setImageError("Minimum image size is 750x422px. Please upload a larger image.");
+    //             }
+    //         };
+    //     }
+    // };
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", "lms"); // ✅ Removed extra slash
+
             const img = new Image();
             img.src = URL.createObjectURL(file);
-            img.onload = () => {
+            img.onload = async () => { // ✅ Added 'async' here
                 if (img.width >= 750 && img.height >= 422) {
-                    setCourseImage(file);
-                    setImageError("");
+                    try {
+                        setCourseImage(file);
+                        setImageError("");
+
+                        const response = await fetch("https://api.cloudinary.com/v1_1/dy8jwwm6j/upload", {
+                            method: "POST",
+                            body: formData,
+                        });
+
+                        const data = await response.json(); // ✅ Awaited response.json()
+                        if (data.secure_url) {
+                            setFormData((prev) => ({
+                                ...prev,
+                                course_thumbnail: data.secure_url, // ✅ Fixed key format
+                            }));
+                        }
+                    } catch (error) {
+                        console.error("Error uploading file:", error);
+                    }
                 } else {
                     setImageError("Minimum image size is 750x422px. Please upload a larger image.");
                 }
@@ -458,7 +515,7 @@ const CourseUpload = () => {
                         onChange={handleChange}
                         className="w-full p-2 bg-gray-800 rounded"
                         placeholder="Enter price"
-                        type="text"
+                        type="number"
                     />
 
                     <label className="block mt-4 mb-2">Course Level</label>
@@ -600,12 +657,26 @@ const CourseUpload = () => {
                 {step < 3 ? (
                     <button onClick={nextStep} className="px-4 py-2 bg-purple-500 rounded">Next</button>
                 ) : (
-                    <button onClick={(e) => {
+                    <button onClick={async (e) => {
                         e.preventDefault();
                         // console.log(user?.first_name);
-                        console.log(formData);
-                        console.log(lectures);
-                    }} className="px-4 py-2 bg-green-500 rounded">Submit</button>
+                        try {
+                            console.log(formData);
+                            console.log(lectures);
+                            const response = await axios.post(
+                                `${import.meta.env.VITE_BASE_URL}/teachers/course/upload`,
+                                formData,
+                                {
+                                    headers: {
+                                        Authorization: `Bearer ${localStorage.getItem('teacher_token')}` // Send the JWT token
+                                    }
+                                }
+                            );
+                        } catch (err) {
+                            console.error('Failed to upload course :', err.response?.data || err.message);
+                        }
+                    }
+                    } className="px-4 py-2 bg-green-500 rounded">Submit</button>
                 )}
             </div>
         </div>

@@ -132,6 +132,36 @@ app.post("/students/profile/upload/image", multerConfig_1.default.single("image"
         res.status(500).json({ error: "Internal server error" });
     }
 }));
+app.post('/teachers/course/upload', auth_middleware_1.authTeacher, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { course_id, course_title, course_description, course_price, course_thumbnail = " ", course_no_of_purchase, course_total_no_hours, rating, creation, course_preview_video, course_what_you_will_learn, course_author, course_keywords, course_level } = req.body;
+        console.log(typeof (course_price));
+        const teaccher_id = req.teacher.teacher_id;
+        const response = yield prisma.courses.create({
+            data: {
+                course_id,
+                course_title,
+                course_description,
+                course_price,
+                course_thumbnail,
+                course_no_of_purchase,
+                course_total_no_hours,
+                rating,
+                creation,
+                course_preview_video,
+                course_what_you_will_learn,
+                course_author,
+                course_keywords,
+                course_level
+            }
+        });
+        return response;
+    }
+    catch (err) {
+        console.error("Error uploading Course Data:", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+}));
 const port = process.env.PORT || 3000;
 const server = http_1.default.createServer(app);
 server.listen(port, () => {
