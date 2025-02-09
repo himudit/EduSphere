@@ -105,49 +105,18 @@ const CourseUpload = () => {
         }
 
         if (name === "course_price") {
-            if (!isNaN(Number(value)) && Number(value) >= 0) {
-                setFormData((prev) => ({
-                    ...prev,
-                    [name]: Number(value),
-                }));
-            }
+            setFormData((prev) => ({
+                ...prev,
+                [name]: Number(value),
+            }));
+            // if (!isNaN(Number(value)) && Number(value) >= 0) {
+            //     setFormData((prev) => ({
+            //         ...prev,
+            //         [name]: Number(value),
+            //     }));
+            // }
         }
     };
-
-
-    // const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     const file = e.target.files?.[0];
-    //     if (file) {
-    //         const formData = new FormData();
-    //         formData.append("file", file);
-    //         formData.append("upload_preset", "my_preset_123");
-    //         const img = new Image();
-    //         img.src = URL.createObjectURL(file);
-    //         img.onload = async () => {
-    //             if (img.width >= 750 && img.height >= 422) {
-    //                 try {
-    //                     setCourseImage(file);
-    //                     setImageError("");
-    //                     const response = await fetch("https://api.cloudinary.com/v1_1/dy8jwwm6j/upload", {
-    //                         method: "POST",
-    //                         body: formData,
-    //                     });
-    //                     const data = await response.json();
-    //                     if (data.secure_url) {
-    //                         setFormData((prev) => ({
-    //                             ...prev,
-    //                             ['course_thumbnail']: data.secure_url, // Update formData with Cloudinary URL
-    //                         }));
-    //                     }
-    //                 } catch (error) {
-    //                     console.error("Error uploading file:", error);
-    //                 }
-    //             } else {
-    //                 setImageError("Minimum image size is 750x422px. Please upload a larger image.");
-    //             }
-    //         };
-    //     }
-    // };
 
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -202,7 +171,7 @@ const CourseUpload = () => {
             const formData = new FormData();
             formData.append("file", file);
             formData.append("upload_preset", "lmsupload"); // Replace with your Cloudinary upload preset
-            formData.append("folder", "courseVideos"); // Folder for storing videos
+            formData.append("folder", "coursePreviewVideo"); // Folder for storing videos
 
             try {
                 const response = await fetch("https://api.cloudinary.com/v1_1/dy8jwwm6j/upload", {
@@ -224,7 +193,6 @@ const CourseUpload = () => {
             }
         }
     };
-
 
     const [showAddSkillModal, setShowAddSkillModal] = useState(false);
     const [newSkill, setNewSkill] = useState<string>('');
@@ -347,13 +315,170 @@ const CourseUpload = () => {
         setLectures(newLectures);
     };
 
-    const handleVideoChange = (lectureIndex: number, videoIndex: number, field: keyof Video, value: string) => {
+    // const handleVideoChange = async (
+    //     lectureIndex: number,
+    //     videoIndex: number,
+    //     field: string,
+    //     file: File | undefined
+    // ) => {
+    //     if (!file) return;
+
+    //     // Validate video file type
+    //     if (!file.type.startsWith("video/")) {
+    //         alert("Please upload a valid video file.");
+    //         return;
+    //     }
+
+    //     const formData = new FormData();
+    //     formData.append("file", file);
+    //     formData.append("upload_preset", "lmsupload"); // Your Cloudinary preset
+    //     formData.append("folder", "LectureVideos"); // Upload video to "video" folder
+
+    //     try {
+    //         const response = await fetch("https://api.cloudinary.com/v1_1/dy8jwwm6j/upload", {
+    //             method: "POST",
+    //             body: formData,
+    //         });
+    //         const data = await response.json();
+    //         if (data.secure_url) {
+    //             const newLectures = [...lectures];
+    //             newLectures[lectureIndex].videos[videoIndex][field] = data.secure_url;
+    //             newLectures[lectureIndex].videos[videoIndex]['lecture_id'] = lectures[lectureIndex].lecture_id;
+    //             newLectures[lectureIndex].videos[videoIndex]['video_order'] = videoIndex;
+    //             setLectures(newLectures);
+    //             console.log("Video uploaded:", data.secure_url);
+    //         }
+    //     } catch (error) {
+    //         console.error("Error uploading video:", error);
+    //         alert("Error uploading video. Please try again.");
+    //     }
+    // };
+
+    const handleTitleChange = async (lectureIndex: number, videoIndex: number, field: keyof Video, value: string) => {
         const newLectures = [...lectures];
         newLectures[lectureIndex].videos[videoIndex][field] = value;
         newLectures[lectureIndex].videos[videoIndex]['lecture_id'] = lectures[lectureIndex].lecture_id;
         newLectures[lectureIndex].videos[videoIndex]['video_order'] = videoIndex;
         setLectures(newLectures);
     };
+
+
+    // const [uploadProgress, setUploadProgress] = useState<[number, number] | null>(null);
+
+    // const handleVideoChange = async (
+    //     lectureIndex: number,
+    //     videoIndex: number,
+    //     field: string,
+    //     file: File | undefined
+    // ) => {
+    //     if (!file) return;
+
+    //     if (!file.type.startsWith("video/")) {
+    //         alert("Please upload a valid video file.");
+    //         return;
+    //     }
+
+    //     const formData = new FormData();
+    //     formData.append("file", file);
+    //     formData.append("upload_preset", "lmsupload");
+    //     formData.append("folder", "video");
+
+    //     const xhr = new XMLHttpRequest();
+    //     xhr.open("POST", "https://api.cloudinary.com/v1_1/dy8jwwm6j/upload", true);
+
+    //     // Track upload progress and store with video index
+    //     xhr.upload.onprogress = (event) => {
+    //         if (event.lengthComputable) {
+    //             const percentComplete = Math.round((event.loaded / event.total) * 100);
+    //             setUploadProgress([percentComplete, videoIndex]); // Store progress + videoIndex
+    //         }
+    //     };
+
+    //     xhr.onload = () => {
+    //         if (xhr.status === 200) {
+    //             const data = JSON.parse(xhr.responseText);
+    //             if (data.secure_url) {
+    //                 const newLectures = [...lectures];
+    //                 newLectures[lectureIndex].videos[videoIndex][field] = data.secure_url;
+    //                 newLectures[lectureIndex].videos[videoIndex]["lecture_id"] = lectures[lectureIndex].lecture_id;
+    //                 newLectures[lectureIndex].videos[videoIndex]["video_order"] = videoIndex;
+    //                 setLectures(newLectures);
+    //                 console.log("Video uploaded:", data.secure_url);
+    //             }
+    //         } else {
+    //             console.error("Error uploading video:", xhr.statusText);
+    //             alert("Error uploading video. Please try again.");
+    //         }
+    //         setUploadProgress(null); // Reset after completion
+    //     };
+
+    //     xhr.onerror = () => {
+    //         console.error("Network error occurred.");
+    //         alert("Network error. Please try again.");
+    //         setUploadProgress(null);
+    //     };
+
+    //     xhr.send(formData);
+    // };
+
+    const [uploadProgress, setUploadProgress] = useState<[number, number, number] | null>(null);
+
+    const handleVideoChange = async (
+        lectureIndex: number,
+        videoIndex: number,
+        field: string,
+        file: File | undefined
+    ) => {
+        if (!file) return;
+
+        if (!file.type.startsWith("video/")) {
+            alert("Please upload a valid video file.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", "lmsupload");
+        formData.append("folder", "LectureVideos");
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "https://api.cloudinary.com/v1_1/dy8jwwm6j/upload", true);
+
+        // Track upload progress and store with lectureIndex + videoIndex
+        xhr.upload.onprogress = (event) => {
+            if (event.lengthComputable) {
+                const percentComplete = Math.round((event.loaded / event.total) * 100);
+                setUploadProgress([percentComplete, lectureIndex, videoIndex]); // Store progress + lectureIndex + videoIndex
+            }
+        };
+
+        xhr.onload = () => {
+            if (xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+                if (data.secure_url) {
+                    const newLectures = [...lectures];
+                    newLectures[lectureIndex].videos[videoIndex][field] = data.secure_url;
+                    newLectures[lectureIndex].videos[videoIndex]["lecture_id"] = lectures[lectureIndex].lecture_id;
+                    newLectures[lectureIndex].videos[videoIndex]["video_order"] = videoIndex;
+                    setLectures(newLectures);
+                    console.log("Video uploaded:", data.secure_url);
+                }
+            } else {
+                console.error("Error uploading video:", xhr.statusText);
+                alert("Error uploading video. Please try again.");
+            }
+            setUploadProgress(null); // Reset after completion
+        };
+
+        xhr.onerror = () => {
+            console.error("Network error occurred.");
+            alert("Network error. Please try again.");
+            setUploadProgress(null);
+        };
+
+        xhr.send(formData);
+    };
+
 
     return (
         <div className="max-w-3xl mx-auto p-6 bg-gray-900 text-white rounded-lg shadow-lg">
@@ -500,7 +625,7 @@ const CourseUpload = () => {
                                                         placeholder="Enter Video Title"
                                                         className="ml-2 border border-transparent rounded-lg px-3 py-2 bg-gray-800 text-white focus:outline-none focus:ring-transparent w-full sm:w-3/4"
                                                         value={video.video_title}
-                                                        onChange={(e) => handleVideoChange(lectureIndex, videoIndex, "video_title", e.target.value)}
+                                                        onChange={(e) => handleTitleChange(lectureIndex, videoIndex, "video_title", e.target.value)}
                                                     />
                                                 </div>
                                                 <div>
@@ -509,6 +634,18 @@ const CourseUpload = () => {
                                                         className="ml-2 border border-transparent rounded-lg px-3 py-2 bg-gray-800 text-white focus:outline-none focus:ring-transparent w-full sm:w-3/4"
                                                         onChange={(e) => handleVideoChange(lectureIndex, videoIndex, "video_url", e.target.files[0])}
                                                     />
+                                                    {uploadProgress !== null && uploadProgress[1] === videoIndex && (
+                                                        <div className="w-full bg-gray-200 rounded-full h-4 mt-2">
+                                                            <div
+                                                                className="bg-blue-500 h-4 text-xs text-white text-center rounded-full"
+                                                                style={{ width: `${uploadProgress[0]}%` }}
+                                                            >
+                                                                {uploadProgress[0]}%
+                                                            </div>
+                                                        </div>
+                                                    )}
+
+
                                                 </div>
                                             </div>
                                         ))}
@@ -691,18 +828,18 @@ const CourseUpload = () => {
                         e.preventDefault();
                         // console.log(user?.first_name);
                         try {
-                            console.log(formData);
+                            // console.log(formData);
                             console.log(lectures);
-                            const response = await axios.post(
-                                `${import.meta.env.VITE_BASE_URL}/teachers/course/upload`,
-                                formData,
-                                {
-                                    headers: {
-                                        Authorization: `Bearer ${localStorage.getItem('teacher_token')}` // Send the JWT token
-                                    }
-                                }
-                            );
-                            notify();
+                            // const response = await axios.post(
+                            //     `${import.meta.env.VITE_BASE_URL}/teachers/course/upload`,
+                            //     formData,
+                            //     {
+                            //         headers: {
+                            //             Authorization: `Bearer ${localStorage.getItem('teacher_token')}` // Send the JWT token
+                            //         }
+                            //     }
+                            // );
+                            // notify();
                         } catch (err) {
                             console.error('Failed to upload course :', err.response?.data || err.message);
                         }

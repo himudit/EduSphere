@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 interface CourseData {
-    course: Course; // The course data
+    course: Course; 
     lectures: Lecture[]; // Array of all lectures
 }
 
