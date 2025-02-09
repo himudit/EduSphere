@@ -51,12 +51,8 @@ const CourseDetails = () => {
             try {
                 const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/course/${course_id}`);
                 const data: CourseData = response.data;
-                // console.log(data);
-                // console.log(data.lectures[0]);
-                // console.log(data.lectures[0].videos[0]);
-                // console.log(data.lectures[0].videos[0].video_total_no_hours);
-                // console.log(data.lectures[0].videos[0].video_title);
                 setCourseData(data);
+                console.log(data);
             } catch (err) {
                 console.log(err);
             }
@@ -81,7 +77,8 @@ const CourseDetails = () => {
                 {/* Video Preview */}
                 <div className="relative aspect-video bg-gray-100 rounded-lg mb-8 overflow-hidden">
                     <video
-                        src={courseData?.course_preview_video} // Replace with your video URL
+                        // src={courseData?.course_preview_video} // Replace with your video URL
+                        src="https://res.cloudinary.com/dy8jwwm6j/video/upload/v1739098886/courseVideos/eqejzrvhbgho2vezjj1m.mp4"
                         className="w-full h-full object-cover"
                         autoPlay
                         loop

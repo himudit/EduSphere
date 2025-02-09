@@ -4,6 +4,8 @@ import { RootState } from "../app/store";
 import { fetchUserProfile, addUser, removeUser } from "../features/userSlice";
 import { nanoid } from "nanoid";
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface CourseFormData {
     course_id: string;
@@ -44,6 +46,7 @@ interface Lecture {
 }
 
 const CourseUpload = () => {
+    const notify = () => toast.success("Course uploaded Successfully!");
     const { user, loading, error } = useSelector((state: RootState) => state.user);
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState<CourseFormData>({
@@ -151,11 +154,11 @@ const CourseUpload = () => {
         if (file) {
             const formData = new FormData();
             formData.append("file", file);
-            formData.append("upload_preset", "lms"); // ✅ Removed extra slash
-
+            formData.append("upload_preset", "lmsupload");
+            formData.append("folder", "courseThumbnail");
             const img = new Image();
             img.src = URL.createObjectURL(file);
-            img.onload = async () => { // ✅ Added 'async' here
+            img.onload = async () => {
                 if (img.width >= 750 && img.height >= 422) {
                     try {
                         setCourseImage(file);
@@ -166,13 +169,14 @@ const CourseUpload = () => {
                             body: formData,
                         });
 
-                        const data = await response.json(); // ✅ Awaited response.json()
+                        const data = await response.json();
                         if (data.secure_url) {
                             setFormData((prev) => ({
                                 ...prev,
-                                course_thumbnail: data.secure_url, // ✅ Fixed key format
+                                course_thumbnail: data.secure_url,
                             }));
                         }
+                        console.log(data.secure_url);
                     } catch (error) {
                         console.error("Error uploading file:", error);
                     }
@@ -183,18 +187,44 @@ const CourseUpload = () => {
         }
     };
 
-    const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             // Validate video file type
-            if (file.type.startsWith("video/")) {
-                setPromoVideo(file);
-                setVideoError("");
-            } else {
+            if (!file.type.startsWith("video/")) {
                 setVideoError("Please upload a valid video file.");
+                return;
+            }
+
+            setPromoVideo(file);
+            setVideoError("");
+
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", "lmsupload"); // Replace with your Cloudinary upload preset
+            formData.append("folder", "courseVideos"); // Folder for storing videos
+
+            try {
+                const response = await fetch("https://api.cloudinary.com/v1_1/dy8jwwm6j/upload", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                const data = await response.json();
+                if (data.secure_url) {
+                    setFormData((prev) => ({
+                        ...prev,
+                        course_preview_video: data.secure_url, // Update state with uploaded video URL
+                    }));
+                }
+                console.log("Video uploaded:", data.secure_url);
+            } catch (error) {
+                console.error("Error uploading video:", error);
+                setVideoError("Error uploading video. Please try again.");
             }
         }
     };
+
 
     const [showAddSkillModal, setShowAddSkillModal] = useState(false);
     const [newSkill, setNewSkill] = useState<string>('');
@@ -502,7 +532,6 @@ const CourseUpload = () => {
                         </div>
                     </div>
                 </div>
-
             </div>}
 
             {/* Step 3: Pricing & Prerequisites */}
@@ -651,6 +680,7 @@ const CourseUpload = () => {
                 </div>
             )}
 
+            <ToastContainer />
             {/* Navigation Buttons */}
             <div className="flex justify-between mt-6">
                 {step > 1 && <button onClick={prevStep} className="px-4 py-2 bg-gray-700 rounded">Previous</button>}
@@ -672,6 +702,7 @@ const CourseUpload = () => {
                                     }
                                 }
                             );
+                            notify();
                         } catch (err) {
                             console.error('Failed to upload course :', err.response?.data || err.message);
                         }
@@ -679,6 +710,7 @@ const CourseUpload = () => {
                     } className="px-4 py-2 bg-green-500 rounded">Submit</button>
                 )}
             </div>
+
         </div>
     );
 };
