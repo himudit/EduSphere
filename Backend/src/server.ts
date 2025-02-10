@@ -70,7 +70,6 @@ app.get('/search', async (req: Request, res: Response) => {
 
 
 app.patch('/students/profile/edit', authStudent, async (req: Request, res: Response) => {
-    // Destructure fields from the request body
     const {
         first_name,
         last_name,
@@ -158,7 +157,7 @@ app.post('/teachers/course/upload', authTeacher, async (req, res) => {
             course_level
         } = req.body;
         console.log(typeof (course_price));
-        const teaccher_id = req.teacher.teacher_id;
+        const teacher_id = req.teacher.teacher_id;
         const response = await prisma.courses.create({
             data: {
                 course_id,

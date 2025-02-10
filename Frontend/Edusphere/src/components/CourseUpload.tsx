@@ -315,45 +315,6 @@ const CourseUpload = () => {
         setLectures(newLectures);
     };
 
-    // const handleVideoChange = async (
-    //     lectureIndex: number,
-    //     videoIndex: number,
-    //     field: string,
-    //     file: File | undefined
-    // ) => {
-    //     if (!file) return;
-
-    //     // Validate video file type
-    //     if (!file.type.startsWith("video/")) {
-    //         alert("Please upload a valid video file.");
-    //         return;
-    //     }
-
-    //     const formData = new FormData();
-    //     formData.append("file", file);
-    //     formData.append("upload_preset", "lmsupload"); // Your Cloudinary preset
-    //     formData.append("folder", "LectureVideos"); // Upload video to "video" folder
-
-    //     try {
-    //         const response = await fetch("https://api.cloudinary.com/v1_1/dy8jwwm6j/upload", {
-    //             method: "POST",
-    //             body: formData,
-    //         });
-    //         const data = await response.json();
-    //         if (data.secure_url) {
-    //             const newLectures = [...lectures];
-    //             newLectures[lectureIndex].videos[videoIndex][field] = data.secure_url;
-    //             newLectures[lectureIndex].videos[videoIndex]['lecture_id'] = lectures[lectureIndex].lecture_id;
-    //             newLectures[lectureIndex].videos[videoIndex]['video_order'] = videoIndex;
-    //             setLectures(newLectures);
-    //             console.log("Video uploaded:", data.secure_url);
-    //         }
-    //     } catch (error) {
-    //         console.error("Error uploading video:", error);
-    //         alert("Error uploading video. Please try again.");
-    //     }
-    // };
-
     const handleTitleChange = async (lectureIndex: number, videoIndex: number, field: keyof Video, value: string) => {
         const newLectures = [...lectures];
         newLectures[lectureIndex].videos[videoIndex][field] = value;
@@ -361,65 +322,6 @@ const CourseUpload = () => {
         newLectures[lectureIndex].videos[videoIndex]['video_order'] = videoIndex;
         setLectures(newLectures);
     };
-
-
-    // const [uploadProgress, setUploadProgress] = useState<[number, number] | null>(null);
-
-    // const handleVideoChange = async (
-    //     lectureIndex: number,
-    //     videoIndex: number,
-    //     field: string,
-    //     file: File | undefined
-    // ) => {
-    //     if (!file) return;
-
-    //     if (!file.type.startsWith("video/")) {
-    //         alert("Please upload a valid video file.");
-    //         return;
-    //     }
-
-    //     const formData = new FormData();
-    //     formData.append("file", file);
-    //     formData.append("upload_preset", "lmsupload");
-    //     formData.append("folder", "video");
-
-    //     const xhr = new XMLHttpRequest();
-    //     xhr.open("POST", "https://api.cloudinary.com/v1_1/dy8jwwm6j/upload", true);
-
-    //     // Track upload progress and store with video index
-    //     xhr.upload.onprogress = (event) => {
-    //         if (event.lengthComputable) {
-    //             const percentComplete = Math.round((event.loaded / event.total) * 100);
-    //             setUploadProgress([percentComplete, videoIndex]); // Store progress + videoIndex
-    //         }
-    //     };
-
-    //     xhr.onload = () => {
-    //         if (xhr.status === 200) {
-    //             const data = JSON.parse(xhr.responseText);
-    //             if (data.secure_url) {
-    //                 const newLectures = [...lectures];
-    //                 newLectures[lectureIndex].videos[videoIndex][field] = data.secure_url;
-    //                 newLectures[lectureIndex].videos[videoIndex]["lecture_id"] = lectures[lectureIndex].lecture_id;
-    //                 newLectures[lectureIndex].videos[videoIndex]["video_order"] = videoIndex;
-    //                 setLectures(newLectures);
-    //                 console.log("Video uploaded:", data.secure_url);
-    //             }
-    //         } else {
-    //             console.error("Error uploading video:", xhr.statusText);
-    //             alert("Error uploading video. Please try again.");
-    //         }
-    //         setUploadProgress(null); // Reset after completion
-    //     };
-
-    //     xhr.onerror = () => {
-    //         console.error("Network error occurred.");
-    //         alert("Network error. Please try again.");
-    //         setUploadProgress(null);
-    //     };
-
-    //     xhr.send(formData);
-    // };
 
     const [uploadProgress, setUploadProgress] = useState<[number, number, number] | null>(null);
 
@@ -444,7 +346,6 @@ const CourseUpload = () => {
         const xhr = new XMLHttpRequest();
         xhr.open("POST", "https://api.cloudinary.com/v1_1/dy8jwwm6j/upload", true);
 
-        // Track upload progress and store with lectureIndex + videoIndex
         xhr.upload.onprogress = (event) => {
             if (event.lengthComputable) {
                 const percentComplete = Math.round((event.loaded / event.total) * 100);
@@ -634,7 +535,7 @@ const CourseUpload = () => {
                                                         className="ml-2 border border-transparent rounded-lg px-3 py-2 bg-gray-800 text-white focus:outline-none focus:ring-transparent w-full sm:w-3/4"
                                                         onChange={(e) => handleVideoChange(lectureIndex, videoIndex, "video_url", e.target.files[0])}
                                                     />
-                                                    {uploadProgress !== null && uploadProgress[1] === videoIndex && (
+                                                    {uploadProgress !== null && uploadProgress[1] === lectureIndex &&  uploadProgress[2] === videoIndex && (
                                                         <div className="w-full bg-gray-200 rounded-full h-4 mt-2">
                                                             <div
                                                                 className="bg-blue-500 h-4 text-xs text-white text-center rounded-full"

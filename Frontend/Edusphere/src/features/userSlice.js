@@ -8,7 +8,6 @@ export const fetchUserProfile = createAsyncThunk(
             const token = localStorage.getItem("token");
             const teacher_token = localStorage.getItem("teacher_token");
 
-            // Create API calls
             const studentRequest = token
                 ? axios.get(`${import.meta.env.VITE_BASE_URL}/students/profile`, {
                     headers: { Authorization: `Bearer ${token}` },
@@ -25,6 +24,7 @@ export const fetchUserProfile = createAsyncThunk(
                 studentRequest,
                 teacherRequest,
             ]);
+            
             const studentData =
                 studentResponse.status === "fulfilled" ? studentResponse.value?.data : null;
             const teacherData =
@@ -41,7 +41,7 @@ export const fetchUserProfile = createAsyncThunk(
 );
 
 const initialState = {
-    user: null, 
+    user: null,
     loading: false,
     error: null,
 };

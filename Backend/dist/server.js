@@ -77,7 +77,6 @@ app.get('/search', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 }));
 app.patch('/students/profile/edit', auth_middleware_1.authStudent, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // Destructure fields from the request body
     const { first_name, last_name, student_about, student_address, student_gender, student_github, student_linkedin, student_mobile, student_profile_picture, student_skills, student_twitter, student_university } = req.body;
     const student_id = req.student.student_id;
     // Validate required fields
@@ -136,7 +135,7 @@ app.post('/teachers/course/upload', auth_middleware_1.authTeacher, (req, res) =>
     try {
         const { course_id, course_title, course_description, course_price, course_thumbnail = " ", course_no_of_purchase, course_total_no_hours, rating, creation, course_preview_video, course_what_you_will_learn, course_author, course_keywords, course_level } = req.body;
         console.log(typeof (course_price));
-        const teaccher_id = req.teacher.teacher_id;
+        const teacher_id = req.teacher.teacher_id;
         const response = yield prisma.courses.create({
             data: {
                 course_id,

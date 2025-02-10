@@ -22,11 +22,15 @@ const Profile: React.FC = () => {
                     <div className="flex-[65%] min-w-[65%] bg-black">
                         <div className="p-5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-t-lg h-24"></div>
                         <div className="-mt-14 lg:ml-[1rem] flex justify-center md:justify-start">
-                            <img
-                                src={user?.student_profile_picture || logo || user?.teacher_profile_picture}
-                                alt="Profile"
-                                className="w-[9rem] h-[9rem] rounded-full border-4 border-white"
-                            />
+                            {(user.role === "students") ?
+                                <img
+                                    src={user?.student_profile_picture || "https://static.vecteezy.com/system/resources/previews/045/944/199/non_2x/male-default-placeholder-avatar-profile-gray-picture-isolated-on-background-man-silhouette-picture-for-user-profile-in-social-media-forum-chat-greyscale-illustration-vector.jpg"} alt="StudentProfile"
+                                    className="w-[9rem] h-[9rem] rounded-full border-4 border-white" /> :
+                                <img
+                                    src={user?.teacher_profile_picture || "https://www.saraswatiias.com/wp-content/uploads/2018/11/dummy-profile-pic-male1.jpg"}
+                                    alt="TeacherProfile"
+                                    className="w-[9rem] h-[9rem] rounded-full border-4 border-white"
+                                />}
                         </div>
                         <div className="mt-4 text-center md:text-left">
                             <h1 className="text-2xl lg:ml-[2rem] font-bold">{user?.first_name || "John Doe"}</h1>
@@ -34,7 +38,7 @@ const Profile: React.FC = () => {
                         </div>
                         <div className='flex items-center justify-evenly'>
                             <button onClick={() => {
-                                navigate('/profile/edit')
+                                navigate(`/profile/${user.role}/edit`)
                             }} className="bg-black w-[6rem] h-[3rem] border border-white rounded-lg text-white font-bold">Edit Profile</button>
                             <button onClick={() => {
                                 if (localStorage.getItem('token')) {

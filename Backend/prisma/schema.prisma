@@ -26,12 +26,13 @@ model students {
   last_name               String?
   email                   String              @unique
   password                String
+  role                    String              @default("students")
   createdAt               DateTime            @default(now())
   student_about           String?             @default("This is default about")
   student_profile_picture String?             @default("https://static.vecteezy.com/system/resources/previews/045/944/199/non_2x/male-default-placeholder-avatar-profile-gray-picture-isolated-on-background-man-silhouette-picture-for-user-profile-in-social-media-forum-chat-greyscale-illustration-vector.jpg")
   student_skills          String[]            @default([])
   student_gender          Gender              @default(MALE)
-  student_twitter          String?
+  student_twitter         String?
   student_linkedin        String?
   student_github          String?
   student_address         String?
@@ -60,6 +61,7 @@ model teachers {
   last_name               String?
   email                   String            @unique
   password                String
+  role                    String            @default("teachers")
   createdAt               DateTime          @default(now())
   teacher_about           String?           @default("This is default about")
   teacher_profile_picture String?           @default("https://www.saraswatiias.com/wp-content/uploads/2018/11/dummy-profile-pic-male1.jpg")
@@ -94,7 +96,7 @@ model courses {
   course_what_you_will_learn String[]            @default([])
   course_author              String              @default("John Doe")
   course_keywords            String[]            @default([])
-  course_level               String           @default("Intermediate")
+  course_level               String              @default("Intermediate")
   purchased_courses          purchased_courses[]
   teacher_courses            teacher_courses[]
   lectures                   lectures[]

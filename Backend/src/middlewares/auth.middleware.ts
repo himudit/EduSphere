@@ -12,7 +12,6 @@ interface DecodedToken extends JwtPayload {
 
 const authStudent = async (req: any, res: Response, next: NextFunction) => {
     try {
-        // const token = req.cookies.token
         const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader.split(' ')[1];
         if (!token) {
@@ -37,9 +36,6 @@ const authStudent = async (req: any, res: Response, next: NextFunction) => {
 const authTeacher = async (req: any, res: Response, next: NextFunction) => {
     const authHeader = req.headers['authorization'];
     const teacher_token = authHeader && authHeader.split(' ')[1];
-    if (!teacher_token) {
-        return res.status(401).json({ message: "Teacher Unauthorized" })
-    }
     if (!teacher_token) {
         return res.status(401).json({ message: "Teacher Unauthorized" })
     }
