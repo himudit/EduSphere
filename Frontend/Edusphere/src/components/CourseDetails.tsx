@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 interface CourseData {
-    course: Course; 
+    course: Course;
     lectures: Lecture[]; // Array of all lectures
 }
 
@@ -77,30 +77,13 @@ const CourseDetails = () => {
                 {/* Video Preview */}
                 <div className="relative aspect-video bg-gray-100 rounded-lg mb-8 overflow-hidden">
                     <video
-                        // src={courseData?.course_preview_video} // Replace with your video URL
-                        src="https://res.cloudinary.com/dy8jwwm6j/video/upload/v1739098886/courseVideos/eqejzrvhbgho2vezjj1m.mp4"
+                        src={courseData?.course_preview_video}
                         className="w-full h-full object-cover"
                         autoPlay
                         loop
                         muted
                         controls
                     ></video>
-                    {/* <button className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 hover:bg-opacity-40 transition-opacity">
-                        <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-8 w-8 text-purple-600"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                            >
-                                <path
-                                    fillRule="evenodd"
-                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                                    clipRule="evenodd"
-                                />
-                            </svg>
-                        </div>
-                    </button> */}
                 </div>
 
                 {/* Header Section */}
@@ -189,8 +172,6 @@ const CourseDetails = () => {
                     <h2 className="text-lg font-semibold mb-4">Course content</h2>
                     <div className="space-y-2">
                         {courseData?.lectures?.map((lecture) => (
-                            // <div key={lecture.lecture_id} className="  border-pink-200 border rounded-lg bg-red-400 overflow-hidden">
-                            // <div key={lecture.lecture_id} className=" rounded-lg bg-gradient-to-r from-purple-900 to-purple-700 D overflow-hidden">
                             <div key={lecture.lecture_id} className="rounded-lg bg-gradient-to-r from-purple-700 to-purple-400 D overflow-hidden">
 
                                 <button

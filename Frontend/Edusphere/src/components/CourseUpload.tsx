@@ -66,7 +66,7 @@ const CourseUpload = () => {
         course_level: "Intermediate",
     });
 
-    const [titleSize, setTitleSize] = useState(20);
+    const [titleSize, setTitleSize] = useState(30);
     const [descriptionSize, setDescriptionSize] = useState(150);
 
     const [courseImage, setCourseImage] = useState<File | null>(null);
@@ -349,7 +349,7 @@ const CourseUpload = () => {
         xhr.upload.onprogress = (event) => {
             if (event.lengthComputable) {
                 const percentComplete = Math.round((event.loaded / event.total) * 100);
-                setUploadProgress([percentComplete, lectureIndex, videoIndex]); // Store progress + lectureIndex + videoIndex
+                setUploadProgress([percentComplete, lectureIndex, videoIndex]);
             }
         };
 
@@ -380,6 +380,19 @@ const CourseUpload = () => {
         xhr.send(formData);
     };
 
+    const removeLecture = (lectureIndex: number) => {
+        setLectures((prevLectures) => prevLectures.filter((_, index) => index !== lectureIndex));
+    };
+
+    const removeVideo = (lectureIndex: number, videoIndex: number) => {
+        setLectures((prevLectures) => {
+            const updatedLectures = [...prevLectures];
+            updatedLectures[lectureIndex].videos = updatedLectures[lectureIndex].videos.filter((_, index) => index !== videoIndex);
+            return updatedLectures;
+        });
+    };
+
+
 
     return (
         <div className="max-w-3xl mx-auto p-6 bg-gray-900 text-white rounded-lg shadow-lg">
@@ -401,7 +414,6 @@ const CourseUpload = () => {
                 ))}
             </div>
 
-            {/* Step 1: Course Info */}
             {step === 1 && (
                 <div>
                     <label className="block mb-2">Course Title</label>
@@ -485,18 +497,25 @@ const CourseUpload = () => {
                 </div>
             )}
 
-            {/* Step 2: Lectures (Placeholder for now) */}
             {step === 2 && <div>
                 <div className="mt-[-1rem]">
                     <div className="flex justify-center items-center text-gray-500 p-4">
                         <div className="w-[60rem] bg-slate-700 border border-transparent rounded-xl p-4">
                             <div className="text-white text-lg font-bold mb-2">Curriculum</div>
                             <hr className="bg-white mb-4" />
-
+                            6
                             {lectures.map((lecture, lectureIndex) => (
                                 <div key={lectureIndex} className="border border-gray-400 p-4 mb-4 rounded-md">
                                     <div className="flex items-center mb-2">
                                         <div className="text-white mr-2 font-bold">Lecture {lectureIndex + 1} :</div>
+                                        <button
+                                            onClick={() => removeLecture(lectureIndex)}
+                                            className="ml-2 px-2 py-1 bg-red-500 text-white rounded-md text-sm flex items-center"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 448 512" fill="currentColor">
+                                                <path d="M135.2 17.7L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-7.2-14.3C307.4 6.8 296.3 0 284.2 0L163.8 0c-12.1 0-23.2 6.8-28.6 17.7zM416 128L32 128 53.2 467c1.6 25.3 22.6 45 47.9 45h245.8c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                                            </svg>
+                                        </button>
                                         <input
                                             type="text"
                                             placeholder="Enter Lecture Title"
@@ -504,7 +523,6 @@ const CourseUpload = () => {
                                             value={lecture.lecture_title}
                                             onChange={(e) => handleInputChange(lectureIndex, "lecture_title", e.target.value)}
                                         />
-
                                     </div>
                                     <div>
                                         <input
@@ -516,11 +534,20 @@ const CourseUpload = () => {
                                         />
                                     </div>
 
+
                                     <div className="border border-white p-2 mt-4 rounded-md">
                                         {lecture.videos.map((video, videoIndex) => (
                                             <div key={videoIndex} className="mb-2">
                                                 <div className="flex items-center mb-2">
                                                     <div className="text-white mr-2">Video {videoIndex + 1} :</div>
+                                                    <button
+                                                        onClick={() => removeVideo(lectureIndex, videoIndex)}
+                                                        className="ml-2 px-2 py-1 bg-red-500 text-white rounded-md text-sm flex items-center"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 448 512" fill="currentColor">
+                                                            <path d="M135.2 17.7L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-7.2-14.3C307.4 6.8 296.3 0 284.2 0L163.8 0c-12.1 0-23.2 6.8-28.6 17.7zM416 128L32 128 53.2 467c1.6 25.3 22.6 45 47.9 45h245.8c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                                                        </svg>
+                                                    </button>
                                                     <input
                                                         type="text"
                                                         placeholder="Enter Video Title"
@@ -535,7 +562,8 @@ const CourseUpload = () => {
                                                         className="ml-2 border border-transparent rounded-lg px-3 py-2 bg-gray-800 text-white focus:outline-none focus:ring-transparent w-full sm:w-3/4"
                                                         onChange={(e) => handleVideoChange(lectureIndex, videoIndex, "video_url", e.target.files[0])}
                                                     />
-                                                    {uploadProgress !== null && uploadProgress[1] === lectureIndex &&  uploadProgress[2] === videoIndex && (
+
+                                                    {uploadProgress !== null && uploadProgress[1] === lectureIndex && uploadProgress[2] === videoIndex && (
                                                         <div className="w-full bg-gray-200 rounded-full h-4 mt-2">
                                                             <div
                                                                 className="bg-blue-500 h-4 text-xs text-white text-center rounded-full"
@@ -572,7 +600,6 @@ const CourseUpload = () => {
                 </div>
             </div>}
 
-            {/* Step 3: Pricing & Prerequisites */}
             {step === 3 && (
                 <div>
                     <label className="block mt-4 mb-2">Course Price</label>
@@ -719,7 +746,6 @@ const CourseUpload = () => {
             )}
 
             <ToastContainer />
-            {/* Navigation Buttons */}
             <div className="flex justify-between mt-6">
                 {step > 1 && <button onClick={prevStep} className="px-4 py-2 bg-gray-700 rounded">Previous</button>}
                 {step < 3 ? (
@@ -727,20 +753,19 @@ const CourseUpload = () => {
                 ) : (
                     <button onClick={async (e) => {
                         e.preventDefault();
-                        // console.log(user?.first_name);
                         try {
-                            // console.log(formData);
+                            console.log(formData);
                             console.log(lectures);
-                            // const response = await axios.post(
-                            //     `${import.meta.env.VITE_BASE_URL}/teachers/course/upload`,
-                            //     formData,
-                            //     {
-                            //         headers: {
-                            //             Authorization: `Bearer ${localStorage.getItem('teacher_token')}` // Send the JWT token
-                            //         }
-                            //     }
-                            // );
-                            // notify();
+                            const response = await axios.post(
+                                `${import.meta.env.VITE_BASE_URL}/teachers/course/upload`,
+                                formData,
+                                {
+                                    headers: {
+                                        Authorization: `Bearer ${localStorage.getItem('teacher_token')}` 
+                                    }
+                                }
+                            );
+                            notify();
                         } catch (err) {
                             console.error('Failed to upload course :', err.response?.data || err.message);
                         }
