@@ -17,6 +17,7 @@ const Navbar: React.FC = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchUserProfile());
+    // console.log(user);
   }, [dispatch]);
 
   const navigate = useNavigate();
@@ -120,7 +121,7 @@ const Navbar: React.FC = () => {
                   (user?.student_profile_picture || user?.teacher_profile_picture)
                     ?
                     <img
-                      src={user?.student_profile_picture || "https://www.saraswatiias.com/wp-content/uploads/2018/11/dummy-profile-pic-male1.jpg" || user?.teacher_profile_picture}
+                      src={user?.student_profile_picture || user?.teacher_profile_picture}
                       alt="Profile"
                       className="w-12 h-12 rounded-full border-2 border-purple-500 cursor-pointer"
                       onClick={() => {

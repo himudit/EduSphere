@@ -31,14 +31,14 @@ const UserProfile = () => {
         try {
             const payload = {
                 ...data,
-                student_skills: skills // Add skills array to the payload
+                student_skills: skills
             };
             const response = await axios.patch(
                 `${import.meta.env.VITE_BASE_URL}/students/profile/edit`,
                 payload,
                 {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}` // Send the JWT token
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
                 }
             );
@@ -57,7 +57,6 @@ const UserProfile = () => {
                         "Authorization": `Bearer ${token}`
                     }
                 });
-                // console.log(response.data);
                 setStudentData(response.data);
                 if (response.data) {
                     setValue("first_name", response.data.first_name);
@@ -119,7 +118,6 @@ const UserProfile = () => {
                     }
                 }
             );
-            alert("Image uploaded successfully!");
         } catch (error) {
             console.error("Upload error:", error);
             alert("Failed to upload image.");
@@ -137,7 +135,7 @@ const UserProfile = () => {
                         <div className="bg-[#212529] shadow-md rounded-lg p-6 flex flex-col items-center">
                             <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-gray-300 mb-4">
                                 <img
-                                    src={preview || studentData?.student_profile_picture || '/default-avatar.png'}
+                                    src={studentData?.student_profile_picture || "https://static.vecteezy.com/system/resources/previews/045/944/199/non_2x/male-default-placeholder-avatar-profile-gray-picture-isolated-on-background-man-silhouette-picture-for-user-profile-in-social-media-forum-chat-greyscale-illustration-vector.jpg"}
                                     alt="Profile"
                                     className="w-full h-full object-cover"
                                 />
@@ -161,14 +159,16 @@ const UserProfile = () => {
                                 {selectedFile ? "Change File" : "Upload New"}
                             </button>
 
-                            {selectedFile && (
+                            {selectedFile ?
                                 <button
                                     className="mt-2 px-6 py-2 border rounded-lg hover:bg-gray-100"
                                     onClick={handleUpload}
                                 >
                                     Save Changes
                                 </button>
-                            )}
+                                :
+                                <></>
+                            }
                         </div>
 
                         {/* Personal Information */}
@@ -407,6 +407,7 @@ const UserProfile = () => {
                         </div>
 
                         <button type='submit' className='w-20 h-15 bg-blue-500 border rounded-lg'>Save Changes</button>
+
                         <ToastContainer />
                     </div>
                 </div>

@@ -131,6 +131,55 @@ app.post("/students/profile/upload/image", multerConfig_1.default.single("image"
         res.status(500).json({ error: "Internal server error" });
     }
 }));
+app.patch('/teachers/profile/edit', auth_middleware_1.authTeacher, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { first_name, last_name, teacher_about, teacher_gender, teacher_profile_picture, teacher_skills, } = req.body;
+    const teacher_id = req.teacher.teacher_id;
+    // Validate required fields
+    if (!teacher_id) {
+        return res.status(400).json({ error: 'Student ID is required' });
+    }
+    try {
+        // Update the student profile in the database
+        const updatedTeacher = yield prisma.teachers.update({
+            where: { teacher_id }, // Use the student_id to find the record
+            data: {
+                first_name,
+                last_name,
+                teacher_about,
+                teacher_gender,
+                teacher_profile_picture,
+                teacher_skills,
+            }
+        });
+        res.status(200).json(updatedTeacher);
+    }
+    catch (err) {
+        console.error('Error updating student profile:', err);
+        res.status(500).json({ error: 'Failed to update profile', details: err });
+    }
+}));
+app.post("/teachers/profile/upload/image", multerConfig_1.default.single("image"), auth_middleware_1.authTeacher, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: "No file uploaded" });
+        }
+        cloudinaryConfig_1.default.uploader.upload_stream({ folder: "profile_pictures" }, (error, result) => __awaiter(void 0, void 0, void 0, function* () {
+            if (error) {
+                return res.status(500).json({ error: "Cloudinary upload failed" });
+            }
+            const teacher_id = req.teacher.teacher_id;
+            const updatedStudent = yield prisma.teachers.update({
+                where: { teacher_id: teacher_id },
+                data: { teacher_profile_picture: result === null || result === void 0 ? void 0 : result.secure_url },
+            });
+            return res.status(200).json({ imageUrl: result === null || result === void 0 ? void 0 : result.secure_url });
+        })).end(req.file.buffer);
+    }
+    catch (error) {
+        console.error("Error uploading image:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+}));
 app.post('/teachers/course/upload', auth_middleware_1.authTeacher, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { course_id, course_title, course_description, course_price, course_thumbnail = " ", course_no_of_purchase, course_total_no_hours, rating, creation, course_preview_video, course_what_you_will_learn, course_author, course_keywords, course_level } = req.body;

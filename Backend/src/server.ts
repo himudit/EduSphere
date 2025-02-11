@@ -138,6 +138,65 @@ app.post("/students/profile/upload/image", upload.single("image"), authStudent, 
     }
 });
 
+
+
+app.patch('/teachers/profile/edit', authTeacher, async (req: Request, res: Response) => {
+    const {
+        first_name,
+        last_name,
+        teacher_about,
+        teacher_gender,
+        teacher_profile_picture,
+        teacher_skills,
+    } = req.body;
+    const teacher_id = req.teacher.teacher_id;
+    // Validate required fields
+    if (!teacher_id) {
+        return res.status(400).json({ error: 'Student ID is required' });
+    }
+    try {
+        // Update the student profile in the database
+        const updatedTeacher = await prisma.teachers.update({
+            where: { teacher_id }, // Use the student_id to find the record
+            data: {
+                first_name,
+                last_name,
+                teacher_about,
+                teacher_gender,
+                teacher_profile_picture,
+                teacher_skills,
+            }
+        });
+
+        res.status(200).json(updatedTeacher);
+    } catch (err) {
+        console.error('Error updating student profile:', err);
+        res.status(500).json({ error: 'Failed to update profile', details: err });
+    }
+});
+
+app.post("/teachers/profile/upload/image", upload.single("image"), authTeacher, async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: "No file uploaded" });
+        }
+        cloudinary.uploader.upload_stream({ folder: "profile_pictures" }, async (error, result) => {
+            if (error) {
+                return res.status(500).json({ error: "Cloudinary upload failed" });
+            }
+            const teacher_id = req.teacher.teacher_id;
+            const updatedStudent = await prisma.teachers.update({
+                where: { teacher_id: teacher_id },
+                data: { teacher_profile_picture: result?.secure_url },
+            });
+            return res.status(200).json({ imageUrl: result?.secure_url });
+        }).end(req.file.buffer);
+    } catch (error) {
+        console.error("Error uploading image:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
 app.post('/teachers/course/upload', authTeacher, async (req, res) => {
     try {
         const {
