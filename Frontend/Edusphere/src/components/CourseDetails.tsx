@@ -179,7 +179,7 @@ const CourseDetails = () => {
                                     onClick={() => toggleSection(lecture.lecture_id)}
                                 >
                                     <div className="flex items-center gap-2">
-                                        <span className="text-sm font-medium">{lecture.lecture_id}. {lecture.lecture_title}</span>
+                                        <span className="text-sm font-medium"> {lecture.lecture_title}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <span className="text-sm text-white">{lecture.lecture_total_no_hours}</span>

@@ -183,8 +183,6 @@ app.post("/teachers/profile/upload/image", multerConfig_1.default.single("image"
 app.post('/teachers/course/upload', auth_middleware_1.authTeacher, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { course_id, course_title, course_description, course_price, course_thumbnail = " ", course_no_of_purchase, course_total_no_hours, rating, creation, course_preview_video, course_what_you_will_learn, course_author, course_keywords, course_level } = req.body;
-        console.log(typeof (course_price));
-        const teacher_id = req.teacher.teacher_id;
         const response = yield prisma.courses.create({
             data: {
                 course_id,
@@ -203,11 +201,53 @@ app.post('/teachers/course/upload', auth_middleware_1.authTeacher, (req, res) =>
                 course_level
             }
         });
-        return response;
+        return res.json(response);
     }
     catch (err) {
         console.error("Error uploading Course Data:", err);
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({ error: "Failed to upload data", details: err.message });
+    }
+}));
+app.post('/teachers/lecture/upload', auth_middleware_1.authTeacher, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { lecture_id, course_id, lecture_title, lecture_description, lecture_order, lecture_total_no_hours, creation } = req.body;
+        const response = yield prisma.lectures.create({
+            data: {
+                lecture_id,
+                course_id,
+                lecture_title,
+                lecture_description,
+                lecture_order,
+                lecture_total_no_hours,
+                creation,
+            }
+        });
+        return res.json(response);
+    }
+    catch (err) {
+        console.error("Error uploading Lecture Data:", err);
+        res.status(500).json({ error: "Failed to upload data", details: err.message });
+    }
+}));
+app.post('/teachers/video/upload', auth_middleware_1.authTeacher, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { video_id, lecture_id, video_title, video_url, video_order, video_total_no_of_hours, creation } = req.body;
+        const response = yield prisma.videos.create({
+            data: {
+                video_id,
+                lecture_id,
+                video_title,
+                video_url,
+                video_order,
+                video_total_no_of_hours,
+                creation
+            }
+        });
+        return res.json(response);
+    }
+    catch (err) {
+        console.error("Error uploading Lecture Data:", err);
+        res.status(500).json({ error: "Failed to upload data", details: err.message });
     }
 }));
 const port = process.env.PORT || 3000;

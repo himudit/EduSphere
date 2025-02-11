@@ -49,8 +49,8 @@ model purchased_courses {
   purchase_date DateTime @default(now())
   progress      Int
 
-  student students @relation(fields: [student_id], references: [student_id])
-  course  courses  @relation(fields: [course_id], references: [course_id])
+  student students @relation(fields: [student_id], references: [student_id], onDelete: Cascade)
+  course  courses  @relation(fields: [course_id], references: [course_id], onDelete: Cascade)
 
   @@map("purchased_courses")
 }
@@ -76,8 +76,8 @@ model teacher_courses {
   teacher_id String   @id
   course_id  String
   creation   DateTime @default(now())
-  teacher    teachers @relation(fields: [teacher_id], references: [teacher_id])
-  course     courses  @relation(fields: [course_id], references: [course_id])
+  teacher    teachers @relation(fields: [teacher_id], references: [teacher_id], onDelete: Cascade)
+  course     courses  @relation(fields: [course_id], references: [course_id], onDelete: Cascade)
 
   @@map("teacher_courses")
 }
@@ -113,7 +113,7 @@ model lectures {
   lecture_total_no_hours Decimal  @db.Decimal(3, 1)
   creation               DateTime @default(now())
 
-  course courses  @relation(fields: [course_id], references: [course_id])
+  course courses  @relation(fields: [course_id], references: [course_id], onDelete: Cascade)
   videos videos[]
 
   @@map("lectures")
@@ -128,7 +128,7 @@ model videos {
   video_total_no_of_hours Decimal  @db.Decimal(10, 2)
   creation                DateTime @default(now())
 
-  lecture lectures @relation(fields: [lecture_id], references: [lecture_id])
+  lecture lectures @relation(fields: [lecture_id], references: [lecture_id], onDelete: Cascade)
 
   @@map("videos")
 }

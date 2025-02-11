@@ -121,7 +121,7 @@ const Navbar: React.FC = () => {
                   (user?.student_profile_picture || user?.teacher_profile_picture)
                     ?
                     <img
-                      src={user?.student_profile_picture || user?.teacher_profile_picture}
+                      src={user?.student_profile_picture || user?.teacher_profile_picture || logo}
                       alt="Profile"
                       className="w-12 h-12 rounded-full border-2 border-purple-500 cursor-pointer"
                       onClick={() => {

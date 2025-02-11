@@ -30,8 +30,8 @@ interface Video {
     video_title: string;
     video_url: string;
     video_order: number;
-    video_total_no_hours?: string;
-    creation: string;
+    video_total_no_of_hours?: number;
+    creation: Date;
 }
 
 interface Lecture {
@@ -40,8 +40,8 @@ interface Lecture {
     lecture_title: string;
     lecture_description: string;
     lecture_order: number;
-    lecture_total_no_of_hours?: string;
-    creation: number;
+    lecture_total_no_hours?: number;
+    creation: Date;
     videos: Video[];
 }
 
@@ -254,16 +254,16 @@ const CourseUpload = () => {
             lecture_title: "",
             lecture_description: "",
             lecture_order: lectureOrder,
-            lecture_total_no_of_hours: "",
-            creation: Date.now(),
+            lecture_total_no_hours: 0,
+            creation: new Date,
             videos: [{
                 video_id: nanoid(),
                 lecture_id: '',
                 video_title: "",
                 video_url: "",
                 video_order: videoOrder,
-                video_total_no_hours: "",
-                creation: new Date().toISOString()
+                video_total_no_of_hours: 0,
+                creation: new Date
             }]
         }
     ]);
@@ -276,8 +276,8 @@ const CourseUpload = () => {
             lecture_title: "",
             lecture_description: "",
             lecture_order: lectureOrder,
-            lecture_total_no_of_hours: "",
-            creation: Date.now(),
+            lecture_total_no_hours: 0,
+            creation: new Date,
             videos: [
                 {
                     video_id: nanoid(),
@@ -285,8 +285,8 @@ const CourseUpload = () => {
                     video_title: "",
                     video_url: "",
                     video_order: videoOrder,
-                    video_total_no_hours: "",
-                    creation: new Date().toISOString()
+                    video_total_no_of_hours: 0,
+                    creation: new Date
                 }
             ]
         }]);
@@ -302,8 +302,8 @@ const CourseUpload = () => {
                 video_url: "",
                 lecture_id: lectures[lectureIndex]['lecture_id'],
                 video_order: videoOrder,
-                video_total_no_hours: "",
-                creation: new Date().toISOString()
+                video_total_no_of_hours: 0,
+                creation: new Date
             }
         );
         setLectures(newLectures);
@@ -503,7 +503,6 @@ const CourseUpload = () => {
                         <div className="w-[60rem] bg-slate-700 border border-transparent rounded-xl p-4">
                             <div className="text-white text-lg font-bold mb-2">Curriculum</div>
                             <hr className="bg-white mb-4" />
-                            6
                             {lectures.map((lecture, lectureIndex) => (
                                 <div key={lectureIndex} className="border border-gray-400 p-4 mb-4 rounded-md">
                                     <div className="flex items-center mb-2">
@@ -761,10 +760,74 @@ const CourseUpload = () => {
                                 formData,
                                 {
                                     headers: {
-                                        Authorization: `Bearer ${localStorage.getItem('teacher_token')}` 
+                                        Authorization: `Bearer ${localStorage.getItem('teacher_token')}`
                                     }
                                 }
                             );
+                            // for (let i = 0; i < lectures.length; i++) {
+                            //     try {
+                            //         const response = await axios.post(
+                            //             `${import.meta.env.VITE_BASE_URL}/teachers/lecture/upload`,
+                            //             lectures[i],
+                            //             {
+                            //                 headers: {
+                            //                     Authorization: `Bearer ${localStorage.getItem('teacher_token')}`
+                            //                 }
+                            //             }
+                            //         )
+                            //         console.log(response);
+                            //         for (let j = 0; j < lectures[i]?.videos?.length; j++) {
+                            //             try {
+                            //                 const response = await axios.post(
+                            //                     `${import.meta.env.VITE_BASE_URL}/teachers/video/upload`,
+                            //                     lectures[i].videos[j],
+                            //                     {
+                            //                         headers: {
+                            //                             Authorization: `Bearer ${localStorage.getItem('teacher_token')}`
+                            //                         }
+                            //                     }
+                            //                 )
+                            //                 console.log(response);
+
+                            //             } catch (err) {
+                            //                 console.error('Failed to upload course :', err.response?.data || err.message);
+                            //             }
+
+                            //         }
+                            //     } catch (err) {
+                            //         console.error('Failed to upload course :', err.response?.data || err.message);
+                            //     }
+
+                            // }
+                            await Promise.all(lectures.map(async (lecture) => {
+                                try {
+                                    const response = await axios.post(
+                                        `${import.meta.env.VITE_BASE_URL}/teachers/lecture/upload`,
+                                        lecture,
+                                        {
+                                            headers: { Authorization: `Bearer ${localStorage.getItem('teacher_token')}` }
+                                        }
+                                    );
+                                    console.log(response);
+
+                                    await Promise.all(lecture.videos.map(async (video) => {
+                                        try {
+                                            const videoResponse = await axios.post(
+                                                `${import.meta.env.VITE_BASE_URL}/teachers/video/upload`,
+                                                video,
+                                                {
+                                                    headers: { Authorization: `Bearer ${localStorage.getItem('teacher_token')}` }
+                                                }
+                                            );
+                                            console.log(videoResponse);
+                                        } catch (err) {
+                                            console.error('Failed to upload video:', err.response?.data || err.message);
+                                        }
+                                    }));
+                                } catch (err) {
+                                    console.error('Failed to upload lecture:', err.response?.data || err.message);
+                                }
+                            }));
                             notify();
                         } catch (err) {
                             console.error('Failed to upload course :', err.response?.data || err.message);
