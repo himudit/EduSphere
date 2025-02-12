@@ -16,7 +16,7 @@ interface Course {
     course_no_of_purchase: number;
     course_total_no_hours: number;
     rating: number;
-    creation: string;
+    creation: Date;
     course_author: string;
     course_what_you_will_learn: string[];
     course_keywords: string[];
@@ -41,18 +41,35 @@ interface Video {
     video_url: string;
 }
 
+interface Teacher_Courses {
+    teacher_id: string,
+    course_id: string,
+    creation: Date
+}
+
+interface Teacher {
+    first_name: string,
+    last_name: string,
+    teacher_about: string,
+    teacher_gender: string,
+    teacher_profile_picture: string,
+    teacher_specialization: string[],
+}
+
 const CourseDetails = () => {
     const [expandedSection, setExpandedSection] = useState<string | null>('01');
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [courseData, setCourseData] = useState<CourseData | undefined>(undefined);
+    const [teacherData, setTeacherData] = useState<Teacher | undefined>(undefined);
     const { course_id } = useParams<{ course_id: string }>();
     useEffect(() => {
         const fetchCourses = async () => {
             try {
                 const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/course/${course_id}`);
                 const data: CourseData = response.data;
-                setCourseData(data);
                 console.log(data);
+                setCourseData(data.course);
+                setTeacherData(data.teacherCourse);
             } catch (err) {
                 console.log(err);
             }
@@ -133,7 +150,7 @@ const CourseDetails = () => {
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
                                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                     </svg>
-                                    <span className="text-gray-600">{point}</span>
+                                    <span className="text-gray-400">{point}</span>
                                 </div>
                             ))}
                         </div>

@@ -58,7 +58,19 @@ app.get('/course/:course_id', (req, res) => __awaiter(void 0, void 0, void 0, fu
         if (!course) {
             return res.status(404).json({ error: 'Course not found' });
         }
-        res.status(200).json(course);
+        const teacherCourse = yield prisma.teacher_courses.findFirst({
+            where: { course_id: req.params.course_id },
+            include: { teacher: true } // Include related teacher details
+        });
+        if (teacherCourse) {
+            res.status(200).json({
+                course,
+                teacherCourse
+            });
+        }
+        else {
+            res.status(200).json(course);
+        }
     }
     catch (err) {
         res.status(500).json({ error: 'Failed to fetch course' });
@@ -182,6 +194,11 @@ app.post("/teachers/profile/upload/image", multerConfig_1.default.single("image"
 }));
 app.post('/teachers/course/upload', auth_middleware_1.authTeacher, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const teacher_id = req.teacher.teacher_id;
+        // Validate required fields
+        if (!teacher_id) {
+            return res.status(400).json({ error: 'Student ID is required' });
+        }
         const { course_id, course_title, course_description, course_price, course_thumbnail = " ", course_no_of_purchase, course_total_no_hours, rating, creation, course_preview_video, course_what_you_will_learn, course_author, course_keywords, course_level } = req.body;
         const response = yield prisma.courses.create({
             data: {
@@ -199,6 +216,13 @@ app.post('/teachers/course/upload', auth_middleware_1.authTeacher, (req, res) =>
                 course_author,
                 course_keywords,
                 course_level
+            }
+        });
+        const response2 = yield prisma.teacher_courses.create({
+            data: {
+                teacher_id,
+                course_id,
+                creation
             }
         });
         return res.json(response);

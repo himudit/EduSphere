@@ -392,8 +392,6 @@ const CourseUpload = () => {
         });
     };
 
-
-
     return (
         <div className="max-w-3xl mx-auto p-6 bg-gray-900 text-white rounded-lg shadow-lg">
             {/* Step Indicator */}
@@ -764,41 +762,6 @@ const CourseUpload = () => {
                                     }
                                 }
                             );
-                            // for (let i = 0; i < lectures.length; i++) {
-                            //     try {
-                            //         const response = await axios.post(
-                            //             `${import.meta.env.VITE_BASE_URL}/teachers/lecture/upload`,
-                            //             lectures[i],
-                            //             {
-                            //                 headers: {
-                            //                     Authorization: `Bearer ${localStorage.getItem('teacher_token')}`
-                            //                 }
-                            //             }
-                            //         )
-                            //         console.log(response);
-                            //         for (let j = 0; j < lectures[i]?.videos?.length; j++) {
-                            //             try {
-                            //                 const response = await axios.post(
-                            //                     `${import.meta.env.VITE_BASE_URL}/teachers/video/upload`,
-                            //                     lectures[i].videos[j],
-                            //                     {
-                            //                         headers: {
-                            //                             Authorization: `Bearer ${localStorage.getItem('teacher_token')}`
-                            //                         }
-                            //                     }
-                            //                 )
-                            //                 console.log(response);
-
-                            //             } catch (err) {
-                            //                 console.error('Failed to upload course :', err.response?.data || err.message);
-                            //             }
-
-                            //         }
-                            //     } catch (err) {
-                            //         console.error('Failed to upload course :', err.response?.data || err.message);
-                            //     }
-
-                            // }
                             await Promise.all(lectures.map(async (lecture) => {
                                 try {
                                     const response = await axios.post(

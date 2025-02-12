@@ -49,7 +49,19 @@ app.get('/course/:course_id', async (req: Request, res: Response) => {
         if (!course) {
             return res.status(404).json({ error: 'Course not found' });
         }
-        res.status(200).json(course);
+        const teacherCourse = await prisma.teacher_courses.findFirst({
+            where: { course_id: req.params.course_id },
+            include: { teacher: true }  // Include related teacher details
+        });
+
+        if (teacherCourse) {
+            res.status(200).json({
+                course,
+                teacherCourse
+            });
+        } else {
+            res.status(200).json(course);
+        }
     } catch (err) {
         res.status(500).json({ error: 'Failed to fetch course' });
     }
@@ -138,8 +150,6 @@ app.post("/students/profile/upload/image", upload.single("image"), authStudent, 
     }
 });
 
-
-
 app.patch('/teachers/profile/edit', authTeacher, async (req: Request, res: Response) => {
     const {
         first_name,
@@ -199,6 +209,11 @@ app.post("/teachers/profile/upload/image", upload.single("image"), authTeacher, 
 
 app.post('/teachers/course/upload', authTeacher, async (req, res) => {
     try {
+        const teacher_id = req.teacher.teacher_id;
+        // Validate required fields
+        if (!teacher_id) {
+            return res.status(400).json({ error: 'Student ID is required' });
+        }
         const {
             course_id,
             course_title,
@@ -231,6 +246,13 @@ app.post('/teachers/course/upload', authTeacher, async (req, res) => {
                 course_author,
                 course_keywords,
                 course_level
+            }
+        })
+        const response2 = await prisma.teacher_courses.create({
+            data: {
+                teacher_id,
+                course_id,
+                creation
             }
         })
         return res.json(response);
@@ -299,7 +321,6 @@ app.post('/teachers/video/upload', authTeacher, async (req, res) => {
         res.status(500).json({ error: "Failed to upload data", details: err.message });
     }
 })
-
 
 const port = process.env.PORT || 3000;
 
