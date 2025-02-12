@@ -40,7 +40,7 @@ function Login() {
             {/* Sign In Card */}
             <div className="w-[400px] p-8 rounded-3xl bg-black/30 backdrop-blur-xl border border-white/10 shadow-2xl relative z-10">
                 <h1 className="text-white text-3xl font-medium mb-2">Log In</h1>
-                <p className="text-gray-400 text-sm mb-8">Keep it all together and you'll be fine</p>
+                <p className="text-gray-400 text-sm mb-8">Stay on top of your studies with easy progress tracking.</p>
 
                 <form className="space-y-4" onSubmit={(e) => formSubmit(e)} >
                     <div>
@@ -78,16 +78,19 @@ function Login() {
 
                     <button
                         type="button"
+                        onClick={() => {
+                            navigate('/teacher/login');
+                        }}
                         className="text-gray-400 text-sm hover:text-purple-400 transition-colors"
                     >
-                        Forgot Password
+                        Login as Teacher
                     </button>
 
                     <button
                         type="submit"
                         className="w-full bg-purple-600 hover:bg-purple-700 text-white rounded-lg py-3 transition-colors"
                     >
-                        Sign In
+                        Log In as Student
                     </button>
 
                 </form>

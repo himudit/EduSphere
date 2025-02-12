@@ -12,6 +12,7 @@ function Signup() {
     const [password, setPassword] = useState('');
     const [first_name, setFirstName] = useState('');
     const [last_name, setLastName] = useState('');
+    const dispatch = useDispatch();
 
     const formSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -44,7 +45,7 @@ function Signup() {
             < div className="w-[400px] p-8 rounded-3xl bg-black/30 backdrop-blur-xl border border-white/10 shadow-2xl relative z-10" >
                 {/* Card header */}
                 <h1 className="text-white text-3xl font-medium mb-2" > Sign Up</h1 >
-                <p className="text-gray-400 text-sm mb-8">Join the cosmic journey</p>
+                <p className="text-gray-400 text-sm mb-8">Join the cosmic journey as Student</p>
 
                 {/* Sign up form */}
                 <form className="space-y-4" onSubmit={(e) => formSubmit(e)}  >
@@ -124,7 +125,7 @@ function Signup() {
 
                 <div className="mt-8 text-center text-sm">
                     <span className="text-gray-400">Already have an account? </span>
-                    <Link to='/login' className="text-purple-400 hover:text-purple-300">Sign In</Link>
+                    <Link to='/login' className="text-purple-400 hover:text-purple-300">Log In</Link>
                 </div>
             </div >
         </div >

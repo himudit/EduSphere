@@ -64,7 +64,7 @@ model teachers {
   role                    String            @default("teachers")
   createdAt               DateTime          @default(now())
   teacher_about           String?           @default("This is default about")
-  teacher_profile_picture String?           @default("https://www.saraswatiias.com/wp-content/uploads/2018/11/dummy-profile-pic-male1.jpg")
+  teacher_profile_picture String?           @default("https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png")
   teacher_skills          String[]          @default([])
   teacher_gender          Gender            @default(MALE)
   teacher_courses         teacher_courses[]
