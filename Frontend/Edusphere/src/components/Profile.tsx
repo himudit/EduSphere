@@ -99,7 +99,7 @@ const Profile: React.FC = () => {
                     <div className="flex-[65%] min-w-[65%]">
                         <h2 className="text-lg font-bold mb-2">About</h2>
                         <p className="text-sm text-gray-400">
-                            {user?.student_about || "No additional information provided."}
+                            {user?.student_about || user?.teacher_about || "No additional information provided."}
                         </p>
                     </div>
                 </div>

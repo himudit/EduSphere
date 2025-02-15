@@ -58,6 +58,27 @@ const Search: React.FC = () => {
         fetchCourses();
     }, []);
 
+    useEffect(() => {
+        const fetchFilteredCourses = async () => {
+            try {
+                console.log(topic);
+                const response = await axios.get<Course[]>(
+                    `${import.meta.env.VITE_BASE_URL}/filterSearch`,
+                    {
+                        params: {
+                            topic: topic,
+                            level
+                        }
+                    }
+                );
+                setCourseData(response.data);
+            } catch (err) {
+                console.error('Error fetching courses:', err);
+            }
+        };
+        fetchFilteredCourses();
+    }, [topic, level]);
+
     return (
         <div className="min-h-screen">
             <div className="max-w-7xl mx-auto">
@@ -268,7 +289,6 @@ const Search: React.FC = () => {
 // FilterGroup Component
 const FilterGroup: React.FC<FilterGroupProps> = ({ title, items, type, selected, setSelected, name }) => {
     const handleSelect = (label: string) => {
-        console.log(selected);
         if (type === 'radio') {
             setSelected(label);
         } else if (type === 'checkbox') {
@@ -279,7 +299,7 @@ const FilterGroup: React.FC<FilterGroupProps> = ({ title, items, type, selected,
                 setSelected([...currentSelected, label]);
             }
         }
-        console.log(selected);
+        // console.log(selected);
     };
 
     return (

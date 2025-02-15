@@ -88,6 +88,28 @@ app.get('/search', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(500).json({ error: 'Failed to fetch course' });
     }
 }));
+app.get('/filterSearch', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { topic, level } = req.query;
+        // console.log(topic);
+        let filter = {};
+        const courses = yield prisma.courses.findMany({
+            where: {
+                AND: [
+                    level ? { course_level: level } : {},
+                    (topic === null || topic === void 0 ? void 0 : topic.length) > 0 ? { course_keywords: { hasSome: topic } } : {}
+                ]
+            },
+        });
+        if (!courses) {
+            return res.status(404).json({ error: 'Course not found' });
+        }
+        res.status(200).json(courses);
+    }
+    catch (err) {
+        res.status(500).json({ error: 'Failed to fetch course' });
+    }
+}));
 app.patch('/students/profile/edit', auth_middleware_1.authStudent, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { first_name, last_name, student_about, student_address, student_gender, student_github, student_linkedin, student_mobile, student_profile_picture, student_skills, student_twitter, student_university } = req.body;
     const student_id = req.student.student_id;

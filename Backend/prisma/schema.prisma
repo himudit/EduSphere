@@ -67,6 +67,11 @@ model teachers {
   teacher_profile_picture String?           @default("https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png")
   teacher_skills          String[]          @default([])
   teacher_gender          Gender            @default(MALE)
+  teacher_twitter         String?
+  teacher_linkedin        String?
+  teacher_github          String?
+  teacher_address         String?
+  teacher_university      String?
   teacher_courses         teacher_courses[]
 
   @@map("teachers")

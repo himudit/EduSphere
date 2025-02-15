@@ -68,8 +68,10 @@ const CourseDetails = () => {
                 const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/course/${course_id}`);
                 const data: CourseData = response.data;
                 console.log(data);
+                console.log(data.course);
+                console.log(data.teacherCourse.teacher);
                 setCourseData(data.course);
-                setTeacherData(data.teacherCourse);
+                setTeacherData(data.teacherCourse.teacher);
             } catch (err) {
                 console.log(err);
             }
@@ -241,17 +243,17 @@ const CourseDetails = () => {
                         <div className="bg-white rounded-lg p-4 shadow-sm">
                             <div className="flex items-start gap-4">
                                 <img
-                                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1"
+                                    src={teacherData?.teacher_profile_picture}
                                     alt="Ryan Curtis"
                                     className="w-12 h-12 rounded-full object-cover"
                                 />
                                 <div className="flex-1">
                                     <div className="flex items-center gap-2 mb-1">
-                                        <h3 className="font-medium text-gray-900">Ryan Curtis</h3>
+                                        <h3 className="font-medium text-gray-900">{teacherData?.first_name}</h3>
                                         <span className="text-sm text-gray-500">3D Artist</span>
                                     </div>
                                     <p className="text-sm text-gray-600 mb-3">
-                                        Hey! My name is Ryan. I'm 26 and I'm a freelance 3D Artist with around 5 years of experience.
+                                        {teacherData?.teacher_about}
                                     </p>
                                     <div className="space-y-2">
                                         <div className="flex items-center gap-2">

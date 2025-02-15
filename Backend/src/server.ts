@@ -80,6 +80,27 @@ app.get('/search', async (req: Request, res: Response) => {
     }
 })
 
+app.get('/filterSearch', async (req: Request, res: Response) => {
+    try {
+        const { topic, level } = req.query;
+        // console.log(topic);
+        let filter = {};
+        const courses = await prisma.courses.findMany({
+            where: {
+                AND: [
+                    level ? { course_level: level } : {},
+                    topic?.length > 0 ? { course_keywords: { hasSome: topic } } : {}
+                ]
+            },
+        });
+        if (!courses) {
+            return res.status(404).json({ error: 'Course not found' });
+        }
+        res.status(200).json(courses);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch course' });
+    }
+})
 
 app.patch('/students/profile/edit', authStudent, async (req: Request, res: Response) => {
     const {

@@ -325,6 +325,62 @@ const CourseUpload = () => {
 
     const [uploadProgress, setUploadProgress] = useState<[number, number, number] | null>(null);
 
+    // const handleVideoChange = async (
+    //     lectureIndex: number,
+    //     videoIndex: number,
+    //     field: string,
+    //     file: File | undefined
+    // ) => {
+    //     if (!file) return;
+
+    //     if (!file.type.startsWith("video/")) {
+    //         alert("Please upload a valid video file.");
+    //         return;
+    //     }
+
+    //     const formData = new FormData();
+    //     formData.append("file", file);
+    //     formData.append("upload_preset", "lmsupload");
+    //     formData.append("folder", "LectureVideos");
+
+    //     const xhr = new XMLHttpRequest();
+    //     xhr.open("POST", "https://api.cloudinary.com/v1_1/dy8jwwm6j/upload", true);
+
+    //     xhr.upload.onprogress = (event) => {
+    //         if (event.lengthComputable) {
+    //             const percentComplete = Math.round((event.loaded / event.total) * 100);
+    //             setUploadProgress([percentComplete, lectureIndex, videoIndex]);
+    //         }
+    //     };
+
+    //     xhr.onload = () => {
+    //         if (xhr.status === 200) {
+    //             const data = JSON.parse(xhr.responseText);
+    //             if (data.secure_url) {
+    //                 const newLectures = [...lectures];
+    //                 newLectures[lectureIndex].videos[videoIndex][field] = data.secure_url;
+    //                 newLectures[lectureIndex].videos[videoIndex]["lecture_id"] = lectures[lectureIndex].lecture_id;
+    //                 newLectures[lectureIndex].videos[videoIndex]["video_order"] = videoIndex;
+    //                 newLectures[lectureIndex].videos[videoIndex]["video_total_no_of_hours"] = 0;
+    //                 setLectures(newLectures);
+    //                 console.log("Video uploaded:", data.secure_url);
+    //             }
+    //         } else {
+    //             console.error("Error uploading video:", xhr.statusText);
+    //             alert("Error uploading video. Please try again.");
+    //         }
+    //         setUploadProgress(null); // Reset after completion
+    //     };
+
+    //     xhr.onerror = () => {
+    //         console.error("Network error occurred.");
+    //         alert("Network error. Please try again.");
+    //         setUploadProgress(null);
+    //     };
+
+    //     xhr.send(formData);
+    // };
+
     const handleVideoChange = async (
         lectureIndex: number,
         videoIndex: number,
@@ -338,46 +394,59 @@ const CourseUpload = () => {
             return;
         }
 
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", "lmsupload");
-        formData.append("folder", "LectureVideos");
+        const videoElement = document.createElement("video");
+        videoElement.preload = "metadata";
+        videoElement.src = URL.createObjectURL(file);
 
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", "https://api.cloudinary.com/v1_1/dy8jwwm6j/upload", true);
+        videoElement.onloadedmetadata = async () => {
+            window.URL.revokeObjectURL(videoElement.src);
+            const duration = videoElement.duration;
+            console.log("Video Duration:", duration);
 
-        xhr.upload.onprogress = (event) => {
-            if (event.lengthComputable) {
-                const percentComplete = Math.round((event.loaded / event.total) * 100);
-                setUploadProgress([percentComplete, lectureIndex, videoIndex]);
-            }
-        };
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", "lmsupload");
+            formData.append("folder", "LectureVideos");
 
-        xhr.onload = () => {
-            if (xhr.status === 200) {
-                const data = JSON.parse(xhr.responseText);
-                if (data.secure_url) {
-                    const newLectures = [...lectures];
-                    newLectures[lectureIndex].videos[videoIndex][field] = data.secure_url;
-                    newLectures[lectureIndex].videos[videoIndex]["lecture_id"] = lectures[lectureIndex].lecture_id;
-                    newLectures[lectureIndex].videos[videoIndex]["video_order"] = videoIndex;
-                    setLectures(newLectures);
-                    console.log("Video uploaded:", data.secure_url);
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "https://api.cloudinary.com/v1_1/dy8jwwm6j/upload", true);
+
+            xhr.upload.onprogress = (event) => {
+                if (event.lengthComputable) {
+                    const percentComplete = Math.round((event.loaded / event.total) * 100);
+                    setUploadProgress([percentComplete, lectureIndex, videoIndex]);
                 }
-            } else {
-                console.error("Error uploading video:", xhr.statusText);
-                alert("Error uploading video. Please try again.");
-            }
-            setUploadProgress(null); // Reset after completion
-        };
+            };
 
-        xhr.onerror = () => {
-            console.error("Network error occurred.");
-            alert("Network error. Please try again.");
-            setUploadProgress(null);
-        };
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.secure_url) {
+                        const newLectures = [...lectures];
+                        newLectures[lectureIndex].videos[videoIndex][field] = data.secure_url;
+                        newLectures[lectureIndex].videos[videoIndex]["lecture_id"] = lectures[lectureIndex].lecture_id;
+                        newLectures[lectureIndex].videos[videoIndex]["video_order"] = videoIndex;
+                        newLectures[lectureIndex].videos[videoIndex]["video_total_no_of_hours"] = duration;
+                        newLectures[lectureIndex].lecture_total_no_hours =
+                            (newLectures[lectureIndex].lecture_total_no_hours || 0) + duration;
+                        setLectures(newLectures);
+                        console.log("Video uploaded:", data.secure_url);
+                    }
+                } else {
+                    console.error("Error uploading video:", xhr.statusText);
+                    alert("Error uploading video. Please try again.");
+                }
+                setUploadProgress(null);
+            };
 
-        xhr.send(formData);
+            xhr.onerror = () => {
+                console.error("Network error occurred.");
+                alert("Network error. Please try again.");
+                setUploadProgress(null);
+            };
+
+            xhr.send(formData);
+        };
     };
 
     const removeLecture = (lectureIndex: number) => {
