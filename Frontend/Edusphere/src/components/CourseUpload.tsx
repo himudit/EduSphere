@@ -73,6 +73,7 @@ const CourseUpload = () => {
     const [promoVideo, setPromoVideo] = useState<File | null>(null);
     const [imageError, setImageError] = useState("");
     const [videoError, setVideoError] = useState("");
+    const [courseDuration, setCourseDuration] = useState(0);
 
     const nextStep = () => setStep((prev) => Math.min(prev + 1, 3));
     const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
@@ -325,62 +326,6 @@ const CourseUpload = () => {
 
     const [uploadProgress, setUploadProgress] = useState<[number, number, number] | null>(null);
 
-    // const handleVideoChange = async (
-    //     lectureIndex: number,
-    //     videoIndex: number,
-    //     field: string,
-    //     file: File | undefined
-    // ) => {
-    //     if (!file) return;
-
-    //     if (!file.type.startsWith("video/")) {
-    //         alert("Please upload a valid video file.");
-    //         return;
-    //     }
-
-    //     const formData = new FormData();
-    //     formData.append("file", file);
-    //     formData.append("upload_preset", "lmsupload");
-    //     formData.append("folder", "LectureVideos");
-
-    //     const xhr = new XMLHttpRequest();
-    //     xhr.open("POST", "https://api.cloudinary.com/v1_1/dy8jwwm6j/upload", true);
-
-    //     xhr.upload.onprogress = (event) => {
-    //         if (event.lengthComputable) {
-    //             const percentComplete = Math.round((event.loaded / event.total) * 100);
-    //             setUploadProgress([percentComplete, lectureIndex, videoIndex]);
-    //         }
-    //     };
-
-    //     xhr.onload = () => {
-    //         if (xhr.status === 200) {
-    //             const data = JSON.parse(xhr.responseText);
-    //             if (data.secure_url) {
-    //                 const newLectures = [...lectures];
-    //                 newLectures[lectureIndex].videos[videoIndex][field] = data.secure_url;
-    //                 newLectures[lectureIndex].videos[videoIndex]["lecture_id"] = lectures[lectureIndex].lecture_id;
-    //                 newLectures[lectureIndex].videos[videoIndex]["video_order"] = videoIndex;
-    //                 newLectures[lectureIndex].videos[videoIndex]["video_total_no_of_hours"] = 0;
-    //                 setLectures(newLectures);
-    //                 console.log("Video uploaded:", data.secure_url);
-    //             }
-    //         } else {
-    //             console.error("Error uploading video:", xhr.statusText);
-    //             alert("Error uploading video. Please try again.");
-    //         }
-    //         setUploadProgress(null); // Reset after completion
-    //     };
-
-    //     xhr.onerror = () => {
-    //         console.error("Network error occurred.");
-    //         alert("Network error. Please try again.");
-    //         setUploadProgress(null);
-    //     };
-
-    //     xhr.send(formData);
-    // };
-
     const handleVideoChange = async (
         lectureIndex: number,
         videoIndex: number,
@@ -430,6 +375,11 @@ const CourseUpload = () => {
                         newLectures[lectureIndex].lecture_total_no_hours =
                             (newLectures[lectureIndex].lecture_total_no_hours || 0) + duration;
                         setLectures(newLectures);
+                        setCourseDuration((prev: Number) => {
+                            return prev + newLectures[lectureIndex].lecture_total_no_hours;
+                        });
+                        formData["course_total_no_hours"] = courseDuration + newLectures[lectureIndex].lecture_total_no_hours;
+                        console.log(courseDuration);
                         console.log("Video uploaded:", data.secure_url);
                     }
                 } else {
@@ -820,6 +770,7 @@ const CourseUpload = () => {
                     <button onClick={async (e) => {
                         e.preventDefault();
                         try {
+                            formData["course_total_no_hours"] = courseDuration;
                             console.log(formData);
                             console.log(lectures);
                             const response = await axios.post(

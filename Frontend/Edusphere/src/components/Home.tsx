@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import CardCarousel from "./CardCarousel";
 import axios from "axios";
 import MiddleSection from './students/MiddleSection';
+import { Try } from './Try';
 
 const Home: React.FC = () => {
   return (
@@ -107,8 +108,11 @@ const Home: React.FC = () => {
           <CardCarousel />
         </div>
       </div>
-
       <MiddleSection />
+
+      <div className="mt-10 flex justify-center items-center">
+        <Try />
+      </div>
 
     </>
   );

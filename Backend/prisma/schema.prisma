@@ -78,7 +78,8 @@ model teachers {
 }
 
 model teacher_courses {
-  teacher_id String   @id
+  id         Int   @id @default(autoincrement())
+  teacher_id String
   course_id  String
   creation   DateTime @default(now())
   teacher    teachers @relation(fields: [teacher_id], references: [teacher_id], onDelete: Cascade)
@@ -94,7 +95,7 @@ model courses {
   course_price               Int
   course_thumbnail           String
   course_no_of_purchase      Int                 @default(0)
-  course_total_no_hours      Decimal             @db.Decimal(3, 1)
+  course_total_no_hours      Decimal             @db.Decimal(10, 2)
   rating                     Decimal             @default(1.0) @db.Decimal(3, 1)
   creation                   DateTime            @default(now())
   course_preview_video       String              @default("https://res.cloudinary.com/dy8jwwm6j/video/upload/v1736872825/12927954_1920_1080_24fps_szansr.mp4")
@@ -115,7 +116,7 @@ model lectures {
   lecture_title          String
   lecture_description    String
   lecture_order          Int
-  lecture_total_no_hours Decimal  @db.Decimal(3, 1)
+  lecture_total_no_hours Decimal  @db.Decimal(10, 2)
   creation               DateTime @default(now())
 
   course courses  @relation(fields: [course_id], references: [course_id], onDelete: Cascade)
