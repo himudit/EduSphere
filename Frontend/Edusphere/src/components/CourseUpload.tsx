@@ -66,8 +66,8 @@ const CourseUpload = () => {
         course_level: "Intermediate",
     });
 
-    const [titleSize, setTitleSize] = useState(30);
-    const [descriptionSize, setDescriptionSize] = useState(150);
+    const [titleSize, setTitleSize] = useState(60);
+    const [descriptionSize, setDescriptionSize] = useState(400);
 
     const [courseImage, setCourseImage] = useState<File | null>(null);
     const [promoVideo, setPromoVideo] = useState<File | null>(null);
@@ -82,8 +82,8 @@ const CourseUpload = () => {
         const { name, value } = e.target;
 
         if (name === "course_title") {
-            if (value.length <= 20) {
-                setTitleSize(20 - value.length);
+            if (value.length <= 60) {
+                setTitleSize(60 - value.length);
                 setFormData((prev) => ({
                     ...prev,
                     [name]: value,
@@ -96,8 +96,8 @@ const CourseUpload = () => {
         }
 
         if (name === "course_description") {
-            if (value.length <= 150) {
-                setDescriptionSize(150 - value.length); // Update remaining characters
+            if (value.length <= 400) {
+                setDescriptionSize(400 - value.length); // Update remaining characters
                 setFormData((prev) => ({
                     ...prev,
                     [name]: value,

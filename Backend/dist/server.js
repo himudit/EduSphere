@@ -90,14 +90,27 @@ app.get('/search', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 }));
 app.get('/filterSearch', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { topic, level } = req.query;
-        // console.log(topic);
+        const { topic, level, rating } = req.query;
         let filter = {};
+        let minRating;
+        if (rating) {
+            if (rating.includes("& up")) {
+                minRating = parseFloat(rating.split(" & up")[0]);
+            }
+            else if (rating.includes("& below")) {
+                minRating = parseFloat(rating.split(" & below")[0]);
+            }
+        }
         const courses = yield prisma.courses.findMany({
             where: {
                 AND: [
                     level ? { course_level: level } : {},
-                    (topic === null || topic === void 0 ? void 0 : topic.length) > 0 ? { course_keywords: { hasSome: topic } } : {}
+                    (topic === null || topic === void 0 ? void 0 : topic.length) > 0 ? { course_keywords: { hasSome: topic } } : {},
+                    minRating !== undefined
+                        ? rating.includes("below")
+                            ? { rating: { lte: minRating } }
+                            : { rating: { gte: minRating } }
+                        : {}
                 ]
             },
         });

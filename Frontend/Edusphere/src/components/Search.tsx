@@ -22,7 +22,6 @@ interface Course {
 
 interface FilterItem {
     label: string;
-    count: string;
 }
 
 interface FilterGroupProps {
@@ -31,13 +30,12 @@ interface FilterGroupProps {
     type: 'radio' | 'checkbox';
     selected: string | string[];
     setSelected: (value: string | string[]) => void;
-    name: string; // Added name prop for radio groups
+    name: string;
 }
 
 const Search: React.FC = () => {
     const navigate = useNavigate();
 
-    // State management for filters and course data
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [courseData, setCourseData] = useState<Course[]>([]);
     const [rating, setRating] = useState<string>('');
@@ -45,7 +43,6 @@ const Search: React.FC = () => {
     const [topic, setTopic] = useState<string[]>([]);
     const [level, setLevel] = useState<string>('');
 
-    // Fetch courses on component mount
     useEffect(() => {
         const fetchCourses = async () => {
             try {
@@ -61,13 +58,13 @@ const Search: React.FC = () => {
     useEffect(() => {
         const fetchFilteredCourses = async () => {
             try {
-                console.log(topic);
                 const response = await axios.get<Course[]>(
                     `${import.meta.env.VITE_BASE_URL}/filterSearch`,
                     {
                         params: {
                             topic: topic,
-                            level
+                            level,
+                            rating
                         }
                     }
                 );
@@ -77,7 +74,7 @@ const Search: React.FC = () => {
             }
         };
         fetchFilteredCourses();
-    }, [topic, level]);
+    }, [topic, level, rating]);
 
     return (
         <div className="min-h-screen">
@@ -94,10 +91,9 @@ const Search: React.FC = () => {
                                     title="Ratings"
                                     name="rating"
                                     items={[
-                                        { label: '4.5 & up', count: '10,000+' },
-                                        { label: '4.0 & up', count: '15,000+' },
-                                        { label: '3.5 & up', count: '20,000+' },
-                                        { label: '3.0 & up', count: '25,000+' }
+                                        { label: '4.5 & up' },
+                                        { label: '3.0 & up' },
+                                        { label: '2.5 & below' },
                                     ]}
                                     type="radio"
                                     selected={rating}
@@ -105,7 +101,7 @@ const Search: React.FC = () => {
                                 />
 
                                 {/* Duration Filter */}
-                                <FilterGroup
+                                {/* <FilterGroup
                                     title="Video Duration"
                                     name="duration"
                                     items={[
@@ -117,17 +113,19 @@ const Search: React.FC = () => {
                                     type="radio"
                                     selected={duration}
                                     setSelected={(value) => setDuration(value as string)}
-                                />
+                                /> */}
 
                                 {/* Topic Filter */}
                                 <FilterGroup
                                     title="Topic"
                                     name="topic"
                                     items={[
-                                        { label: 'Python', count: '586' },
-                                        { label: 'JavaScript', count: '508' },
-                                        { label: 'React.js', count: '486' },
-                                        { label: 'Web Development', count: '379' }
+                                        { label: 'Python' },
+                                        { label: 'JavaScript' },
+                                        { label: 'React' },
+                                        { label: 'Web Development' },
+                                        { label: 'Frontend' },
+                                        { label: 'AI' }
                                     ]}
                                     type="checkbox"
                                     selected={topic}
@@ -139,9 +137,9 @@ const Search: React.FC = () => {
                                     title="Level"
                                     name="level"
                                     items={[
-                                        { label: 'Beginner', count: '5,749' },
-                                        { label: 'Intermediate', count: '3,678' },
-                                        { label: 'Advanced', count: '1,893' }
+                                        { label: 'Beginner' },
+                                        { label: 'Intermediate' },
+                                        { label: 'Advanced' }
                                     ]}
                                     type="radio"
                                     selected={level}
@@ -225,17 +223,16 @@ const Search: React.FC = () => {
                                     title="Ratings"
                                     name="rating-mobile"
                                     items={[
-                                        { label: '4.5 & up', count: '10,000+' },
-                                        { label: '4.0 & up', count: '15,000+' },
-                                        { label: '3.5 & up', count: '20,000+' },
-                                        { label: '3.0 & up', count: '25,000+' }
+                                        { label: '4.5 & up' },
+                                        { label: '3.0 & up' },
+                                        { label: '2.5 & below' },
                                     ]}
                                     type="radio"
                                     selected={rating}
                                     setSelected={(value) => setRating(value as string)}
                                 />
                                 {/* Duration Filter */}
-                                <FilterGroup
+                                {/* <FilterGroup
                                     title="Video Duration"
                                     name="duration"
                                     items={[
@@ -247,17 +244,19 @@ const Search: React.FC = () => {
                                     type="radio"
                                     selected={duration}
                                     setSelected={(value) => setDuration(value as string)}
-                                />
+                                /> */}
 
                                 {/* Topic Filter */}
                                 <FilterGroup
                                     title="Topic"
                                     name="topic"
                                     items={[
-                                        { label: 'Python', count: '586' },
-                                        { label: 'JavaScript', count: '508' },
-                                        { label: 'React.js', count: '486' },
-                                        { label: 'Web Development', count: '379' }
+                                        { label: 'Python' },
+                                        { label: 'JavaScript' },
+                                        { label: 'React' },
+                                        { label: 'Web Development' },
+                                        { label: 'Frontend' },
+                                        { label: 'AI' }
                                     ]}
                                     type="checkbox"
                                     selected={topic}
@@ -269,9 +268,9 @@ const Search: React.FC = () => {
                                     title="Level"
                                     name="level"
                                     items={[
-                                        { label: 'Beginner', count: '5,749' },
-                                        { label: 'Intermediate', count: '3,678' },
-                                        { label: 'Advanced', count: '1,893' }
+                                        { label: 'Beginner' },
+                                        { label: 'Intermediate' },
+                                        { label: 'Advanced' }
                                     ]}
                                     type="radio"
                                     selected={level}
@@ -324,7 +323,7 @@ const FilterGroup: React.FC<FilterGroupProps> = ({ title, items, type, selected,
                         <span className="ml-3 text-sm text-white group-hover:text-gray-200 transition-colors">
                             {item.label}
                         </span>
-                        <span className="ml-auto text-xs text-white">({item.count})</span>
+                        {/* <span className="ml-auto text-xs text-white">({item.count})</span> */}
                     </label>
                 ))}
             </div>
