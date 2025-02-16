@@ -8,7 +8,7 @@ import { Try } from './Try';
 const Home: React.FC = () => {
   return (
     <>
-      <div className="flex flex-col items-center justify-center min-h-screen text-white px-6">
+      <div className="flex flex-col items-center justify-center min-h-screen text-white px-6 overflow-hidden">
         {/* Main Heading */}
         <motion.h1
           initial={{ opacity: 0, y: -50 }}
@@ -65,7 +65,7 @@ const Home: React.FC = () => {
       {/* _____________________ */}
       <div className="flex flex-col lg:flex-row justify-center items-center min-h-screen p-4 gap-8 lg:gap-4">
         {/* Left Content */}
-        <div className="w-full lg:w-1/3 lg:pr-8 relative ml-[5rem]">
+        <div className="w-full lg:w-1/3 lg:pr-8 relative ml-[2rem]">
           <div className="hidden lg:block absolute top-0 right-0 w-[2px] h-full bg-gradient-to-b from-purple-600 via-pink-500 to-transparent"></div>
           <h1 className="text-3xl lg:text-4xl font-bold text-white mb-6 bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent text-center lg:text-left">
             Discover Excellence in Learning
@@ -110,7 +110,7 @@ const Home: React.FC = () => {
       </div>
       <MiddleSection />
 
-      <div className="mt-10 flex justify-center items-center">
+      <div className="mt-10 flex justify-center items-center ">
         <Try />
       </div>
 

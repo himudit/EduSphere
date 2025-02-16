@@ -204,7 +204,7 @@ const ShowcaseRow = ({ items, direction }: ShowcaseRowProps) => {
     };
 
     return (
-        <div className="relative overflow-hidden py-2">
+        <div className="relative overflow-hidden py-2 border border-transparent rounded-xl">
             <motion.div
                 className="flex gap-3 md:gap-4"
                 variants={containerAnimation}
@@ -230,27 +230,27 @@ const ShowcaseRow = ({ items, direction }: ShowcaseRowProps) => {
 
 export const Try = () => {
     return (
-        <div className="flex h-[30%] border-transparent rounded-2xl min-w-[95%] items-center justify-center bg-[#111111] px-2 sm:px-4 py-16">
+        <div className="flex h-[40rem] w-[22rem] border-transparent rounded-2xl  min-w-[60%] items-center justify-center bg-[#111111] px-2 sm:px-4 py-16">
             <div className="w-full max-w-6xl rounded-xl bg-[#111111] p-4 sm:p-8">
                 <div className="flex flex-col gap-1">
                     {/* Showcase rows first */}
-                    <div className="flex flex-col gap-2 mt-[-4rem]">
+                    <div className="flex flex-col gap-2 mt-[-3rem]">
                         <ShowcaseRow items={showcaseItems1} direction="left" />
                         <ShowcaseRow items={showcaseItems2} direction="right" />
                     </div>
-                    <div className="flex mt-[2rem] justify-center items-center flex-wrap gap-10">
+                    <div className="flex mt-[0.5rem] justify-center items-center flex-wrap gap-10">
                         {/* Text content below */}
-                        <div className="-ml-[3rem]">
+                        <div className="lg:-ml-[3rem]">
                             <h2 className="text-2xl  font-medium tracking-tight text-gray-500">
                                 Designed & built
                             </h2>
-                            <div className="mt-2 text-[5rem] tracking-tight text-white">
+                            <div className="-mt-1 text-[5rem] tracking-tight text-white">
                                 Using Relume
                             </div>
                         </div>
 
                         {/* Buttons */}
-                        <div className="flex justify-center gap-3 sm:gap-4">
+                        <div className="-mt-[1rem] flex justify-center gap-3 sm:gap-4">
                             <a
                                 href="#"
                                 className="inline-flex items-center justify-center rounded-md bg-white px-4 py-2 sm:px-6 sm:py-3 text-xs sm:text-sm font-medium text-black transition-colors hover:bg-gray-100"

@@ -23,7 +23,7 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <nav className="relative bg-black text-white">
+    <nav className="relative bg-black text-white ">
       {/* Main Navbar Container */}
       <div className="max-w-7xl mx-auto">
         {/* Top Navbar */}
