@@ -80,40 +80,94 @@ app.get('/search', async (req: Request, res: Response) => {
     }
 })
 
+// app.get('/filterSearch', async (req: Request, res: Response) => {
+//     try {
+//         const { topic, level, rating } = req.query;
+//         let filter = {};
+
+//         let minRating: number | undefined;
+//         if (rating) {
+//             if (rating.includes("& up")) {
+//                 minRating = parseFloat(rating.split(" & up")[0]);
+//             } else if (rating.includes("& below")) {
+//                 minRating = parseFloat(rating.split(" & below")[0]);
+//             }
+//         }
+//         const courses = await prisma.courses.findMany({
+//             where: {
+//                 AND: [
+//                     level ? { course_level: level } : {},
+//                     topic?.length > 0 ? { course_keywords: { hasSome: topic } } : {},
+//                     minRating !== undefined
+//                         ? rating.includes("below")
+//                             ? { rating: { lte: minRating } }
+//                             : { rating: { gte: minRating } }
+//                         : {}
+//                 ]
+//             },
+//         });
+//         if (!courses) {
+//             return res.status(404).json({ error: 'Course not found' });
+//         }
+//         res.status(200).json(courses);
+//     } catch (err) {
+//         res.status(500).json({ error: 'Failed to fetch course' });
+//     }
+// })
 app.get('/filterSearch', async (req: Request, res: Response) => {
     try {
+        // Extract query params
         const { topic, level, rating } = req.query;
-        let filter = {};
 
+        let filter: any = {};
+
+        // Ensure rating is a string before using `.includes()`
         let minRating: number | undefined;
-        if (rating) {
-            if (rating.includes("& up")) {
-                minRating = parseFloat(rating.split(" & up")[0]);
-            } else if (rating.includes("& below")) {
-                minRating = parseFloat(rating.split(" & below")[0]);
+        const ratingStr = typeof rating === "string" ? rating : undefined;
+
+        if (ratingStr) {
+            if (ratingStr.includes("& up")) {
+                minRating = parseFloat(ratingStr.split(" & up")[0]);
+            } else if (ratingStr.includes("& below")) {
+                minRating = parseFloat(ratingStr.split(" & below")[0]);
             }
         }
+
+        // Ensure topic is properly typed as an array of strings
+        let topicsArray: string[] = [];
+        if (typeof topic === "string") {
+            topicsArray = [topic]; // Convert single string to an array
+        } else if (Array.isArray(topic)) {
+            topicsArray = topic.map(t => String(t)); // Ensure each item is a string
+        }
+
+        // Ensure level is a string
+        const levelStr = typeof level === "string" ? level : undefined;
+
         const courses = await prisma.courses.findMany({
             where: {
                 AND: [
-                    level ? { course_level: level } : {},
-                    topic?.length > 0 ? { course_keywords: { hasSome: topic } } : {},
+                    levelStr ? { course_level: levelStr } : {}, // ✅ Fixed type issue
+                    topicsArray.length > 0 ? { course_keywords: { hasSome: topicsArray } } : {}, // ✅ Fixed type issue
                     minRating !== undefined
-                        ? rating.includes("below")
+                        ? ratingStr?.includes("below")
                             ? { rating: { lte: minRating } }
                             : { rating: { gte: minRating } }
                         : {}
                 ]
             },
         });
-        if (!courses) {
+
+        if (!courses.length) {
             return res.status(404).json({ error: 'Course not found' });
         }
+
         res.status(200).json(courses);
     } catch (err) {
-        res.status(500).json({ error: 'Failed to fetch course' });
+        res.status(500).json({ error: 'Failed to fetch courses' });
     }
-})
+});
+
 
 interface StudentRequest extends Request {
     student?: {
@@ -202,14 +256,12 @@ app.patch('/teachers/profile/edit', authTeacher,  async (req: TeacherRequest, re
         teacher_skills,
     } = req.body;
     const teacher_id = req.teacher?.teacher_id;
-    // Validate required fields
     if (!teacher_id) {
         return res.status(400).json({ error: 'Student ID is required' });
     }
     try {
-        // Update the student profile in the database
         const updatedTeacher = await prisma.teachers.update({
-            where: { teacher_id }, // Use the student_id to find the record
+            where: { teacher_id }, 
             data: {
                 first_name,
                 last_name,
