@@ -116,12 +116,10 @@ app.get('/search', async (req: Request, res: Response) => {
 // })
 app.get('/filterSearch', async (req: Request, res: Response) => {
     try {
-        // Extract query params
         const { topic, level, rating } = req.query;
 
         let filter: any = {};
 
-        // Ensure rating is a string before using `.includes()`
         let minRating: number | undefined;
         const ratingStr = typeof rating === "string" ? rating : undefined;
 
@@ -133,22 +131,20 @@ app.get('/filterSearch', async (req: Request, res: Response) => {
             }
         }
 
-        // Ensure topic is properly typed as an array of strings
         let topicsArray: string[] = [];
         if (typeof topic === "string") {
-            topicsArray = [topic]; // Convert single string to an array
+            topicsArray = [topic];
         } else if (Array.isArray(topic)) {
-            topicsArray = topic.map(t => String(t)); // Ensure each item is a string
+            topicsArray = topic.map(t => String(t)); 
         }
 
-        // Ensure level is a string
         const levelStr = typeof level === "string" ? level : undefined;
 
         const courses = await prisma.courses.findMany({
             where: {
                 AND: [
-                    levelStr ? { course_level: levelStr } : {}, // ✅ Fixed type issue
-                    topicsArray.length > 0 ? { course_keywords: { hasSome: topicsArray } } : {}, // ✅ Fixed type issue
+                    levelStr ? { course_level: levelStr } : {}, 
+                    topicsArray.length > 0 ? { course_keywords: { hasSome: topicsArray } } : {}, 
                     minRating !== undefined
                         ? ratingStr?.includes("below")
                             ? { rating: { lte: minRating } }
@@ -157,11 +153,9 @@ app.get('/filterSearch', async (req: Request, res: Response) => {
                 ]
             },
         });
-
         if (!courses.length) {
             return res.status(404).json({ error: 'Course not found' });
         }
-
         res.status(200).json(courses);
     } catch (err) {
         res.status(500).json({ error: 'Failed to fetch courses' });
