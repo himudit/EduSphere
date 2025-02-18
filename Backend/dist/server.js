@@ -124,16 +124,15 @@ app.get('/filterSearch', (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
 }));
 app.patch('/students/profile/edit', auth_middleware_1.authStudent, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const { first_name, last_name, student_about, student_address, student_gender, student_github, student_linkedin, student_mobile, student_profile_picture, student_skills, student_twitter, student_university } = req.body;
-    const student_id = req.student.student_id;
-    // Validate required fields
+    const student_id = (_a = req.student) === null || _a === void 0 ? void 0 : _a.student_id;
     if (!student_id) {
         return res.status(400).json({ error: 'Student ID is required' });
     }
     try {
-        // Update the student profile in the database
         const updatedStudent = yield prisma.students.update({
-            where: { student_id }, // Use the student_id to find the record
+            where: { student_id },
             data: {
                 first_name,
                 last_name,
@@ -162,10 +161,11 @@ app.post("/students/profile/upload/image", multerConfig_1.default.single("image"
             return res.status(400).json({ error: "No file uploaded" });
         }
         cloudinaryConfig_1.default.uploader.upload_stream({ folder: "profile_pictures" }, (error, result) => __awaiter(void 0, void 0, void 0, function* () {
+            var _a;
             if (error) {
                 return res.status(500).json({ error: "Cloudinary upload failed" });
             }
-            const student_id = req.student.student_id;
+            const student_id = (_a = req.student) === null || _a === void 0 ? void 0 : _a.student_id;
             const updatedStudent = yield prisma.students.update({
                 where: { student_id: student_id },
                 data: { student_profile_picture: result === null || result === void 0 ? void 0 : result.secure_url },
@@ -179,8 +179,9 @@ app.post("/students/profile/upload/image", multerConfig_1.default.single("image"
     }
 }));
 app.patch('/teachers/profile/edit', auth_middleware_1.authTeacher, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const { first_name, last_name, teacher_about, teacher_gender, teacher_profile_picture, teacher_skills, } = req.body;
-    const teacher_id = req.teacher.teacher_id;
+    const teacher_id = (_a = req.teacher) === null || _a === void 0 ? void 0 : _a.teacher_id;
     // Validate required fields
     if (!teacher_id) {
         return res.status(400).json({ error: 'Student ID is required' });
@@ -211,10 +212,11 @@ app.post("/teachers/profile/upload/image", multerConfig_1.default.single("image"
             return res.status(400).json({ error: "No file uploaded" });
         }
         cloudinaryConfig_1.default.uploader.upload_stream({ folder: "profile_pictures" }, (error, result) => __awaiter(void 0, void 0, void 0, function* () {
+            var _a;
             if (error) {
                 return res.status(500).json({ error: "Cloudinary upload failed" });
             }
-            const teacher_id = req.teacher.teacher_id;
+            const teacher_id = (_a = req.teacher) === null || _a === void 0 ? void 0 : _a.teacher_id;
             const updatedStudent = yield prisma.teachers.update({
                 where: { teacher_id: teacher_id },
                 data: { teacher_profile_picture: result === null || result === void 0 ? void 0 : result.secure_url },
@@ -228,11 +230,12 @@ app.post("/teachers/profile/upload/image", multerConfig_1.default.single("image"
     }
 }));
 app.post('/teachers/course/upload', auth_middleware_1.authTeacher, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
-        const teacher_id = req.teacher.teacher_id;
+        const teacher_id = (_a = req.teacher) === null || _a === void 0 ? void 0 : _a.teacher_id;
         // Validate required fields
         if (!teacher_id) {
-            return res.status(400).json({ error: 'Student ID is required' });
+            return res.status(400).json({ error: 'Teacher ID is required' });
         }
         const { course_id, course_title, course_description, course_price, course_thumbnail = " ", course_no_of_purchase, course_total_no_hours, rating, creation, course_preview_video, course_what_you_will_learn, course_author, course_keywords, course_level } = req.body;
         const response = yield prisma.courses.create({
@@ -263,8 +266,15 @@ app.post('/teachers/course/upload', auth_middleware_1.authTeacher, (req, res) =>
         return res.json(response);
     }
     catch (err) {
-        console.error("Error uploading Course Data:", err);
-        res.status(500).json({ error: "Failed to upload data", details: err.message });
+        if (err instanceof Error) {
+            console.error("Error uploading Lecture Data:", err);
+            res.status(500).json({ error: "Failed to upload data", details: err.message });
+        }
+        else {
+            // Handle non-Error objects
+            console.error("Unknown error:", err);
+            res.status(500).json({ error: "Failed to upload data", details: "Unknown error" });
+        }
     }
 }));
 app.post('/teachers/lecture/upload', auth_middleware_1.authTeacher, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -284,8 +294,15 @@ app.post('/teachers/lecture/upload', auth_middleware_1.authTeacher, (req, res) =
         return res.json(response);
     }
     catch (err) {
-        console.error("Error uploading Lecture Data:", err);
-        res.status(500).json({ error: "Failed to upload data", details: err.message });
+        if (err instanceof Error) {
+            console.error("Error uploading Lecture Data:", err);
+            res.status(500).json({ error: "Failed to upload data", details: err.message });
+        }
+        else {
+            // Handle non-Error objects
+            console.error("Unknown error:", err);
+            res.status(500).json({ error: "Failed to upload data", details: "Unknown error" });
+        }
     }
 }));
 app.post('/teachers/video/upload', auth_middleware_1.authTeacher, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -305,8 +322,15 @@ app.post('/teachers/video/upload', auth_middleware_1.authTeacher, (req, res) => 
         return res.json(response);
     }
     catch (err) {
-        console.error("Error uploading Lecture Data:", err);
-        res.status(500).json({ error: "Failed to upload data", details: err.message });
+        if (err instanceof Error) {
+            console.error("Error uploading Lecture Data:", err);
+            res.status(500).json({ error: "Failed to upload data", details: err.message });
+        }
+        else {
+            // Handle non-Error objects
+            console.error("Unknown error:", err);
+            res.status(500).json({ error: "Failed to upload data", details: "Unknown error" });
+        }
     }
 }));
 const port = process.env.PORT || 3000;

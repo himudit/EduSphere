@@ -115,7 +115,12 @@ app.get('/filterSearch', async (req: Request, res: Response) => {
     }
 })
 
-app.patch('/students/profile/edit', authStudent, async (req: Request, res: Response) => {
+interface StudentRequest extends Request {
+    student?: {
+        student_id: string;
+    }
+}
+app.patch('/students/profile/edit', authStudent, async  (req: StudentRequest, res: Response) => {
     const {
         first_name,
         last_name,
@@ -130,15 +135,13 @@ app.patch('/students/profile/edit', authStudent, async (req: Request, res: Respo
         student_twitter,
         student_university
     } = req.body;
-    const student_id = req.student.student_id;
-    // Validate required fields
+    const student_id = req.student?.student_id;
     if (!student_id) {
         return res.status(400).json({ error: 'Student ID is required' });
     }
     try {
-        // Update the student profile in the database
         const updatedStudent = await prisma.students.update({
-            where: { student_id }, // Use the student_id to find the record
+            where: { student_id }, 
             data: {
                 first_name,
                 last_name,
@@ -162,7 +165,7 @@ app.patch('/students/profile/edit', authStudent, async (req: Request, res: Respo
     }
 });
 
-app.post("/students/profile/upload/image", upload.single("image"), authStudent, async (req, res) => {
+app.post("/students/profile/upload/image", upload.single("image"), authStudent, async (req: StudentRequest, res: Response) => {
     try {
         if (!req.file) {
             return res.status(400).json({ error: "No file uploaded" });
@@ -171,7 +174,7 @@ app.post("/students/profile/upload/image", upload.single("image"), authStudent, 
             if (error) {
                 return res.status(500).json({ error: "Cloudinary upload failed" });
             }
-            const student_id = req.student.student_id;
+            const student_id = req.student?.student_id;
             const updatedStudent = await prisma.students.update({
                 where: { student_id: student_id },
                 data: { student_profile_picture: result?.secure_url },
@@ -184,7 +187,12 @@ app.post("/students/profile/upload/image", upload.single("image"), authStudent, 
     }
 });
 
-app.patch('/teachers/profile/edit', authTeacher, async (req: Request, res: Response) => {
+interface TeacherRequest extends Request {
+    teacher?: {
+        teacher_id: string;
+    }
+}
+app.patch('/teachers/profile/edit', authTeacher,  async (req: TeacherRequest, res: Response) => {
     const {
         first_name,
         last_name,
@@ -193,7 +201,7 @@ app.patch('/teachers/profile/edit', authTeacher, async (req: Request, res: Respo
         teacher_profile_picture,
         teacher_skills,
     } = req.body;
-    const teacher_id = req.teacher.teacher_id;
+    const teacher_id = req.teacher?.teacher_id;
     // Validate required fields
     if (!teacher_id) {
         return res.status(400).json({ error: 'Student ID is required' });
@@ -219,7 +227,7 @@ app.patch('/teachers/profile/edit', authTeacher, async (req: Request, res: Respo
     }
 });
 
-app.post("/teachers/profile/upload/image", upload.single("image"), authTeacher, async (req, res) => {
+app.post("/teachers/profile/upload/image", upload.single("image"), authTeacher, async (req: TeacherRequest, res: Response) => {
     try {
         if (!req.file) {
             return res.status(400).json({ error: "No file uploaded" });
@@ -228,7 +236,7 @@ app.post("/teachers/profile/upload/image", upload.single("image"), authTeacher, 
             if (error) {
                 return res.status(500).json({ error: "Cloudinary upload failed" });
             }
-            const teacher_id = req.teacher.teacher_id;
+            const teacher_id = req.teacher?.teacher_id;
             const updatedStudent = await prisma.teachers.update({
                 where: { teacher_id: teacher_id },
                 data: { teacher_profile_picture: result?.secure_url },
@@ -241,12 +249,13 @@ app.post("/teachers/profile/upload/image", upload.single("image"), authTeacher, 
     }
 });
 
-app.post('/teachers/course/upload', authTeacher, async (req, res) => {
+
+app.post('/teachers/course/upload', authTeacher, async (req: TeacherRequest, res: Response) => {
     try {
-        const teacher_id = req.teacher.teacher_id;
+        const teacher_id = req.teacher?.teacher_id;
         // Validate required fields
         if (!teacher_id) {
-            return res.status(400).json({ error: 'Student ID is required' });
+            return res.status(400).json({ error: 'Teacher ID is required' });
         }
         const {
             course_id,
@@ -290,9 +299,15 @@ app.post('/teachers/course/upload', authTeacher, async (req, res) => {
             }
         })
         return res.json(response);
-    } catch (err) {
-        console.error("Error uploading Course Data:", err);
-        res.status(500).json({ error: "Failed to upload data", details: err.message });
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            console.error("Error uploading Lecture Data:", err);
+            res.status(500).json({ error: "Failed to upload data", details: err.message });
+        } else {
+            // Handle non-Error objects
+            console.error("Unknown error:", err);
+            res.status(500).json({ error: "Failed to upload data", details: "Unknown error" });
+        }
     }
 })
 
@@ -320,10 +335,15 @@ app.post('/teachers/lecture/upload', authTeacher, async (req, res) => {
         })
         return res.json(response);
 
-    } catch (err) {
-        console.error("Error uploading Lecture Data:", err);
-        res.status(500).json({ error: "Failed to upload data", details: err.message });
-
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            console.error("Error uploading Lecture Data:", err);
+            res.status(500).json({ error: "Failed to upload data", details: err.message });
+        } else {
+            // Handle non-Error objects
+            console.error("Unknown error:", err);
+            res.status(500).json({ error: "Failed to upload data", details: "Unknown error" });
+        }
     }
 })
 
@@ -350,9 +370,15 @@ app.post('/teachers/video/upload', authTeacher, async (req, res) => {
             }
         })
         return res.json(response);
-    } catch (err) {
-        console.error("Error uploading Lecture Data:", err);
-        res.status(500).json({ error: "Failed to upload data", details: err.message });
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            console.error("Error uploading Lecture Data:", err);
+            res.status(500).json({ error: "Failed to upload data", details: err.message });
+        } else {
+            // Handle non-Error objects
+            console.error("Unknown error:", err);
+            res.status(500).json({ error: "Failed to upload data", details: "Unknown error" });
+        }
     }
 })
 
