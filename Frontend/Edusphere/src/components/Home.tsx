@@ -5,6 +5,7 @@ import axios from "axios";
 import MiddleSection from './students/MiddleSection';
 import { Try } from './Try';
 
+
 const Home: React.FC = () => {
   return (
     <>
