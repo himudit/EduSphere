@@ -78,7 +78,7 @@ model teachers {
 }
 
 model teacher_courses {
-  id         Int   @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   teacher_id String
   course_id  String
   creation   DateTime @default(now())

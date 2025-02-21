@@ -231,22 +231,6 @@ const Search: React.FC = () => {
                                     selected={rating}
                                     setSelected={(value) => setRating(value as string)}
                                 />
-                                {/* Duration Filter */}
-                                {/* <FilterGroup
-                                    title="Video Duration"
-                                    name="duration"
-                                    items={[
-                                        { label: '0-1 Hour', count: '1,473' },
-                                        { label: '1-3 Hours', count: '2,286' },
-                                        { label: '3-6 Hours', count: '3,549' },
-                                        { label: '6-17 Hours', count: '5,058' }
-                                    ]}
-                                    type="radio"
-                                    selected={duration}
-                                    setSelected={(value) => setDuration(value as string)}
-                                /> */}
-
-                                {/* Topic Filter */}
                                 <FilterGroup
                                     title="Topic"
                                     name="topic"

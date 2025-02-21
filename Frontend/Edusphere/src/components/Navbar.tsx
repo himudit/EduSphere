@@ -184,15 +184,20 @@ const Navbar: React.FC = () => {
         <div className="py-6">
           {/* Profile Section in Sidebar */}
           <div className="px-6 mb-6 flex items-center gap-3">
-            <img
-              src={user?.student_profile_picture || logo || user?.teacher_profile_picture}
-              alt="Profile"
-              className="w-[4rem] h-[4rem] rounded-full border-2 border-purple-500"
-            />
-            <div>
-              <h3 className="font-medium">{user?.first_name} {user?.last_name}</h3>
-              <p className="text-sm text-gray-400">{user?.email}</p>
-            </div>
+            {
+              user ?
+                <>
+                  <img
+                    src={user?.student_profile_picture || user?.teacher_profile_picture}
+                    alt="Profile"
+                    className="w-[4rem] h-[4rem] rounded-full border-2 border-purple-500"
+                  />
+                  <div>
+                    <h3 className="font-medium">{user?.first_name} {user?.last_name}</h3>
+                    <p className="text-sm text-gray-400">{user?.email}</p>
+                  </div>
+                </> : <></>
+            }
           </div>
 
           <ul className="space-y-2">
@@ -239,25 +244,27 @@ const Navbar: React.FC = () => {
               </Link>
             </li>
             <li>
-              <Link
-                to="/profile"
-                className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
-              >
-                <svg
-                  className="w-5 h-5 mr-3"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+              {user ?
+                <> <Link
+                  to="/profile"
+                  className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
-                Profile
-              </Link>
+                  <svg
+                    className="w-5 h-5 mr-3"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
+                  Profile
+                </Link></> : <></>}
+
             </li>
           </ul>
         </div>

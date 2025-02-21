@@ -51,7 +51,7 @@ const Home: React.FC = () => {
         </motion.p>
 
         {/* Button */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.8, delay: 0.6 }}
@@ -60,7 +60,7 @@ const Home: React.FC = () => {
           <button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg shadow-lg hover:opacity-90 text-lg transition-all">
             Get Started
           </button>
-        </motion.div>
+        </motion.div> */}
       </div>
 
       {/* _____________________ */}

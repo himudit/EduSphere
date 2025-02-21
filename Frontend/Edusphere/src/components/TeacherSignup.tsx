@@ -13,10 +13,12 @@ function Signup() {
     const [first_name, setFirstName] = useState('');
     const [last_name, setLastName] = useState('');
     const dispatch = useDispatch();
+    const [loading, setLoading] = useState(false);
 
     const formSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
+            setLoading(true);
             const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/teachers/register`, {
                 first_name: first_name,
                 last_name: last_name,
@@ -33,6 +35,8 @@ function Signup() {
             }
         } catch (error) {
             console.error('Registration failed:', error);
+        } finally {
+            setLoading(false);
         }
     }
     return (
@@ -116,11 +120,15 @@ function Signup() {
 
                     <button
                         type="submit"
-                        className="w-full bg-purple-600 hover:bg-purple-700 text-white rounded-lg py-3 transition-colors mt-6"
+                        disabled={loading}
+                        className={`w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg py-3 transition-colors ${loading ? 'bg-purple-400 cursor-not-allowed' : ''
+                            }`}
                     >
-                        Create Account
+                        {loading && (
+                            <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                        )}
+                        {loading ? 'Creating Account...' : 'Create Account'}
                     </button>
-
                 </form>
 
                 <div className="mt-8 text-center text-sm">

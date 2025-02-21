@@ -10,12 +10,14 @@ function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const dispatch = useDispatch();
 
     const formSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
+            setLoading(true);
             const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/teachers/login`, {
                 email: email,
                 password: password
@@ -30,6 +32,8 @@ function Login() {
             }
         } catch (error) {
             console.error('Registration failed:', error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -90,9 +94,14 @@ function Login() {
 
                     <button
                         type="submit"
-                        className="w-full bg-purple-600 hover:bg-purple-700 text-white rounded-lg py-3 transition-colors"
+                        disabled={loading}
+                        className={`w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg py-3 transition-colors ${loading ? 'bg-purple-400 cursor-not-allowed' : ''
+                            }`}
                     >
-                        Log In as Teacher
+                        {loading && (
+                            <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                        )}
+                        {loading ? 'Logging In...' : 'Log In as Teacher'}
                     </button>
 
                 </form>
