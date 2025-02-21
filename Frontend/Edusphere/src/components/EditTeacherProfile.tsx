@@ -122,7 +122,7 @@ const UserProfile = () => {
                         <div className="bg-[#212529] shadow-md rounded-lg p-6 flex flex-col items-center">
                             <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-gray-300 mb-4">
                                 <img
-                                    src={teacherData?.teacher_profile_picture || "https://www.saraswatiias.com/wp-content/uploads/2018/11/dummy-profile-pic-male1.jpg"}
+                                    src={teacherData?.teacher_profile_picture}
                                     alt="Profile"
                                     className="w-full h-full object-cover"
                                 />
