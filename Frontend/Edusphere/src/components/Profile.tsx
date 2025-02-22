@@ -39,26 +39,6 @@ const Profile: React.FC = () => {
                             <h1 className="text-2xl lg:ml-[2rem] font-bold">{user?.first_name || "John Doe"}</h1>
                             <p className="text-sm lg:ml-[2rem] text-gray-400">{user?.role}</p>
                         </div>
-                        {/* <div className='flex items-center justify-evenly'>
-                            <button onClick={() => {
-                                navigate(`/profile/${user.role}/edit`)
-                            }} className="bg-black w-[6rem] h-[3rem] border border-white rounded-lg text-white font-bold">Edit Profile</button>
-                            <button onClick={() => {
-                                if (localStorage.getItem('token')) {
-                                    localStorage.removeItem('token');
-                                    console.log("'token' has been deleted from local storage.");
-                                }
-                                else if (localStorage.getItem('teacher_token')) {
-                                    localStorage.removeItem('teacher_token');
-                                    console.log("'teacher_token' has been deleted from local storage.");
-                                }
-                                else {
-                                    console.log("No token found in local storage.");
-                                }
-                                dispatch(removeUser());
-                                navigate('/');
-                            }} className="bg-blue-300  w-[6rem] h-[3rem] border border-white rounded-lg text-white font-bold">Logout</button>
-                        </div> */}
                         <div className="flex items-center justify-center gap-6 w-full">
                             {/* Edit Profile Button */}
                             <button
