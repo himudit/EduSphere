@@ -74,6 +74,7 @@ const CourseUpload = () => {
     const [imageError, setImageError] = useState("");
     const [videoError, setVideoError] = useState("");
     const [courseDuration, setCourseDuration] = useState(0);
+    const [finalLoading, setFinalLoading] = useState(false);
 
     const nextStep = () => setStep((prev) => Math.min(prev + 1, 3));
     const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
@@ -767,56 +768,81 @@ const CourseUpload = () => {
                 {step < 3 ? (
                     <button onClick={nextStep} className="px-4 py-2 bg-purple-500 rounded">Next</button>
                 ) : (
-                    <button onClick={async (e) => {
-                        e.preventDefault();
-                        try {
-                            formData["course_total_no_hours"] = courseDuration;
-                            console.log(formData);
-                            console.log(lectures);
-                            const response = await axios.post(
-                                `${import.meta.env.VITE_BASE_URL}/teachers/course/upload`,
-                                formData,
-                                {
-                                    headers: {
-                                        Authorization: `Bearer ${localStorage.getItem('teacher_token')}`
+                    <>
+                        {/* <button
+                        type="submit"
+                        disabled={finalLoading}
+                        className={`w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg py-3 transition-colors ${loading ? 'bg-purple-400 cursor-not-allowed' : ''
+                            }`}
+                    >
+                        {loading && (
+                            <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                        )}
+                        {loading ? 'Logging In...' : 'Log In as Student'}
+                    </button> */}
+                        <button onClick={async (e) => {
+                            e.preventDefault();
+                            setFinalLoading(true);
+                            try {
+                                formData["course_total_no_hours"] = courseDuration;
+                                console.log(formData);
+                                console.log(lectures);
+                                const response = await axios.post(
+                                    `${import.meta.env.VITE_BASE_URL}/teachers/course/upload`,
+                                    formData,
+                                    {
+                                        headers: {
+                                            Authorization: `Bearer ${localStorage.getItem('teacher_token')}`
+                                        }
                                     }
-                                }
-                            );
-                            await Promise.all(lectures.map(async (lecture) => {
-                                try {
-                                    const response = await axios.post(
-                                        `${import.meta.env.VITE_BASE_URL}/teachers/lecture/upload`,
-                                        lecture,
-                                        {
-                                            headers: { Authorization: `Bearer ${localStorage.getItem('teacher_token')}` }
-                                        }
-                                    );
-                                    console.log(response);
+                                );
+                                await Promise.all(lectures.map(async (lecture) => {
+                                    try {
+                                        const response = await axios.post(
+                                            `${import.meta.env.VITE_BASE_URL}/teachers/lecture/upload`,
+                                            lecture,
+                                            {
+                                                headers: { Authorization: `Bearer ${localStorage.getItem('teacher_token')}` }
+                                            }
+                                        );
+                                        console.log(response);
 
-                                    await Promise.all(lecture.videos.map(async (video) => {
-                                        try {
-                                            const videoResponse = await axios.post(
-                                                `${import.meta.env.VITE_BASE_URL}/teachers/video/upload`,
-                                                video,
-                                                {
-                                                    headers: { Authorization: `Bearer ${localStorage.getItem('teacher_token')}` }
-                                                }
-                                            );
-                                            console.log(videoResponse);
-                                        } catch (err) {
-                                            console.error('Failed to upload video:', err.response?.data || err.message);
-                                        }
-                                    }));
-                                } catch (err) {
-                                    console.error('Failed to upload lecture:', err.response?.data || err.message);
-                                }
-                            }));
-                            notify();
-                        } catch (err) {
-                            console.error('Failed to upload course :', err.response?.data || err.message);
+                                        await Promise.all(lecture.videos.map(async (video) => {
+                                            try {
+                                                const videoResponse = await axios.post(
+                                                    `${import.meta.env.VITE_BASE_URL}/teachers/video/upload`,
+                                                    video,
+                                                    {
+                                                        headers: { Authorization: `Bearer ${localStorage.getItem('teacher_token')}` }
+                                                    }
+                                                );
+                                                console.log(videoResponse);
+                                            } catch (err) {
+                                                console.error('Failed to upload video:', err.response?.data || err.message);
+                                            }
+                                        }));
+                                    } catch (err) {
+                                        console.error('Failed to upload lecture:', err.response?.data || err.message);
+                                    }
+                                }));
+                                notify();
+                            } catch (err) {
+                                console.error('Failed to upload course :', err.response?.data || err.message);
+                            } finally {
+                                setFinalLoading(false);
+                            }
                         }
-                    }
-                    } className="px-4 py-2 bg-green-500 rounded">Submit</button>
+                        }
+                            disabled={finalLoading}
+                            className={`w-40 flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg py-3 transition-colors ${loading ? 'bg-purple-400 cursor-not-allowed' : ''
+                                }`}
+                        >
+                            {finalLoading && (
+                                <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                            )}
+                            {finalLoading ? 'Uploading...' : 'Upload Course'}
+                        </button>
+                    </>
                 )}
             </div>
 
