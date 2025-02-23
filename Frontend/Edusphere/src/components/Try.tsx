@@ -84,10 +84,10 @@ export const Try = () => {
                         {/* Text content below */}
                         <div className="lg:-ml-[3rem]">
                             <h2 className="text-2xl  font-medium tracking-tight text-gray-500">
-                                Designed & built
+                                Shaping & Educating
                             </h2>
                             <div className="-mt-1 text-[5rem] tracking-tight text-white">
-                                Using Relume
+                                Using EduSphere
                             </div>
                         </div>
 
