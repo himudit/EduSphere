@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import CardCarousel from "./CardCarousel";
 import axios from "axios";
-import MiddleSection from './students/MiddleSection';
+import MiddleSection from './MiddleSection';
 import { Try } from './Try';
 
 

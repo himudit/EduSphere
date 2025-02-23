@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 
-// Sample showcase items using Unsplash images
 const showcaseItems1 = [
     { id: 1, image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&auto=format&fit=crop", alt: "Business website" },
     { id: 2, image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop", alt: "Marketing website" },
