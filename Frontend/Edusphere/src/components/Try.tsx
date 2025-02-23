@@ -92,7 +92,7 @@ export const Try = () => {
                         </div>
 
                         {/* Buttons */}
-                        <div className="-mt-[1rem] flex justify-center gap-3 sm:gap-4">
+                        {/* <div className="-mt-[1rem] flex justify-center gap-3 sm:gap-4">
                             <a
                                 href="#"
                                 className="inline-flex items-center justify-center rounded-md bg-white px-4 py-2 sm:px-6 sm:py-3 text-xs sm:text-sm font-medium text-black transition-colors hover:bg-gray-100"
@@ -105,7 +105,7 @@ export const Try = () => {
                             >
                                 Become an Expert
                             </a>
-                        </div>
+                        </div> */}
                     </div>
 
                 </div>
