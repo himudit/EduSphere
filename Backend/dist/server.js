@@ -17,6 +17,7 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const students_routes_1 = __importDefault(require("./routes/students.routes"));
 const teachers_routes_1 = __importDefault(require("./routes/teachers.routes"));
+const payment_1 = __importDefault(require("./routes/payment"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const client_1 = require("@prisma/client");
 const auth_middleware_1 = require("./middlewares/auth.middleware");
@@ -34,6 +35,7 @@ app.use('/api', (req, res) => {
 });
 app.use('/students', students_routes_1.default);
 app.use('/teachers', teachers_routes_1.default);
+app.use('/payment', payment_1.default);
 app.get('/rating', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const courses = yield prisma.courses.findMany();
@@ -60,7 +62,7 @@ app.get('/course/:course_id', (req, res) => __awaiter(void 0, void 0, void 0, fu
         }
         const teacherCourse = yield prisma.teacher_courses.findFirst({
             where: { course_id: req.params.course_id },
-            include: { teacher: true } // Include related teacher details
+            include: { teacher: true }
         });
         if (teacherCourse) {
             res.status(200).json({
@@ -88,39 +90,6 @@ app.get('/search', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(500).json({ error: 'Failed to fetch course' });
     }
 }));
-// app.get('/filterSearch', async (req: Request, res: Response) => {
-//     try {
-//         const { topic, level, rating } = req.query;
-//         let filter = {};
-//         let minRating: number | undefined;
-//         if (rating) {
-//             if (rating.includes("& up")) {
-//                 minRating = parseFloat(rating.split(" & up")[0]);
-//             } else if (rating.includes("& below")) {
-//                 minRating = parseFloat(rating.split(" & below")[0]);
-//             }
-//         }
-//         const courses = await prisma.courses.findMany({
-//             where: {
-//                 AND: [
-//                     level ? { course_level: level } : {},
-//                     topic?.length > 0 ? { course_keywords: { hasSome: topic } } : {},
-//                     minRating !== undefined
-//                         ? rating.includes("below")
-//                             ? { rating: { lte: minRating } }
-//                             : { rating: { gte: minRating } }
-//                         : {}
-//                 ]
-//             },
-//         });
-//         if (!courses) {
-//             return res.status(404).json({ error: 'Course not found' });
-//         }
-//         res.status(200).json(courses);
-//     } catch (err) {
-//         res.status(500).json({ error: 'Failed to fetch course' });
-//     }
-// })
 app.get('/filterSearch', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { topic, level, rating } = req.query;

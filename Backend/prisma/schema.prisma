@@ -39,6 +39,7 @@ model students {
   student_university      String?
   student_mobile          String?
   purchased_courses       purchased_courses[]
+  order                   order[]
 
   @@map("students")
 }
@@ -73,6 +74,7 @@ model teachers {
   teacher_address         String?
   teacher_university      String?
   teacher_courses         teacher_courses[]
+  order                   order[]
 
   @@map("teachers")
 }
@@ -106,6 +108,7 @@ model courses {
   purchased_courses          purchased_courses[]
   teacher_courses            teacher_courses[]
   lectures                   lectures[]
+  order                      order[]
 
   @@map("courses")
 }
@@ -137,4 +140,20 @@ model videos {
   lecture lectures @relation(fields: [lecture_id], references: [lecture_id], onDelete: Cascade)
 
   @@map("videos")
+}
+
+model order {
+  order_id            String   @id @default(uuid())
+  student             students @relation(fields: [student_id], references: [student_id], onDelete: Cascade)
+  student_id          String
+  teacher             teachers @relation(fields: [teacher_id], references: [teacher_id], onDelete: Cascade)
+  teacher_id          String
+  course              courses  @relation(fields: [course_id], references: [course_id], onDelete: Cascade)
+  course_id           String
+  amount              Int
+  currency            String   @default("INR")
+  payment_status      String   @default("PENDING")
+  razorpay_order_id   String?  @unique
+  razorpay_payment_id String?  @unique
+  created_at          DateTime @default(now())
 }

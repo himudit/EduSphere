@@ -48,6 +48,7 @@ interface Teacher_Courses {
 }
 
 interface Teacher {
+    teacher_id: string,
     first_name: string,
     last_name: string,
     teacher_about: string,
@@ -87,6 +88,51 @@ const CourseDetails = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
 
+    const handleBuyClick = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("Please log in to purchase this course.");
+                return;
+            }
+            const response = await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/payment/create/course/${course_id}/teacher/${teacherData?.teacher_id}`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            const { amount, currency, notes, razorpay_order_id } = response.data.order;
+            if (response.data.success) {
+                console.log("Order created:", response.data.order);
+                const options = {
+                    key: 'rzp_test_HduuapK5bWNRuY',
+                    amount: amount,
+                    currency: currency,
+                    name: 'EduSphere',
+                    description: 'Let the world be more smater',
+                    order_id: razorpay_order_id,
+                    prefill: {
+                        name: notes?.first_name + " " + notes?.last_name,
+                        email: notes?.email,
+                    },
+                    theme: {
+                        color: '#F37254'
+                    },
+                };
+                const rzp = new window.Razorpay(options);
+                rzp.open();
+            } else {
+                alert("Failed to create order.");
+            }
+        } catch (error) {
+            console.error("Error in handleBuyClick:", error);
+            alert("Something went wrong. Please try again.");
+        }
+    };
+
     return (
         <div className="flex min-h-screen">
             {/* Main Content */}
@@ -116,7 +162,7 @@ const CourseDetails = () => {
                                 <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                                 <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
                             </svg>
-                            
+
                             <span className="font-medium">{courseData?.lectures.length}</span>
                         </div>
 
@@ -280,6 +326,11 @@ const CourseDetails = () => {
                                                 <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm0 4H4v2h1V9zm-1 4h1v2H4v-2z" clipRule="evenodd" />
                                             </svg>
                                             <span className="text-sm text-gray-600">6 Courses</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <button onClick={() => {
+                                                handleBuyClick();
+                                            }} className='w-20 h-10 border rounded-lg border-blue-600 text-white bg-blue-400'>Buy Now</button>
                                         </div>
                                     </div>
                                 </div>
