@@ -25,6 +25,8 @@ interface RazorpayOrderOptions {
 
 paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', authStudent, async (req: any, res: Response, next: NextFunction) => {
     try {
+
+        console.log("hi1");
         const student = req.student;
         // console.log(student);
         const options: RazorpayOrderOptions = {
@@ -64,7 +66,7 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', authStudent,
 
 paymentRouter.post('/payment/webhook', async (req: any, res: Response, next: NextFunction) => {
     try {
-        console.log("hi");
+        console.log("hi2");
         const webhookSignature = req.get("X-Razorpay-Signature");
         console.log(webhookSignature)
 
