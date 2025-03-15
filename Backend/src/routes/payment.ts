@@ -39,7 +39,7 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', authStudent,
             },
         };
         const order = await razorpayinstance.orders.create(options);
-        console.log(order);
+        // console.log(order);
 
         const newOrder = await prisma.payments.create({
             data: {
@@ -64,6 +64,7 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', authStudent,
 
 paymentRouter.post('/payment/webhook', async (req: any, res: Response, next: NextFunction) => {
     try {
+        console.log("hi");
         const webhookSignature = req.get("X-Razorpay-Signature");
         console.log(webhookSignature)
 
