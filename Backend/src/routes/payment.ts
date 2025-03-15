@@ -64,7 +64,7 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', authStudent,
     }
 })
 
-paymentRouter.post('/payment/webhook', async (req: any, res: Response, next: NextFunction) => {
+paymentRouter.post('/webhook', async (req: any, res: Response, next: NextFunction) => {
     try {
         console.log("hi2");
         const webhookSignature = req.get("X-Razorpay-Signature");
