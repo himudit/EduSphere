@@ -36,7 +36,7 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', auth_middlew
         };
         const order = yield razorpay_1.default.orders.create(options);
         console.log(order);
-        const newOrder = yield prisma.order.create({
+        const newOrder = yield prisma.payments.create({
             data: {
                 student_id: student.student_id,
                 teacher_id: req.params.teacher_id,
@@ -68,7 +68,7 @@ paymentRouter.post('/payment/webhook', (req, res, next) => __awaiter(void 0, voi
         const paymentDetails = (_b = (_a = req.body.payload) === null || _a === void 0 ? void 0 : _a.payment) === null || _b === void 0 ? void 0 : _b.entity;
         console.log(paymentDetails);
         // update order in DB
-        const updatedOrder = yield prisma.order.updateMany({
+        const updatedOrder = yield prisma.payments.updateMany({
             where: { razorpay_order_id: paymentDetails.order_id },
             data: {
                 payment_status: paymentDetails.status,

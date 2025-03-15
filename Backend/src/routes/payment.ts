@@ -41,7 +41,7 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', authStudent,
         const order = await razorpayinstance.orders.create(options);
         console.log(order);
 
-        const newOrder = await prisma.order.create({
+        const newOrder = await prisma.payments.create({
             data: {
                 student_id: student.student_id,
                 teacher_id: req.params.teacher_id,
@@ -76,7 +76,7 @@ paymentRouter.post('/payment/webhook', async (req: any, res: Response, next: Nex
         console.log(paymentDetails);
 
         // update order in DB
-        const updatedOrder = await prisma.order.updateMany({
+        const updatedOrder = await prisma.payments.updateMany({
             where: { razorpay_order_id: paymentDetails.order_id },
             data: {
                 payment_status: paymentDetails.status,
