@@ -83,6 +83,7 @@ paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, voi
                 razorpay_payment_id: paymentDetails.id,
             }
         });
+        console.log(updatedOrder);
         // add course in myplaylist according to student
         if (req.body.event == "payment.captured") {
             const data = yield prisma.payments.findUnique({

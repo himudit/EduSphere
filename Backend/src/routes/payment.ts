@@ -93,6 +93,7 @@ paymentRouter.post('/webhook', async (req: any, res: Response, next: NextFunctio
                 razorpay_payment_id: paymentDetails.id,
             }
         });
+        console.log(updatedOrder);
         // add course in myplaylist according to student
 
         if (req.body.event == "payment.captured") {
