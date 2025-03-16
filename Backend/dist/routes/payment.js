@@ -83,7 +83,9 @@ paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, voi
         });
         // add course in myplaylist according to student
         if (paymentDetails.status == "captured") {
-            console.log("hiii");
+            console.log(paymentDetails.razorpay_order_id);
+            console.log(paymentDetails.notes.student_id);
+            console.log(paymentDetails.notes.course_id);
             const purchasedCourse = yield prisma.purchased_courses.create({
                 data: {
                     order_id: paymentDetails.razorpay_order_id,
