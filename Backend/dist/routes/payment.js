@@ -82,7 +82,7 @@ paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, voi
             }
         });
         // add course in myplaylist according to student
-        if (req.body.event == "payment.captured") {
+        if (paymentDetails.status == "captured") {
             console.log("hiii");
             const purchasedCourse = yield prisma.purchased_courses.create({
                 data: {
