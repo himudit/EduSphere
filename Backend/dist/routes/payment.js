@@ -74,6 +74,7 @@ paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, voi
         }
         const paymentDetails = (_b = (_a = req.body.payload) === null || _a === void 0 ? void 0 : _a.payment) === null || _b === void 0 ? void 0 : _b.entity;
         console.log("paymentDetails" + paymentDetails);
+        console.log(paymentDetails);
         // update order in DB
         const updatedOrder = yield prisma.payments.updateMany({
             where: { razorpay_order_id: paymentDetails.order_id },
@@ -85,7 +86,7 @@ paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, voi
         // add course in myplaylist according to student
         if (req.body.event == "payment.captured") {
             const data = yield prisma.payments.findUnique({
-                where: { order_id: paymentDetails.order_id },
+                where: { razorpay_order_id: paymentDetails.order_id },
                 include: {
                     student: true,
                     teacher: true,

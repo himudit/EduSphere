@@ -83,6 +83,7 @@ paymentRouter.post('/webhook', async (req: any, res: Response, next: NextFunctio
         }
         const paymentDetails = req.body.payload?.payment?.entity
         console.log("paymentDetails" + paymentDetails);
+        console.log(paymentDetails);
 
         // update order in DB
         const updatedOrder = await prisma.payments.updateMany({
@@ -96,7 +97,7 @@ paymentRouter.post('/webhook', async (req: any, res: Response, next: NextFunctio
 
         if (req.body.event == "payment.captured") {
             const data = await prisma.payments.findUnique({
-                where: { order_id: paymentDetails.order_id },
+                where: { razorpay_order_id: paymentDetails.order_id },
                 include: {
                     student: true,
                     teacher: true,
