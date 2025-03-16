@@ -86,7 +86,7 @@ paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, voi
         console.log(updatedOrder);
         // add course in myplaylist according to student
         if (req.body.event == "payment.captured") {
-            const data = yield prisma.payments.findUnique({
+            const paymentData = yield prisma.payments.findUnique({
                 where: { razorpay_order_id: paymentDetails.order_id },
                 include: {
                     student: true,
@@ -94,17 +94,22 @@ paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, voi
                     course: true
                 }
             });
+            console.log(paymentData);
+            if (!paymentData) {
+                console.error("Payment not found for order_id:", paymentDetails.order_id);
+                return res.status(404).json({ message: "Payment record not found." });
+            }
+            const purchasedCourse = yield prisma.purchased_courses.create({
+                data: {
+                    order_id: paymentDetails.razorpay_order_id,
+                    student_id: paymentData === null || paymentData === void 0 ? void 0 : paymentData.student_id,
+                    course_id: paymentData === null || paymentData === void 0 ? void 0 : paymentData.course_id,
+                    progress: 0,
+                    purchase_date: new Date()
+                },
+            });
+            console.log("Purchased course added:", purchasedCourse);
         }
-        const purchasedCourse = yield prisma.purchased_courses.create({
-            data: {
-                order_id: paymentDetails.razorpay_order_id,
-                student_id: paymentDetails.student_id,
-                course_id: paymentDetails.course_id,
-                progress: 0,
-                purchase_date: new Date()
-            },
-        });
-        console.log("Purchased course added:", purchasedCourse);
         // if (req.body.event == "payment.failed") {
         // }
         // return success response to razorpay 
