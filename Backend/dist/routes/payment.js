@@ -38,6 +38,7 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', auth_middlew
                 last_name: student.last_name,
                 email: student.email,
                 course_id: req.params.course_id,
+                student_id: student.student_id,
             },
         };
         const order = yield razorpay_1.default.orders.create(options);
@@ -65,15 +66,12 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', auth_middlew
 paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     try {
-        console.log("hi2");
         const webhookSignature = req.get("X-Razorpay-Signature");
-        console.log("webhookSignature" + webhookSignature);
         const isWebHookValid = (0, razorpay_utils_1.validateWebhookSignature)(JSON.stringify(req.body), webhookSignature, process.env.RAZORPAY_WEBHOOK_SECRET);
         if (!isWebHookValid) {
             return res.status(400).json({ msg: "Invalid Webhook Signature" });
         }
         const paymentDetails = (_b = (_a = req.body.payload) === null || _a === void 0 ? void 0 : _a.payment) === null || _b === void 0 ? void 0 : _b.entity;
-        console.log("paymentDetails" + paymentDetails);
         console.log(paymentDetails);
         // update order in DB
         const updatedOrder = yield prisma.payments.updateMany({
@@ -83,27 +81,14 @@ paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, voi
                 razorpay_payment_id: paymentDetails.id,
             }
         });
-        console.log(updatedOrder);
         // add course in myplaylist according to student
         if (req.body.event == "payment.captured") {
-            const paymentData = yield prisma.payments.findUnique({
-                where: { razorpay_order_id: paymentDetails.order_id },
-                include: {
-                    student: true,
-                    teacher: true,
-                    course: true
-                }
-            });
-            console.log(paymentData);
-            if (!paymentData) {
-                console.error("Payment not found for order_id:", paymentDetails.order_id);
-                return res.status(404).json({ message: "Payment record not found." });
-            }
+            console.log("hiii");
             const purchasedCourse = yield prisma.purchased_courses.create({
                 data: {
                     order_id: paymentDetails.razorpay_order_id,
-                    student_id: paymentData === null || paymentData === void 0 ? void 0 : paymentData.student_id,
-                    course_id: paymentData === null || paymentData === void 0 ? void 0 : paymentData.course_id,
+                    student_id: paymentDetails.notes.student_id,
+                    course_id: paymentDetails.notes.course_id,
                     progress: 0,
                     purchase_date: new Date()
                 },
