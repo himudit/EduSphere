@@ -39,13 +39,14 @@ model students {
   student_university      String?
   student_mobile          String?
   purchased_courses       purchased_courses[]
-  payments                   payments[]
+  payments                payments[]
 
   @@map("students")
 }
 
 model purchased_courses {
-  student_id    String   @id
+  order_id      String   @id
+  student_id    String
   course_id     String
   purchase_date DateTime @default(now())
   progress      Int
@@ -74,7 +75,7 @@ model teachers {
   teacher_address         String?
   teacher_university      String?
   teacher_courses         teacher_courses[]
-  payments                   payments[]
+  payments                payments[]
 
   @@map("teachers")
 }
@@ -108,7 +109,7 @@ model courses {
   purchased_courses          purchased_courses[]
   teacher_courses            teacher_courses[]
   lectures                   lectures[]
-  payments                      payments[]
+  payments                   payments[]
 
   @@map("courses")
 }

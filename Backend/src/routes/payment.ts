@@ -25,12 +25,18 @@ interface RazorpayOrderOptions {
 
 paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', authStudent, async (req: any, res: Response, next: NextFunction) => {
     try {
-
-        console.log("hi1");
         const student = req.student;
+
+        const course = await prisma.courses.findUnique({
+            where: { course_id: req.params.course_id },
+            include: {
+                lectures: true,
+            },
+        });
+
         // console.log(student);
         const options: RazorpayOrderOptions = {
-            amount: 599443,
+            amount: Number(course?.course_price) * 100,
             currency: "INR",
             receipt: "receipt#1",
             notes: {
@@ -68,7 +74,7 @@ paymentRouter.post('/webhook', async (req: any, res: Response, next: NextFunctio
     try {
         console.log("hi2");
         const webhookSignature = req.get("X-Razorpay-Signature");
-        console.log(webhookSignature)
+        console.log("webhookSignature" + webhookSignature)
 
         const isWebHookValid = validateWebhookSignature(JSON.stringify(req.body), webhookSignature, process.env.RAZORPAY_WEBHOOK_SECRET as string)
 
@@ -76,7 +82,7 @@ paymentRouter.post('/webhook', async (req: any, res: Response, next: NextFunctio
             return res.status(400).json({ msg: "Invalid Webhook Signature" });
         }
         const paymentDetails = req.body.payload?.payment?.entity
-        console.log(paymentDetails);
+        console.log("paymentDetails" + paymentDetails);
 
         // update order in DB
         const updatedOrder = await prisma.payments.updateMany({
@@ -88,9 +94,26 @@ paymentRouter.post('/webhook', async (req: any, res: Response, next: NextFunctio
         });
         // add course in myplaylist according to student
 
-        // if (req.body.event == "payment.captured") {
-
-        // }
+        if (req.body.event == "payment.captured") {
+            const data = await prisma.payments.findUnique({
+                where: { order_id: paymentDetails.order_id },
+                include: {
+                    student: true,
+                    teacher: true,
+                    course: true
+                }
+            });
+        }
+        const purchasedCourse = await prisma.purchased_courses.create({
+            data: {
+                order_id: paymentDetails.razorpay_order_id,
+                student_id: paymentDetails.student_id,
+                course_id: paymentDetails.course_id,
+                progress: 0,
+                purchase_date: new Date()
+            },
+        });
+        console.log("Purchased course added:", purchasedCourse);
         // if (req.body.event == "payment.failed") {
 
         // }
@@ -103,5 +126,17 @@ paymentRouter.post('/webhook', async (req: any, res: Response, next: NextFunctio
         return res.status(500).json({ msg: "An unknown error occurred" });
     }
 })
+
+// paymentRouter.post('/webhook', async (req: any, res: Response, next: NextFunction) => {
+//     try {
+
+//     } catch (err) {
+//         if (err instanceof Error) {
+//             return res.status(500).json({ msg: err.message });
+//         }
+//         return res.status(500).json({ msg: "An unknown error occurred" });
+//     }
+// }
+// )
 
 export default paymentRouter;

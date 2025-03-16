@@ -22,9 +22,15 @@ const prisma = new client_1.PrismaClient();
 paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', auth_middleware_1.authStudent, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const student = req.student;
+        const course = yield prisma.courses.findUnique({
+            where: { course_id: req.params.course_id },
+            include: {
+                lectures: true,
+            },
+        });
         // console.log(student);
         const options = {
-            amount: 599443,
+            amount: Number(course === null || course === void 0 ? void 0 : course.course_price) * 100,
             currency: "INR",
             receipt: "receipt#1",
             notes: {
@@ -35,7 +41,7 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', auth_middlew
             },
         };
         const order = yield razorpay_1.default.orders.create(options);
-        console.log(order);
+        // console.log(order);
         const newOrder = yield prisma.payments.create({
             data: {
                 student_id: student.student_id,
@@ -56,17 +62,18 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', auth_middlew
         return res.status(500).json({ msg: "An unknown error occurred" });
     }
 }));
-paymentRouter.post('/payment/webhook', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     try {
+        console.log("hi2");
         const webhookSignature = req.get("X-Razorpay-Signature");
-        console.log(webhookSignature);
+        console.log("webhookSignature" + webhookSignature);
         const isWebHookValid = (0, razorpay_utils_1.validateWebhookSignature)(JSON.stringify(req.body), webhookSignature, process.env.RAZORPAY_WEBHOOK_SECRET);
         if (!isWebHookValid) {
             return res.status(400).json({ msg: "Invalid Webhook Signature" });
         }
         const paymentDetails = (_b = (_a = req.body.payload) === null || _a === void 0 ? void 0 : _a.payment) === null || _b === void 0 ? void 0 : _b.entity;
-        console.log(paymentDetails);
+        console.log("paymentDetails" + paymentDetails);
         // update order in DB
         const updatedOrder = yield prisma.payments.updateMany({
             where: { razorpay_order_id: paymentDetails.order_id },
@@ -76,8 +83,26 @@ paymentRouter.post('/payment/webhook', (req, res, next) => __awaiter(void 0, voi
             }
         });
         // add course in myplaylist according to student
-        // if (req.body.event == "payment.captured") {
-        // }
+        if (req.body.event == "payment.captured") {
+            const data = yield prisma.payments.findUnique({
+                where: { order_id: paymentDetails.order_id },
+                include: {
+                    student: true,
+                    teacher: true,
+                    course: true
+                }
+            });
+        }
+        const purchasedCourse = yield prisma.purchased_courses.create({
+            data: {
+                order_id: paymentDetails.razorpay_order_id,
+                student_id: paymentDetails.student_id,
+                course_id: paymentDetails.course_id,
+                progress: 0,
+                purchase_date: new Date()
+            },
+        });
+        console.log("Purchased course added:", purchasedCourse);
         // if (req.body.event == "payment.failed") {
         // }
         // return success response to razorpay 
@@ -90,4 +115,14 @@ paymentRouter.post('/payment/webhook', (req, res, next) => __awaiter(void 0, voi
         return res.status(500).json({ msg: "An unknown error occurred" });
     }
 }));
+// paymentRouter.post('/webhook', async (req: any, res: Response, next: NextFunction) => {
+//     try {
+//     } catch (err) {
+//         if (err instanceof Error) {
+//             return res.status(500).json({ msg: err.message });
+//         }
+//         return res.status(500).json({ msg: "An unknown error occurred" });
+//     }
+// }
+// )
 exports.default = paymentRouter;

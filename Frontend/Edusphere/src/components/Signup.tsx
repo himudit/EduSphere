@@ -1,59 +1,88 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../app/store";
-import { fetchUserProfile, addUser, removeUser } from "../features/userSlice";
+import { useDispatch } from "react-redux";
+import { fetchUserProfile } from "../features/userSlice";
 
 function Signup() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [first_name, setFirstName] = useState('');
     const [last_name, setLastName] = useState('');
-    const dispatch = useDispatch();
+    const [isStudent, setIsStudent] = useState(true);
     const [loading, setLoading] = useState(false);
 
     const formSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             setLoading(true);
-            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/students/register`, {
+            const url = isStudent
+                ? (`${import.meta.env.VITE_BASE_URL}/students/register`)
+
+                : (`${import.meta.env.VITE_BASE_URL}/teachers/register`);
+
+            const response = await axios.post(url, {
                 first_name: first_name,
                 last_name: last_name,
                 email: email,
                 password: password
             });
             console.log(response);
-
-            if (response.status === 200) {
-                const data = response.data;
-                localStorage.setItem('token', data.token);
-                dispatch(fetchUserProfile());
-                navigate('/');
+            if (isStudent == true) {
+                if (response.status === 200) {
+                    const data = response.data;
+                    localStorage.setItem('token', data.token);
+                    dispatch(fetchUserProfile());
+                    navigate('/');
+                }
+            } else {
+                if (response.status === 200) {
+                    const data = response.data;
+                    localStorage.setItem('teacher_token', data.teacher_token);
+                    dispatch(fetchUserProfile());
+                    navigate('/');
+                }
             }
         } catch (error) {
             console.error('Registration failed:', error);
         } finally {
             setLoading(false);
         }
-    }
+    };
+
     return (
-        < div className="min-h-screen bg-[#0B0B1E] relative overflow-hidden flex items-center justify-center" >
+        <div className="min-h-screen bg-[#0B0B1E] relative flex items-center justify-center overflow-hidden">
 
-            < div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full bg-gradient-to-br from-purple-600/20 via-purple-900/20 to-transparent blur-3xl" ></ div>
+            <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full bg-gradient-to-br from-purple-600/20 via-purple-900/20 to-transparent blur-3xl"></div>
+            <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] rounded-full bg-gradient-to-br from-indigo-500/30 via-purple-500/30 to-pink-500/30 blur-3xl"></div>
 
-            < div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] rounded-full bg-gradient-to-br from-indigo-500/30 via-purple-500/30 to-pink-500/30 blur-3xl" ></ div>
+            {/* Signup Card */}
+            <div className="w-[400px] p-8 rounded-3xl bg-black/30 backdrop-blur-xl border border-white/10 shadow-2xl relative z-10">
 
-            < div className="w-[400px] p-8 rounded-3xl bg-black/30 backdrop-blur-xl border border-white/10 shadow-2xl relative z-10" >
-                {/* Card header */}
-                <h1 className="text-white text-3xl font-medium mb-2" > Sign Up</h1 >
-                <p className="text-gray-400 text-sm mb-8">Join the cosmic journey as Student</p>
+                {/* Toggle Student/Teacher */}
+                <div className="flex justify-between  items-center mb-4">
+                    <button
+                        className={`text-white px-4 py-2 rounded-lg transition-all ${isStudent ? 'bg-purple-600' : 'bg-transparent'}`}
+                        onClick={() => setIsStudent(true)}
+                    >
+                        Student
+                    </button>
+                    <button
+                        className={`text-white px-4 py-2 rounded-lg transition-all ${!isStudent ? 'bg-purple-600' : 'bg-transparent'}`}
+                        onClick={() => setIsStudent(false)}
+                    >
+                        Teacher
+                    </button>
+                </div>
 
-                {/* Sign up form */}
-                <form className="space-y-4" onSubmit={(e) => formSubmit(e)}  >
-                    {/* First Name input field */}
+                <h1 className="text-white -mt-2 text-2xl font-medium mb-2">Sign Up</h1>
+                <p className="text-gray-400 text-sm mb-8">Join the cosmic journey as {isStudent == true ? 'Student' : 'Teacher'}</p>
+
+                <form className="space-y-3" onSubmit={formSubmit}>
                     <div>
                         <input
                             type="text"
@@ -67,8 +96,6 @@ function Signup() {
                             className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                         />
                     </div>
-
-                    {/* Last Name input field (optional) */}
                     <div>
                         <input
                             type="text"
@@ -81,7 +108,6 @@ function Signup() {
                             className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                         />
                     </div>
-
                     <div>
                         <input
                             type="email"
@@ -95,7 +121,6 @@ function Signup() {
                             className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                         />
                     </div>
-
                     <div className="relative">
                         <input
                             type={showPassword ? "text" : "password"}
@@ -108,7 +133,6 @@ function Signup() {
                             }}
                             className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                         />
-
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
@@ -129,15 +153,15 @@ function Signup() {
                         )}
                         {loading ? 'Creating Account...' : 'Create Account'}
                     </button>
-                    
+
                 </form>
 
                 <div className="mt-8 text-center text-sm">
                     <span className="text-gray-400">Already have an account? </span>
                     <Link to='/login' className="text-purple-400 hover:text-purple-300">Log In</Link>
                 </div>
-            </div >
-        </div >
+            </div>
+        </div>
     );
 }
 

@@ -26,8 +26,8 @@ function App() {
         <Route path="/profile/students/edit" element={<EditStudentProfile />} />
         <Route path="/profile/teachers/edit" element={<EditTeacherProfile />} />
         <Route path="/teacher/courseupload" element={<CourseUpload />} />
-        <Route path="/teacher/login" element={<TeacherLogin />} />
-        <Route path="/teacher/signup" element={<TeacherSignup />} />
+        {/* <Route path="/teacher/login" element={<TeacherLogin />} /> */}
+        {/* <Route path="/teacher/signup" element={<TeacherSignup />} /> */}
       </Route>
     )
   );

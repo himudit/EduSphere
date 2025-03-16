@@ -66,7 +66,7 @@ const Card: React.FC<CardProps> = ({
           </div>
           <span className="text-xs sm:text-sm text-gray-400 ml-1 sm:ml-2">({reviews})</span>
         </div>
-        <p className="text-base sm:text-lg mt-1 sm:mt-2 font-bold">${price}</p>
+        <p className="text-base sm:text-lg mt-1 sm:mt-2 font-bold">₹{price}</p>
       </div>
     </div>
   );
