@@ -49,70 +49,27 @@ export default tseslint.config({
 })
 ```
 
-import { useEffect, useState } from 'react';
-import Card from "./Card";
-import axios from 'axios';
 
-interface Course {
-    course_id: string;
-    course_title: string;
-    course_description: string;
-    course_price: number;
-    course_thumbnail: string;
-    course_total_no_hours: string;
-    rating: string;
-}
 
-interface PurchasedCourse {
-    order_id: string;
-    student_id: string;
-    course_id: string;
-    purchase_date: string;
-    progress: number;
-    course: Course;
-}
-
-const PurchasedCourses: React.FC = () => {
-
-    const [courses, setCourses] = useState<PurchasedCourse[]>([]);
+ 
+    const [expandedSection, setExpandedSection] = useState<string | null>('01');
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [courseData, setCourseData] = useState<CourseData | undefined>(undefined);
+    const { course_id } = useParams<{ course_id: string }>();
 
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const token = localStorage.getItem("token");
+                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/course/${course_id}`);
+                const data: CourseData = response.data; 
+                console.log(data);
+                console.log(data.lectures);
+                console.log(data.lectures[0]?.videos); 
 
-                const response = await axios.get<{ purchasedCourses: PurchasedCourse[] }>(
-                    `${import.meta.env.VITE_BASE_URL}/students/mylearning`, 
-                    { headers: { Authorization: `Bearer ${token}` } }
-                );
-
-                console.log(response.data);
-                if (response.data && response.data.purchasedCourses) {
-                    setCourses(response.data.purchasedCourses);
-                }
-
+                setCourseData(data);
             } catch (err) {
-                console.error('Error fetching courses:', err);
+                console.log(err);
             }
         };
         fetchCourses();
-    }, []);
-
-    return (
-        <>
-            <div className="absolute w-full h-full flex justify-center items-center">
-                {courses.map((purchase, index) => (
-                    <div key={index}>
-                        <h2>{purchase.course.course_title}</h2>
-                        <img src={purchase.course.course_thumbnail} alt="Course Thumbnail" width={200} />
-                        <p>{purchase.course.course_description}</p>
-                        <p><strong>Price:</strong> {purchase.course.course_price} INR</p>
-                        <p><strong>Rating:</strong> {purchase.course.rating} ⭐</p>
-                    </div>
-                ))}
-            </div>
-        </>
-    )
-}
-
-export default PurchasedCourses;
+    }, [course_id]); 

@@ -37,9 +37,10 @@ app.use('/students', students_routes_1.default);
 app.use('/teachers', teachers_routes_1.default);
 app.use('/payment', payment_1.default);
 app.get('/students/mylearning', auth_middleware_1.authStudent, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
         const purchasedCourses = yield prisma.purchased_courses.findMany({
-            where: { student_id: "ef78449b-9452-4cde-82b9-01fbe3a4176a" },
+            where: { student_id: (_a = req.student) === null || _a === void 0 ? void 0 : _a.student_id },
             include: {
                 course: true
             }

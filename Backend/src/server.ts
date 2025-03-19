@@ -38,7 +38,7 @@ interface StudentRequest extends Request {
 app.get('/students/mylearning', authStudent, async (req: StudentRequest, res: Response) => {
     try {
         const purchasedCourses = await prisma.purchased_courses.findMany({
-            where: { student_id: "ef78449b-9452-4cde-82b9-01fbe3a4176a" },
+            where: { student_id: req.student?.student_id },
             include: {
                 course: true
             }
