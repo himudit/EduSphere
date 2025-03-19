@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "server.ts",
   "scripts": {
-    "dev": "nodemon dist/server.js",
+    "dev": "nodemon --exec",
     "build": "tsc",
     "prisma:generate": "prisma generate"
   },

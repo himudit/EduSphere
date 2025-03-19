@@ -94,25 +94,20 @@ paymentRouter.post('/webhook', async (req: any, res: Response, next: NextFunctio
         });
         // add course in myplaylist according to student
         if (paymentDetails.status == "captured") {
-            console.log(paymentDetails.order_id);
-            console.log(paymentDetails.notes.student_id,);
-            console.log(paymentDetails.notes.course_id);
+            // console.log(paymentDetails.order_id);
+            // console.log(paymentDetails.notes.student_id,);
+            // console.log(paymentDetails.notes.course_id);
             const purchasedCourse = await prisma.purchased_courses.create({
                 data: {
                     order_id: paymentDetails.order_id,
                     student_id: paymentDetails.notes.student_id,
-                    course_id: paymentDetails.notes.course_id,
+                    course_id: paymentDetails.neotes.course_id,
                     progress: 0,
                     purchase_date: new Date()
                 },
             });
             console.log("Purchased course added:", purchasedCourse);
         }
-
-        // if (req.body.event == "payment.failed") {
-
-        // }
-        // return success response to razorpay 
         res.status(200).json({ msg: "webhook received successfully" })
     } catch (err) {
         if (err instanceof Error) {

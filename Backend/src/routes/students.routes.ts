@@ -1,10 +1,9 @@
 import express from 'express'
-import { registerStudent, loginStudent, getStudentProfile,logoutStudent } from '../controllers/students.controller'
+import { registerStudent, loginStudent, getStudentProfile, logoutStudent } from '../controllers/students.controller'
 const router = express.Router();
 import { body } from 'express-validator';
 import { Request, Response, NextFunction } from "express";
 import { authStudent } from '../middlewares/auth.middleware'
-
 
 router.post(
     '/register',
@@ -16,7 +15,6 @@ router.post(
     registerStudent
 );
 
-
 router.post(
     '/login',
     [
@@ -26,7 +24,6 @@ router.post(
     loginStudent
 );
 
-
 router.get(
     '/profile', authStudent, getStudentProfile
 )
@@ -34,5 +31,7 @@ router.get(
 router.get('/logout',
     logoutStudent
 )
+
+// router.get('/mylearning', authStudent, getStudentCourses)
 
 export default router;

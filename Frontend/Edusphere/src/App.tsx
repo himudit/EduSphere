@@ -10,8 +10,7 @@ import Profile from './components/Profile.tsx';
 import EditStudentProfile from './components/EditStudentProfile.tsx';
 import EditTeacherProfile from './components/EditTeacherProfile.tsx'
 import CourseUpload from './components/CourseUpload';
-import TeacherSignup from './components/TeacherSignup.tsx';
-import TeacherLogin from './components/TeacherLogin.tsx';
+import PurchasedCourses from './components/PurchasedCourses.tsx';
 
 function App() {
   const router = createBrowserRouter(
@@ -26,7 +25,7 @@ function App() {
         <Route path="/profile/students/edit" element={<EditStudentProfile />} />
         <Route path="/profile/teachers/edit" element={<EditTeacherProfile />} />
         <Route path="/teacher/courseupload" element={<CourseUpload />} />
-        {/* <Route path="/teacher/login" element={<TeacherLogin />} /> */}
+        <Route path="/mylearning" element={<PurchasedCourses />} />
         {/* <Route path="/teacher/signup" element={<TeacherSignup />} /> */}
       </Route>
     )

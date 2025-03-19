@@ -36,6 +36,24 @@ app.use('/api', (req, res) => {
 app.use('/students', students_routes_1.default);
 app.use('/teachers', teachers_routes_1.default);
 app.use('/payment', payment_1.default);
+app.get('/students/mylearning', auth_middleware_1.authStudent, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const purchasedCourses = yield prisma.purchased_courses.findMany({
+            where: { student_id: "ef78449b-9452-4cde-82b9-01fbe3a4176a" },
+            include: {
+                course: true
+            }
+        });
+        if (purchasedCourses.length === 0) {
+            return res.status(404).json({ message: "No purchased courses found for this student." });
+        }
+        res.status(200).json({ purchasedCourses });
+    }
+    catch (error) {
+        console.error("Error fetching purchased courses:", error);
+        res.status(500).json({ message: "Failed to fetch purchased courses", error });
+    }
+}));
 app.get('/rating', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const courses = yield prisma.courses.findMany();

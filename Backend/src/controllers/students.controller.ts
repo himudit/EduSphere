@@ -66,4 +66,28 @@ const logoutStudent = async (req: any, res: Response, next: NextFunction) => {
     res.clearCookie('token');
     res.status(200).json({ message: "Logged Out Successfully" })
 }
+
+
+// const getStudentCourses = async (req: any, res: Response, next: NextFunction) => {
+//     try {
+//         console.log("hi");
+//         console.log(req.student.student_id);
+//         const purchasedCourses = await prisma.purchased_courses.findMany({
+//             where: { student_id: req.student.student_id },
+//             include: {
+//                 course: true // This will fetch course details as well
+//             }
+//         });
+
+//         if (purchasedCourses.length === 0) {
+//             return res.status(404).json({ message: "No purchased courses found for this student." });
+//         }
+//         res.status(200).json({ purchasedCourses });
+//     } catch (error) {
+//         console.error("Error fetching purchased courses:", error);
+//         res.status(500).json({ message: "Failed to fetch purchased courses", error });
+//     }
+// }
+
+
 export { registerStudent, loginStudent, getStudentProfile, logoutStudent };

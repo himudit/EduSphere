@@ -19,6 +19,7 @@ app.use(cookieParser());
 app.use(cors({
     credentials: true,
 }));
+
 app.use(express.json());
 app.use('/api', (req, res) => {
     res.send('Hello from server')
@@ -27,6 +28,31 @@ app.use('/api', (req, res) => {
 app.use('/students', studentRoutes);
 app.use('/teachers', teacherRoutes);
 app.use('/payment', paymentRoutes);
+
+interface StudentRequest extends Request {
+    student?: {
+        student_id: string;
+    }
+}
+
+app.get('/students/mylearning', authStudent, async (req: StudentRequest, res: Response) => {
+    try {
+        const purchasedCourses = await prisma.purchased_courses.findMany({
+            where: { student_id: "ef78449b-9452-4cde-82b9-01fbe3a4176a" },
+            include: {
+                course: true
+            }
+        });
+
+        if (purchasedCourses.length === 0) {
+            return res.status(404).json({ message: "No purchased courses found for this student." });
+        }
+        res.status(200).json({ purchasedCourses });
+    } catch (error) {
+        console.error("Error fetching purchased courses:", error);
+        res.status(500).json({ message: "Failed to fetch purchased courses", error });
+    }
+})
 
 app.get('/rating', async (req: Request, res: Response) => {
     try {
@@ -104,7 +130,7 @@ app.get('/filterSearch', async (req: Request, res: Response) => {
         if (typeof topic === "string") {
             topicsArray = [topic];
         } else if (Array.isArray(topic)) {
-            topicsArray = topic.map(t => String(t)); 
+            topicsArray = topic.map(t => String(t));
         }
 
         const levelStr = typeof level === "string" ? level : undefined;
@@ -112,8 +138,8 @@ app.get('/filterSearch', async (req: Request, res: Response) => {
         const courses = await prisma.courses.findMany({
             where: {
                 AND: [
-                    levelStr ? { course_level: levelStr } : {}, 
-                    topicsArray.length > 0 ? { course_keywords: { hasSome: topicsArray } } : {}, 
+                    levelStr ? { course_level: levelStr } : {},
+                    topicsArray.length > 0 ? { course_keywords: { hasSome: topicsArray } } : {},
                     minRating !== undefined
                         ? ratingStr?.includes("below")
                             ? { rating: { lte: minRating } }
@@ -137,7 +163,7 @@ interface StudentRequest extends Request {
         student_id: string;
     }
 }
-app.patch('/students/profile/edit', authStudent, async  (req: StudentRequest, res: Response) => {
+app.patch('/students/profile/edit', authStudent, async (req: StudentRequest, res: Response) => {
     const {
         first_name,
         last_name,
@@ -158,7 +184,7 @@ app.patch('/students/profile/edit', authStudent, async  (req: StudentRequest, re
     }
     try {
         const updatedStudent = await prisma.students.update({
-            where: { student_id }, 
+            where: { student_id },
             data: {
                 first_name,
                 last_name,
@@ -209,7 +235,7 @@ interface TeacherRequest extends Request {
         teacher_id: string;
     }
 }
-app.patch('/teachers/profile/edit', authTeacher,  async (req: TeacherRequest, res: Response) => {
+app.patch('/teachers/profile/edit', authTeacher, async (req: TeacherRequest, res: Response) => {
     const {
         first_name,
         last_name,
@@ -224,7 +250,7 @@ app.patch('/teachers/profile/edit', authTeacher,  async (req: TeacherRequest, re
     }
     try {
         const updatedTeacher = await prisma.teachers.update({
-            where: { teacher_id }, 
+            where: { teacher_id },
             data: {
                 first_name,
                 last_name,

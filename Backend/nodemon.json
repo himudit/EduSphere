@@ -1,0 +1,6 @@
+{
+    "watch": ["dist"],
+    "ext": "js,ts",
+    "exec": "npx kill-port 4000 && node dist/server.js"
+  }
+  

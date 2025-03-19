@@ -56,7 +56,7 @@ const Navbar: React.FC = () => {
                       </Link>
                     </li>
                     <li>
-                      <Link to="#learning" className="text-sm font-medium hover:text-purple-400 transition-colors">
+                      <Link to="/mylearning" className="text-sm font-medium hover:text-purple-400 transition-colors">
                         My Courses
                       </Link>
                     </li>
@@ -217,7 +217,7 @@ const Navbar: React.FC = () => {
                   </li>
                   <li>
                     <Link
-                      to="#learning"
+                      to="/mylearning"
                       onClick={toggleMenu}
                       className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
                     >
@@ -302,7 +302,7 @@ const Navbar: React.FC = () => {
                       </Link>
                     </li>
                     <li>
-                      <Link to="#learning" className="text-sm font-medium hover:text-purple-400 transition-colors">
+                      <Link to="/mylearning" className="text-sm font-medium hover:text-purple-400 transition-colors">
                         My Learning
                       </Link>
                     </li>
@@ -475,7 +475,7 @@ const Navbar: React.FC = () => {
                   </li>
                   <li>
                     <Link
-                      to="#learning"
+                      to="/mylearning"
                       onClick={toggleMenu}
                       className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
                     >
