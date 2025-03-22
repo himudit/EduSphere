@@ -42,7 +42,18 @@ const Search: React.FC = () => {
     const [duration, setDuration] = useState<string>('');
     const [topic, setTopic] = useState<string[]>([]);
     const [level, setLevel] = useState<string>('');
+    const [loading, setLoading] = useState(true);
+    const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
 
+    useEffect(() => {
+        const handleResize = () => {
+            setIsDesktop(window.innerWidth >= 768);
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+    
     useEffect(() => {
         const fetchCourses = async () => {
             try {
@@ -50,6 +61,8 @@ const Search: React.FC = () => {
                 setCourseData(response.data);
             } catch (err) {
                 console.error('Error fetching courses:', err);
+            } finally {
+                setLoading(false);
             }
         };
         fetchCourses();
@@ -101,19 +114,6 @@ const Search: React.FC = () => {
                                 />
 
                                 {/* Duration Filter */}
-                                {/* <FilterGroup
-                                    title="Video Duration"
-                                    name="duration"
-                                    items={[
-                                        { label: '0-1 Hour', count: '1,473' },
-                                        { label: '1-3 Hours', count: '2,286' },
-                                        { label: '3-6 Hours', count: '3,549' },
-                                        { label: '6-17 Hours', count: '5,058' }
-                                    ]}
-                                    type="radio"
-                                    selected={duration}
-                                    setSelected={(value) => setDuration(value as string)}
-                                /> */}
 
                                 {/* Topic Filter */}
                                 <FilterGroup
@@ -167,24 +167,56 @@ const Search: React.FC = () => {
                         </div>
 
                         {/* Course Cards Grid */}
-                        <div className="p-4 sm:p-6 lg:p-8">
-                            <div className="grid grid-cols-1 gap-6">
-                                {courseData.map((item) => (
-                                    <div
-                                        key={item.course_id}
-                                        onClick={() => navigate(`/course/${item.course_id}`)}
-                                        className="cursor-pointer"
-                                    >
-                                        <CardDisplay
-                                            image={item.course_thumbnail}
-                                            creation={item.creation}
-                                            title={item.course_title}
-                                            tags={item.course_keywords}
-                                        />
+                        {
+                            loading ?
+                                <>
+                                    <div className="flex flex-wrap gap-6 justify-center">
+                                        {Array(5).fill(null).map((_, index) => (
+                                            <div
+                                                key={index}
+                                                className={`bg-gray-300 animate-pulse rounded-xl overflow-hidden shadow-lg 
+          ${isDesktop ? "w-[770px] h-[190px] flex -ml-[10rem]" : "w-full max-w-sm flex flex-col h-auto"}`}
+                                            >
+                                                {/* Image Placeholder */}
+                                                <div className={`${isDesktop ? "w-1/3 h-auto" : "w-full h-[200px]"} bg-gray-400 animate-pulse`} />
+
+                                                {/* Content Placeholder */}
+                                                <div className={`${isDesktop ? "w-2/3 p-4 space-y-3" : "w-full p-4 space-y-3"}`}>
+                                                    <div className="w-32 h-4 bg-gray-400 rounded" /> {/* Date */}
+                                                    <div className={`${isDesktop ? "w-[25rem] h-10" : "w-full h-10"} bg-gray-500 rounded`} /> {/* Title */}
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {Array(4).fill(null).map((_, i) => (
+                                                            <div key={i} className="w-20 mt-5 h-10 bg-gray-400 rounded-2xl" />
+                                                        ))}
+                                                    </div>
+                                                    {/* <div className="w-20 h-4 bg-gray-400 rounded mt-3" /> View More */}
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
-                            </div>
-                        </div>
+                                </> :
+                                <>
+                                    <div className="p-4 sm:p-6 lg:p-8">
+                                        <div className="grid grid-cols-1 gap-6">
+                                            {courseData.map((item) => (
+                                                <div
+                                                    key={item.course_id}
+                                                    onClick={() => navigate(`/course/${item.course_id}`)}
+                                                    className="cursor-pointer"
+                                                >
+                                                    <CardDisplay
+                                                        image={item.course_thumbnail}
+                                                        creation={item.creation}
+                                                        title={item.course_title}
+                                                        tags={item.course_keywords}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </>
+                        }
+
                     </div>
                 </div>
             </div>
