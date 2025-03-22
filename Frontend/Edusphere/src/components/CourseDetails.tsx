@@ -4,7 +4,7 @@ import axios from 'axios';
 
 interface CourseData {
     course: Course;
-    lectures: Lecture[]; // Array of all lectures
+    lectures: Lecture[];
 }
 
 interface Course {
@@ -63,21 +63,56 @@ const CourseDetails = () => {
     const [courseData, setCourseData] = useState<CourseData | undefined>(undefined);
     const [teacherData, setTeacherData] = useState<Teacher | undefined>(undefined);
     const { course_id } = useParams<{ course_id: string }>();
+    const [loading, setLoading] = useState<Boolean>(true);
+
+    // useEffect(() => {
+    //     const fetchCourses = async () => {
+    //         try {
+    //                 const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/course/${course_id}`);
+    //                 const data = response.data;
+    //                 setCourseData(data.course);
+    //                 setTeacherData(data.teacherCourse.teacher);
+    //         } catch (err) {
+    //             console.log(err);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
+    //     fetchCourses();
+    // }, [course_id]);
     useEffect(() => {
+        let isMounted = true; // To prevent state updates if unmounted
+
         const fetchCourses = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/course/${course_id}`);
-                const data = response.data;
-                console.log(data);
-                console.log(data.course);
-                console.log(data.teacherCourse.teacher);
-                setCourseData(data.course);
-                setTeacherData(data.teacherCourse.teacher);
+                console.log(loading);
+                setLoading(true);
+
+                setTimeout(async () => {
+                    try {
+                        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/course/${course_id}`);
+                        if (!isMounted) return; // Prevent state update if component unmounted
+
+                        const data = response.data;
+                        setCourseData(data.course);
+                        setTeacherData(data.teacherCourse.teacher);
+                    } catch (err) {
+                        console.log(err);
+                    } finally {
+                        if (isMounted) setLoading(false);
+                    }
+                }, 3000);
+
             } catch (err) {
                 console.log(err);
             }
         };
+
         fetchCourses();
+
+        return () => {
+            isMounted = false; // Cleanup function
+        };
     }, [course_id]);
 
     const toggleSection = (sectionId: string) => {
@@ -153,57 +188,87 @@ const CourseDetails = () => {
 
                 {/* Header Section */}
                 <div className="mb-8">
-                    <h1 className="text-3xl md:text-3xl font-bold mb-4 text-white font-sans tracking-tight">
-                        {courseData?.course_title}
-                    </h1>
-                    <div className="flex flex-wrap items-center gap-4 md:gap-6 text-sm text-gray-600">
-                        <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-full">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
-                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-                            </svg>
+                    {loading ? (
+                        <div className="w-full gap-3 h-10 bg-gray-200 rounded-lg animate-pulse"></div>
+                    ) : (
+                        <h1 className="text-3xl md:text-3xl font-bold mb-4 text-white font-sans tracking-tight">
+                            {courseData?.course_title}
+                        </h1>
+                    )}
 
-                            <span className="font-medium">{courseData?.lectures.length}</span>
-                        </div>
+                    <div className="flex mt-5 flex-wrap items-center gap-4 md:gap-6 text-sm text-gray-600">
+                        {loading ? (
+                            <div className="flex flex-wrap gap-4 md:gap-6">
+                                <div className="w-20 h-10 bg-gray-200 rounded-full animate-pulse"></div>
+                                <div className="w-20 h-10 bg-gray-200 rounded-full animate-pulse"></div>
+                                <div className="w-20 h-10 bg-gray-200 rounded-full animate-pulse"></div>
+                            </div>
+                        ) : (
+                            <div className="flex flex-wrap gap-4 md:gap-6">
+                                <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                        <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                                    </svg>
+                                    <span className="font-medium">{courseData?.lectures.length}</span>
+                                </div>
 
-                        <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-full">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-                            </svg>
-                            <span className="font-medium">{courseData?.course_total_no_hours}</span>
-                        </div>
+                                <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                                    </svg>
+                                    <span className="font-medium">{courseData?.course_total_no_hours}</span>
+                                </div>
 
-                        <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-full">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            <span className="font-medium">{courseData?.rating}</span>
-                        </div>
+                                <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <span className="font-medium">{courseData?.rating}</span>
+                                </div>
+                            </div>
+                        )}
                     </div>
+
                 </div>
 
                 {/* Course Content */}
                 <div className="mb-8">
-                    <div className="mb-8">
-                        <h2 className="text-xl font-semibold mb-4">About Course</h2>
-                        <p className="text-white text-sm">
-                            {courseData?.course_description}
-                        </p>
-                    </div>
 
-                    <div className="mb-8">
-                        <h2 className="text-xl font-semibold mb-4">What You'll Learn</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            {courseData?.course_what_you_will_learn.map((point, index) => (
-                                <div key={index} className="flex items-start gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                    </svg>
-                                    <span className="text-gray-400">{point}</span>
+                    {loading ? (
+                        <>
+                            <div className="w-full gap-3 h-20 bg-gray-200 rounded-lg animate-pulse"></div>
+                            <div className="mt-5 grid grid-cols-2 gap-4 p-4">
+                                {
+                                    Array.from({ length: 6 }).map((_, index) => (
+                                        <div
+                                            key={index}
+                                            className="w-full h-8 bg-gray-200 rounded-lg animate-pulse"
+                                        ></div>
+                                    ))}
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <h2 className="text-xl font-semibold mb-4">About Course</h2>
+                            <p className="text-white text-sm">
+                                {courseData?.course_description}
+                            </p>
+                            <div className="mb-8">
+                                <h2 className="text-xl mt-7 font-semibold mb-4">What You'll Learn</h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    {courseData?.course_what_you_will_learn.map((point, index) => (
+                                        <div key={index} className="flex items-start gap-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                            </svg>
+                                            <span className="text-gray-400">{point}</span>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
-                    </div>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
 
@@ -228,60 +293,96 @@ const CourseDetails = () => {
                 </svg>
             </button>
 
-
             {/* Course Content Sidebar */}
             <div
                 className={`fixed lg:static lg:block w-full lg:w-[35%] h-full bg-black overflow-y-auto transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'
                     } top-0 right-0 z-40`}
             >
                 <div className="p-4">
-                    <h2 className="text-lg font-semibold mb-4">Course content</h2>
-                    <div className="space-y-2">
-                        {courseData?.lectures?.map((lecture) => (
-                            <div key={lecture.lecture_id} className="rounded-lg bg-gradient-to-r from-purple-700 to-purple-400 D overflow-hidden">
+                    <div>
+                        <h2 className="text-lg font-semibold mb-4">Course content</h2>
+                        {/* Loading State */}
+                        {loading ?
+                            <>
+                                <div className="flex flex-col gap-2 p-4">
+                                    {/* Placeholder Box 1 */}
+                                    <div className="w-full h-12 bg-gray-200 rounded-lg animate-pulse"></div>
 
-                                <button
-                                    className="w-full px-4 py-3 flex items-center justify-between hover:bg-purple-500"
-                                    onClick={() => toggleSection(lecture.lecture_id)}
-                                >
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-sm font-medium"> {lecture.lecture_title}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-sm text-white">{lecture.lecture_total_no_hours}</span>
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            className={`h-5 w-5 transition-transform ${expandedSection === lecture.lecture_id ? 'transform rotate-180' : ''
-                                                }`}
-                                            viewBox="0 0 20 20"
-                                            fill="currentColor"
+                                    {/* Placeholder Box 2 */}
+                                    <div className="w-full h-12 bg-gray-200 rounded-lg animate-pulse"></div>
+
+                                    {/* Placeholder Box 3 */}
+                                    <div className="w-full h-12 bg-gray-200 rounded-lg animate-pulse"></div>
+
+                                    {/* Placeholder Box 4 */}
+                                    <div className="w-full h-12 bg-gray-200 rounded-lg animate-pulse"></div>
+                                </div>
+
+
+
+                            </> : (
+                                <div className="space-y-2">
+                                    {courseData?.lectures?.map((lecture) => (
+                                        <div
+                                            key={lecture.lecture_id}
+                                            className="rounded-lg bg-gradient-to-r from-purple-700 to-purple-400 overflow-hidden"
                                         >
-                                            <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                                        </svg>
-                                    </div>
-                                </button>
-                                {expandedSection === lecture.lecture_id && lecture.videos && (
-                                    <div className="border-t">
-                                        {lecture.videos.map((video, index) => (
-                                            <div
-                                                key={index}
-                                                className="px-4 py-2 flex items-center justify-between hover:bg-purple-400 cursor-pointer"
+                                            <button
+                                                className="w-full px-4 py-3 flex items-center justify-between hover:bg-purple-500"
+                                                onClick={() => toggleSection(lecture.lecture_id)}
                                             >
                                                 <div className="flex items-center gap-2">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white-400" viewBox="0 0 20 20" fill="currentColor">
-                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-                                                    </svg>
-                                                    <span className="text-sm text-white">{video.video_title}</span>
+                                                    <span className="text-sm font-medium">{lecture.lecture_title}</span>
                                                 </div>
-                                                <span className="text-sm text-black-500">
-                                                    {video.video_total_no_of_hours}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        ))}
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-sm text-white">{lecture.lecture_total_no_hours}</span>
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        className={`h-5 w-5 transition-transform ${expandedSection === lecture.lecture_id ? "transform rotate-180" : ""
+                                                            }`}
+                                                        viewBox="0 0 20 20"
+                                                        fill="currentColor"
+                                                    >
+                                                        <path
+                                                            fillRule="evenodd"
+                                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                            clipRule="evenodd"
+                                                        />
+                                                    </svg>
+                                                </div>
+                                            </button>
 
+                                            {expandedSection === lecture.lecture_id && lecture.videos && (
+                                                <div className="border-t">
+                                                    {lecture.videos.map((video, index) => (
+                                                        <div
+                                                            key={index}
+                                                            className="px-4 py-2 flex items-center justify-between hover:bg-purple-400 cursor-pointer"
+                                                        >
+                                                            <div className="flex items-center gap-2">
+                                                                <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    className="h-4 w-4 text-white-400"
+                                                                    viewBox="0 0 20 20"
+                                                                    fill="currentColor"
+                                                                >
+                                                                    <path
+                                                                        fillRule="evenodd"
+                                                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                                                        clipRule="evenodd"
+                                                                    />
+                                                                </svg>
+                                                                <span className="text-sm text-white">{video.video_title}</span>
+                                                            </div>
+                                                            <span className="text-sm text-black-500">{video.video_total_no_of_hours}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                     </div>
 
                     {/* Author Section */}
@@ -339,8 +440,7 @@ const CourseDetails = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
-
 export default CourseDetails;

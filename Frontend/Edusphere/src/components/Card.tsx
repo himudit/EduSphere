@@ -39,7 +39,7 @@ const Card: React.FC<CardProps> = ({
         <h2 className="text-base sm:text-lg font-bold -mt-1 sm:-mt-3 mb-1 line-clamp-1">{title}</h2>
         <p className="text-xs sm:text-sm text-[#baf1ba] mb-1 sm:mb-2">{author}</p>
         <p className="text-xs sm:text-sm text-gray-300 mb-2 sm:mb-4 overflow-hidden text-ellipsis whitespace-nowrap">{description}</p>
-{/* jcnkfnrk */}
+        {/* jcnkfnrk */}
         <div className="flex items-center -mt-1 sm:-mt-2">
           <span className="text-xs sm:text-sm text-yellow-400 font-bold mr-1 sm:mr-2">
             {rating}
