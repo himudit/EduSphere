@@ -33,7 +33,7 @@ const Card: React.FC<CardProps> = ({
       <img
         src={thumbnail}
         alt={title}
-        className="w-full h-32 sm:h-40 object-cover"
+        className="w-full h-32 sm:h-40 object-fill"
       />
       <div className="p-3 sm:p-4">
         <h2 className="text-base sm:text-lg font-bold -mt-1 sm:-mt-3 mb-1 line-clamp-1">{title}</h2>
@@ -73,13 +73,3 @@ const Card: React.FC<CardProps> = ({
 };
 
 export default Card;
-
-// import React from 'react'
-
-// const Card = () => {
-//   return (
-//     <div>Card</div>
-//   )
-// }
-
-// export default Card
