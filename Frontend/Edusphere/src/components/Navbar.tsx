@@ -16,10 +16,18 @@ const Navbar: React.FC = () => {
 
   const { user, loading, error } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
+  // useEffect(() => {
+  //   dispatch(fetchUserProfile());
+  //   console.log(user);
+  // }, [dispatch]);
+
   useEffect(() => {
     dispatch(fetchUserProfile());
-    console.log(user);
   }, [dispatch]);
+
+  useEffect(() => {
+    console.log(user);  // This will log the user only after it is updated
+  }, [user]);
 
   const navigate = useNavigate();
 
