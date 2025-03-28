@@ -5,7 +5,6 @@ import axios from "axios";
 import MiddleSection from './MiddleSection';
 import { Try } from './Try';
 
-
 const Home: React.FC = () => {
   return (
     <>
@@ -49,18 +48,6 @@ const Home: React.FC = () => {
         >
           Access the Latest Online Learning System and Materials to Fuel Your knowledge Growth.
         </motion.p>
-
-        {/* Button */}
-        {/* <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.8, delay: 0.6 }}
-          className="mt-8"
-        >
-          <button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg shadow-lg hover:opacity-90 text-lg transition-all">
-            Get Started
-          </button>
-        </motion.div> */}
       </div>
 
       {/* _____________________ */}

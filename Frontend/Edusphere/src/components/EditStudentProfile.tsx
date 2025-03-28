@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { fetchUserProfile, addUser, removeUser } from "../features/userSlice";
 
-
 interface Student {
     first_name: string,
     last_name: string,
@@ -53,8 +52,9 @@ const UserProfile = () => {
                     }
                 }
             );
+            dispatch(fetchUserProfile());
             notify();
-        } catch (err) {
+        } catch (err: any) {
             console.error('Failed to update profile:', err.response?.data || err.message);
         } finally {
             setFinalLoading(false);

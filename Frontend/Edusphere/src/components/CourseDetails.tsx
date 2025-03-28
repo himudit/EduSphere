@@ -64,44 +64,23 @@ const CourseDetails = () => {
     const [teacherData, setTeacherData] = useState<Teacher | undefined>(undefined);
     const { course_id } = useParams<{ course_id: string }>();
     const [loading, setLoading] = useState<Boolean>(true);
-
-    // useEffect(() => {
-    //     const fetchCourses = async () => {
-    //         try {
-    //                 const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/course/${course_id}`);
-    //                 const data = response.data;
-    //                 setCourseData(data.course);
-    //                 setTeacherData(data.teacherCourse.teacher);
-    //         } catch (err) {
-    //             console.log(err);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-    //     fetchCourses();
-    // }, [course_id]);
     useEffect(() => {
-        let isMounted = true; // To prevent state updates if unmounted
-
+        let isMounted = true; 
         const fetchCourses = async () => {
             try {
                 console.log(loading);
                 setLoading(true);
-
-                setTimeout(async () => {
-                    try {
-                        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/course/${course_id}`);
-                        if (!isMounted) return; // Prevent state update if component unmounted
-
-                        const data = response.data;
-                        setCourseData(data.course);
-                        setTeacherData(data.teacherCourse.teacher);
-                    } catch (err) {
-                        console.log(err);
-                    } finally {
-                        if (isMounted) setLoading(false);
-                    }
-                }, 3000);
+                try {
+                    const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/course/${course_id}`);
+                    if (!isMounted) return; 
+                    const data = response.data;
+                    setCourseData(data.course);
+                    setTeacherData(data.teacherCourse.teacher);
+                } catch (err) {
+                    console.log(err);
+                } finally {
+                    if (isMounted) setLoading(false);
+                }
 
             } catch (err) {
                 console.log(err);
@@ -111,7 +90,7 @@ const CourseDetails = () => {
         fetchCourses();
 
         return () => {
-            isMounted = false; // Cleanup function
+            isMounted = false; 
         };
     }, [course_id]);
 

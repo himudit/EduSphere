@@ -9,8 +9,6 @@ interface CardDisplayProps {
 
 const CardDisplay: React.FC<CardDisplayProps> = ({ image, creation, title, tags }) => {
   const isoDate = creation;
-  const [loading, setLoading] = useState(true);
-  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
 
   // Convert ISO Date
   const date = new Date(isoDate);

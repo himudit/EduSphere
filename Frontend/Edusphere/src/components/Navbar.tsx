@@ -18,7 +18,7 @@ const Navbar: React.FC = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchUserProfile());
-    // console.log(user);
+    console.log(user);
   }, [dispatch]);
 
   const navigate = useNavigate();
