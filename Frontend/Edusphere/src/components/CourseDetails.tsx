@@ -4,6 +4,7 @@ import axios from 'axios';
 import useConvertTime from '../util/useConvertTime'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock } from "@fortawesome/free-solid-svg-icons";
+import { FaPlayCircle, FaFileAlt, FaDownload, FaMobileAlt } from "react-icons/fa";
 
 interface CourseData {
     course: Course;
@@ -151,7 +152,7 @@ const CourseDetails = () => {
     };
 
     return (
-        <div className="flex min-h-screen">
+        <div className="flex min-h-screen bg-black">
             {/* Main Content */}
             <div className="w-full lg:w-[65%] bg-black p-4 overflow-y-auto">
 
@@ -372,9 +373,9 @@ const CourseDetails = () => {
                     </div>
 
                     {/* Author Section */}
-                    <div className="mt-8 border-t pt-6">
-                        <h2 className="text-lg font-semibold mb-4">Teacher</h2>
-                        <div className="bg-white rounded-lg p-4 shadow-sm">
+                    <div className="flex justify-center items-center mt-8 border-t pt-6">
+                        {/* <h2 className="text-lg font-semibold mb-4">Teacher</h2> */}
+                        {/* <div className="bg-white rounded-lg p-4 shadow-sm">
                             <div className="flex items-start gap-4">
                                 <img
                                     src={teacherData?.teacher_profile_picture}
@@ -422,6 +423,48 @@ const CourseDetails = () => {
                                     </div>
                                 </div>
                             </div>
+                        </div> */}
+                        <div className="bg-white shadow-lg rounded-xl p-6 w-80 border border-gray-200">
+                            {/* Course Title */}
+                            <p className="text-gray-500 text-sm font-medium">Full course</p>
+                            {/* Price Section */}
+                            <div className="flex items-center gap-2 mt-2">
+                                <span className="text-2xl font-bold text-black">₹15.99</span>
+                                {/* <span className="text-gray-400 line-through text-sm">$39.99</span>
+                                <span className="bg-purple-200 text-purple-700 text-xs font-semibold px-2 py-1 rounded-lg">60%</span> */}
+                            </div>
+
+                            {/* Course Includes */}
+                            <p className="text-gray-700 font-semibold mt-4">Course includes:</p>
+                            <ul className="mt-2 space-y-2 text-gray-600 text-sm">
+                                <li className="flex items-center gap-2">
+                                    <FaPlayCircle className="text-gray-500" />
+                                    {courseData?.course_total_no_hours} on-demand video
+                                    {/* {courseData?.course_total_no_hours} hours on-demand video */}
+                                </li>
+                                <li className="flex items-center gap-2">
+                                    <FaFileAlt className="text-gray-500" />
+                                    {courseData?.lectures.length} Articles
+                                </li>
+                                <li className="flex items-center gap-2">
+                                    <FaDownload className="text-gray-500" />
+                                    8 Downloadable resources
+                                </li>
+                                <li className="flex items-center gap-2">
+                                    <FaMobileAlt className="text-gray-500" />
+                                    Mobile version
+                                </li>
+                            </ul>
+
+                            {/* Buttons */}
+                            <button className="bg-purple-600 hover:bg-purple-700 text-white w-full py-2 mt-5 rounded-lg font-semibold">
+                                Buy now
+                            </button>
+                            {/* <button className="border border-purple-600 text-purple-600 hover:bg-purple-100 w-full py-2 mt-2 rounded-lg font-semibold">
+                               
+                            </button> */}
+                            <p className="text-gray-400 text-xs text-center mt-4">Lifetime access to all course materials</p>
+
                         </div>
                     </div>
                 </div>
