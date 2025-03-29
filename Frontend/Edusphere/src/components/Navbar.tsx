@@ -386,7 +386,7 @@ const Navbar: React.FC = () => {
                           </>
                       } */}
                       {loading ? (
-                        <p>Loading...</p>
+                        <></>
                       ) : user?.student_profile_picture ? (
                         <img
                           src={user?.student_profile_picture}
@@ -412,31 +412,12 @@ const Navbar: React.FC = () => {
                           </Link>
                         </div>
                       )}
-
-                      {/* <div className="flex items-center space-x-2">
-                        <Link
-                          to="/login"
-                          className="text-gray-500 hover:text-white transition duration-300"
-                        >
-                          Login
-                        </Link>
-                        <span className="text-gray-400">or</span>
-                        <Link
-                          to="/signup"
-                          className="text-gray-500 hover:text-white transition duration-300"
-                        >
-                          Signup
-                        </Link>
-                      </div> */}
-                      {/* } */}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Rest of the code (Sidebar and Overlay) remains the same */}
-            {/* Sidebar */}
             <div
               className={`fixed top-0 left-0 h-full w-72 bg-gradient-to-b from-gray-900 to-black text-white z-50 transform ${isOpen ? "translate-x-0" : "-translate-x-full"
                 } transition-transform duration-300 ease-in-out shadow-2xl`}
