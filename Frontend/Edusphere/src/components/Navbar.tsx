@@ -16,18 +16,10 @@ const Navbar: React.FC = () => {
 
   const { user, loading, error } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
-  // useEffect(() => {
-  //   dispatch(fetchUserProfile());
-  //   console.log(user);
-  // }, [dispatch]);
 
   useEffect(() => {
     dispatch(fetchUserProfile());
   }, [dispatch]);
-
-  useEffect(() => {
-    console.log(user);  // This will log the user only after it is updated
-  }, [user]);
 
   const navigate = useNavigate();
 
@@ -375,8 +367,8 @@ const Navbar: React.FC = () => {
 
                     {/* Profile Picture */}
                     <div className="relative group">
-                      {
-                        (user?.student_profile_picture)
+                      {/* {
+                        (user?.student_profile_picture && loading === false)
                           ?
                           <img
                             src={user?.student_profile_picture}
@@ -384,25 +376,59 @@ const Navbar: React.FC = () => {
                             className="w-12 h-12 rounded-full border-2 border-purple-500 cursor-pointer"
                             onClick={() => {
                               navigate('/profile');
-                            }}
-                          />
+                            }} />
                           :
-                          <div className="flex items-center space-x-2">
-                            <Link
-                              to="/login"
-                              className="text-gray-500 hover:text-white transition duration-300"
-                            >
-                              Login
-                            </Link>
-                            <span className="text-gray-400">or</span>
-                            <Link
-                              to="/signup"
-                              className="text-gray-500 hover:text-white transition duration-300"
-                            >
-                              Signup
-                            </Link>
-                          </div>
-                      }
+                          <>
+                            {
+                              (user?.student_profile_picture && loading === false) ?
+                                <></> : <></>
+                            }
+                          </>
+                      } */}
+                      {loading ? (
+                        <p>Loading...</p>
+                      ) : user?.student_profile_picture ? (
+                        <img
+                          src={user?.student_profile_picture}
+                          alt="Profile"
+                          className="w-12 h-12 rounded-full border-2 border-purple-500 cursor-pointer"
+                          onClick={() => {
+                            navigate('/profile');
+                          }} />
+                      ) : (
+                        <div className="flex items-center space-x-2">
+                          <Link
+                            to="/login"
+                            className="text-gray-500 hover:text-white transition duration-300"
+                          >
+                            Login
+                          </Link>
+                          <span className="text-gray-400">or</span>
+                          <Link
+                            to="/signup"
+                            className="text-gray-500 hover:text-white transition duration-300"
+                          >
+                            Signup
+                          </Link>
+                        </div>
+                      )}
+
+                      {/* <div className="flex items-center space-x-2">
+                        <Link
+                          to="/login"
+                          className="text-gray-500 hover:text-white transition duration-300"
+                        >
+                          Login
+                        </Link>
+                        <span className="text-gray-400">or</span>
+                        <Link
+                          to="/signup"
+                          className="text-gray-500 hover:text-white transition duration-300"
+                        >
+                          Signup
+                        </Link>
+                      </div> */}
+                      {/* } */}
                     </div>
                   </div>
                 </div>
