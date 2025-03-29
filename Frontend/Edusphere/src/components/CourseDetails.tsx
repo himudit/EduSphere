@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import useConvertTime from '../util/useConvertTime'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClock } from "@fortawesome/free-solid-svg-icons";
 
 interface CourseData {
     course: Course;
@@ -65,14 +68,14 @@ const CourseDetails = () => {
     const { course_id } = useParams<{ course_id: string }>();
     const [loading, setLoading] = useState<Boolean>(true);
     useEffect(() => {
-        let isMounted = true; 
+        let isMounted = true;
         const fetchCourses = async () => {
             try {
                 console.log(loading);
                 setLoading(true);
                 try {
                     const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/course/${course_id}`);
-                    if (!isMounted) return; 
+                    if (!isMounted) return;
                     const data = response.data;
                     setCourseData(data.course);
                     setTeacherData(data.teacherCourse.teacher);
@@ -90,7 +93,7 @@ const CourseDetails = () => {
         fetchCourses();
 
         return () => {
-            isMounted = false; 
+            isMounted = false;
         };
     }, [course_id]);
 
@@ -196,7 +199,8 @@ const CourseDetails = () => {
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
                                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                                     </svg>
-                                    <span className="font-medium">{courseData?.course_total_no_hours}</span>
+                                    {/* <span> <FontAwesomeIcon icon={faClock} className="text-gray-300 mr-3" /></span> */}
+                                    <span className="font-medium">{useConvertTime(courseData?.course_total_no_hours)}</span>
                                 </div>
 
                                 <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-full">
@@ -296,9 +300,6 @@ const CourseDetails = () => {
                                     {/* Placeholder Box 4 */}
                                     <div className="w-full h-12 bg-gray-200 rounded-lg animate-pulse"></div>
                                 </div>
-
-
-
                             </> : (
                                 <div className="space-y-2">
                                     {courseData?.lectures?.map((lecture) => (
@@ -310,11 +311,16 @@ const CourseDetails = () => {
                                                 className="w-full px-4 py-3 flex items-center justify-between hover:bg-purple-500"
                                                 onClick={() => toggleSection(lecture.lecture_id)}
                                             >
+                                                {/* <div className="flex"> */}
+                                                {/* <span className="text-sm font-medium">{lecture.lecture_title}</span> */}
+                                                {/* </div> */}
+                                                <span className="text-sm font-medium truncate w-full block">
+                                                    {lecture.lecture_title}
+                                                </span>
+
                                                 <div className="flex items-center gap-2">
-                                                    <span className="text-sm font-medium">{lecture.lecture_title}</span>
-                                                </div>
-                                                <div className="flex items-center gap-2">
-                                                    <span className="text-sm text-white">{lecture.lecture_total_no_hours}</span>
+                                                    <span className='ml-[6rem]'> <FontAwesomeIcon icon={faClock} className="text-gray-300 mr-3" /></span>
+                                                    <span className="text-sm text-white">{useConvertTime(lecture.lecture_total_no_hours)}</span>
                                                     <svg
                                                         xmlns="http://www.w3.org/2000/svg"
                                                         className={`h-5 w-5 transition-transform ${expandedSection === lecture.lecture_id ? "transform rotate-180" : ""
@@ -353,7 +359,8 @@ const CourseDetails = () => {
                                                                 </svg>
                                                                 <span className="text-sm text-white">{video.video_title}</span>
                                                             </div>
-                                                            <span className="text-sm text-black-500">{video.video_total_no_of_hours}</span>
+                                                            <span> <FontAwesomeIcon icon={faClock} className="text-gray-300 mr-3" /></span>
+                                                            <span className="text-sm text-black-500">{useConvertTime(video.video_total_no_of_hours)}</span>
                                                         </div>
                                                     ))}
                                                 </div>
