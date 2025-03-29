@@ -121,7 +121,7 @@ const Navbar: React.FC = () => {
 
                     {/* Profile Picture */}
                     <div className="relative group">
-                      {
+                      {/* {
                         (user?.teacher_profile_picture)
                           ?
                           <img
@@ -148,7 +148,34 @@ const Navbar: React.FC = () => {
                               Signup
                             </Link>
                           </div>
-                      }
+                      } */}
+                      {loading ? (
+                        <></>
+                      ) : user?.teacher_profile_picture ? (
+                        <img
+                          src={user?.teacher_profile_picture}
+                          alt="Profile"
+                          className="w-12 h-12 rounded-full border-2 border-purple-500 cursor-pointer"
+                          onClick={() => {
+                            navigate('/profile');
+                          }} />
+                      ) : (
+                        <div className="flex items-center space-x-2">
+                          <Link
+                            to="/login"
+                            className="text-gray-500 hover:text-white transition duration-300"
+                          >
+                            Login
+                          </Link>
+                          <span className="text-gray-400">or</span>
+                          <Link
+                            to="/signup"
+                            className="text-gray-500 hover:text-white transition duration-300"
+                          >
+                            Signup
+                          </Link>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -367,24 +394,6 @@ const Navbar: React.FC = () => {
 
                     {/* Profile Picture */}
                     <div className="relative group">
-                      {/* {
-                        (user?.student_profile_picture && loading === false)
-                          ?
-                          <img
-                            src={user?.student_profile_picture}
-                            alt="Profile"
-                            className="w-12 h-12 rounded-full border-2 border-purple-500 cursor-pointer"
-                            onClick={() => {
-                              navigate('/profile');
-                            }} />
-                          :
-                          <>
-                            {
-                              (user?.student_profile_picture && loading === false) ?
-                                <></> : <></>
-                            }
-                          </>
-                      } */}
                       {loading ? (
                         <></>
                       ) : user?.student_profile_picture ? (
