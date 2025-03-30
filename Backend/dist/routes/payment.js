@@ -18,6 +18,7 @@ const auth_middleware_1 = require("../middlewares/auth.middleware");
 const razorpay_1 = __importDefault(require("../services/razorpay"));
 const client_1 = require("@prisma/client");
 const razorpay_utils_1 = require("razorpay/dist/utils/razorpay-utils");
+const inspector_1 = require("inspector");
 const prisma = new client_1.PrismaClient();
 paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', auth_middleware_1.authStudent, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -28,7 +29,6 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', auth_middlew
                 lectures: true,
             },
         });
-        // console.log(student);
         const options = {
             amount: Number(course === null || course === void 0 ? void 0 : course.course_price) * 100,
             currency: "INR",
@@ -42,7 +42,6 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', auth_middlew
             },
         };
         const order = yield razorpay_1.default.orders.create(options);
-        // console.log(order);
         const newOrder = yield prisma.payments.create({
             data: {
                 student_id: student.student_id,
@@ -66,13 +65,13 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', auth_middlew
 paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     try {
+        inspector_1.console.log("i am webhook");
         const webhookSignature = req.get("X-Razorpay-Signature");
         const isWebHookValid = (0, razorpay_utils_1.validateWebhookSignature)(JSON.stringify(req.body), webhookSignature, process.env.RAZORPAY_WEBHOOK_SECRET);
         if (!isWebHookValid) {
             return res.status(400).json({ msg: "Invalid Webhook Signature" });
         }
         const paymentDetails = (_b = (_a = req.body.payload) === null || _a === void 0 ? void 0 : _a.payment) === null || _b === void 0 ? void 0 : _b.entity;
-        console.log(paymentDetails);
         // update order in DB
         const updatedOrder = yield prisma.payments.updateMany({
             where: { razorpay_order_id: paymentDetails.order_id },
@@ -81,8 +80,10 @@ paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, voi
                 razorpay_payment_id: paymentDetails.id,
             }
         });
+        inspector_1.console.log(paymentDetails);
         // add course in myplaylist according to student
         if (paymentDetails.status == "captured") {
+            inspector_1.console.log("i am captured");
             // console.log(paymentDetails.order_id);
             // console.log(paymentDetails.notes.student_id,);
             // console.log(paymentDetails.notes.course_id);
@@ -95,7 +96,7 @@ paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, voi
                     purchase_date: new Date()
                 },
             });
-            console.log("Purchased course added:", purchasedCourse);
+            inspector_1.console.log("Purchased course added:", purchasedCourse);
         }
         res.status(200).json({ msg: "webhook received successfully" });
     }

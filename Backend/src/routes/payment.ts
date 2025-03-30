@@ -7,6 +7,7 @@ import razorpayinstance from '../services/razorpay'
 import { PrismaClient } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid"; // Import UUID generator
 import { validateWebhookSignature } from 'razorpay/dist/utils/razorpay-utils';
+import { console } from 'inspector';
 
 const prisma = new PrismaClient();
 
@@ -35,7 +36,6 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', authStudent,
             },
         });
 
-        // console.log(student);
         const options: RazorpayOrderOptions = {
             amount: Number(course?.course_price) * 100,
             currency: "INR",
@@ -49,7 +49,6 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', authStudent,
             },
         };
         const order = await razorpayinstance.orders.create(options);
-        // console.log(order);
 
         const newOrder = await prisma.payments.create({
             data: {
@@ -74,6 +73,7 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', authStudent,
 
 paymentRouter.post('/webhook', async (req: any, res: Response, next: NextFunction) => {
     try {
+        console.log("i am webhook");
         const webhookSignature = req.get("X-Razorpay-Signature");
 
         const isWebHookValid = validateWebhookSignature(JSON.stringify(req.body), webhookSignature, process.env.RAZORPAY_WEBHOOK_SECRET as string)
@@ -82,7 +82,6 @@ paymentRouter.post('/webhook', async (req: any, res: Response, next: NextFunctio
             return res.status(400).json({ msg: "Invalid Webhook Signature" });
         }
         const paymentDetails = req.body.payload?.payment?.entity
-        console.log(paymentDetails);
 
         // update order in DB
         const updatedOrder = await prisma.payments.updateMany({
@@ -92,8 +91,10 @@ paymentRouter.post('/webhook', async (req: any, res: Response, next: NextFunctio
                 razorpay_payment_id: paymentDetails.id,
             }
         });
+        console.log(paymentDetails);
         // add course in myplaylist according to student
         if (paymentDetails.status == "captured") {
+            console.log("i am captured");
             // console.log(paymentDetails.order_id);
             // console.log(paymentDetails.notes.student_id,);
             // console.log(paymentDetails.notes.course_id);
