@@ -429,7 +429,7 @@ const CourseDetails = () => {
                             <p className="text-gray-500 text-sm font-medium">Full course</p>
                             {/* Price Section */}
                             <div className="flex items-center gap-2 mt-2">
-                                <span className="text-2xl font-bold text-black">₹15.99</span>
+                                <span className="text-2xl font-bold text-black">₹{courseData?.course_price}</span>
                                 {/* <span className="text-gray-400 line-through text-sm">$39.99</span>
                                 <span className="bg-purple-200 text-purple-700 text-xs font-semibold px-2 py-1 rounded-lg">60%</span> */}
                             </div>
@@ -457,7 +457,10 @@ const CourseDetails = () => {
                             </ul>
 
                             {/* Buttons */}
-                            <button className="bg-purple-600 hover:bg-purple-700 text-white w-full py-2 mt-5 rounded-lg font-semibold">
+                            <button onClick={() => {
+                                handleBuyClick();
+                            }}
+                                className="bg-purple-600 hover:bg-purple-700 text-white w-full py-2 mt-5 rounded-lg font-semibold">
                                 Buy now
                             </button>
                             {/* <button className="border border-purple-600 text-purple-600 hover:bg-purple-100 w-full py-2 mt-2 rounded-lg font-semibold">
