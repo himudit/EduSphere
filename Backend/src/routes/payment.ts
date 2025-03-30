@@ -27,6 +27,7 @@ interface RazorpayOrderOptions {
 
 paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', authStudent, async (req: any, res: Response, next: NextFunction) => {
     try {
+        console.log("i am post");
         const student = req.student;
 
         const course = await prisma.courses.findUnique({
@@ -91,7 +92,7 @@ paymentRouter.post('/webhook', async (req: any, res: Response, next: NextFunctio
                 razorpay_payment_id: paymentDetails.id,
             }
         });
-        console.log(paymentDetails);
+        // console.log(paymentDetails);
         // add course in myplaylist according to student
         if (paymentDetails.status == "captured") {
             console.log("i am captured");

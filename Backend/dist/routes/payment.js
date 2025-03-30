@@ -22,6 +22,7 @@ const inspector_1 = require("inspector");
 const prisma = new client_1.PrismaClient();
 paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', auth_middleware_1.authStudent, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        inspector_1.console.log("i am post");
         const student = req.student;
         const course = yield prisma.courses.findUnique({
             where: { course_id: req.params.course_id },
@@ -80,7 +81,7 @@ paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, voi
                 razorpay_payment_id: paymentDetails.id,
             }
         });
-        inspector_1.console.log(paymentDetails);
+        // console.log(paymentDetails);
         // add course in myplaylist according to student
         if (paymentDetails.status == "captured") {
             inspector_1.console.log("i am captured");
