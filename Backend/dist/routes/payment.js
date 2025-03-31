@@ -18,12 +18,12 @@ const auth_middleware_1 = require("../middlewares/auth.middleware");
 const razorpay_1 = __importDefault(require("../services/razorpay"));
 const client_1 = require("@prisma/client");
 const razorpay_utils_1 = require("razorpay/dist/utils/razorpay-utils");
-const inspector_1 = require("inspector");
 const prisma = new client_1.PrismaClient();
 paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', auth_middleware_1.authStudent, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        inspector_1.console.log("i am post");
+        console.log("i am post");
         const student = req.student;
+        console.log(student);
         const course = yield prisma.courses.findUnique({
             where: { course_id: req.params.course_id },
             include: {
@@ -54,9 +54,11 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', auth_middlew
         });
         // save it in Db
         // return back to frontend
+        console.log("i am post");
         return res.status(201).json({ success: true, order: newOrder });
     }
     catch (err) {
+        console.log("i am post");
         if (err instanceof Error) {
             return res.status(500).json({ msg: err.message });
         }
@@ -66,7 +68,7 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', auth_middlew
 paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     try {
-        inspector_1.console.log("i am webhook");
+        console.log("i am webhook");
         const webhookSignature = req.get("X-Razorpay-Signature");
         const isWebHookValid = (0, razorpay_utils_1.validateWebhookSignature)(JSON.stringify(req.body), webhookSignature, process.env.RAZORPAY_WEBHOOK_SECRET);
         if (!isWebHookValid) {
@@ -84,7 +86,7 @@ paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, voi
         // console.log(paymentDetails);
         // add course in myplaylist according to student
         if (paymentDetails.status == "captured") {
-            inspector_1.console.log("i am captured");
+            console.log("i am captured");
             // console.log(paymentDetails.order_id);
             // console.log(paymentDetails.notes.student_id,);
             // console.log(paymentDetails.notes.course_id);
@@ -97,7 +99,7 @@ paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, voi
                     purchase_date: new Date()
                 },
             });
-            inspector_1.console.log("Purchased course added:", purchasedCourse);
+            console.log("Purchased course added:", purchasedCourse);
         }
         res.status(200).json({ msg: "webhook received successfully" });
     }

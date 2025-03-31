@@ -122,6 +122,7 @@ const CourseDetails = () => {
                     },
                 }
             );
+            console.log(response.data);
             const { amount, currency, notes, razorpay_order_id } = response.data.order;
             if (response.data.success) {
                 console.log("Order created:", response.data.order);

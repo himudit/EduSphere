@@ -7,7 +7,6 @@ import razorpayinstance from '../services/razorpay'
 import { PrismaClient } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid"; // Import UUID generator
 import { validateWebhookSignature } from 'razorpay/dist/utils/razorpay-utils';
-import { console } from 'inspector';
 
 const prisma = new PrismaClient();
 
@@ -27,9 +26,8 @@ interface RazorpayOrderOptions {
 
 paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', authStudent, async (req: any, res: Response, next: NextFunction) => {
     try {
-        console.log("i am post");
+        console.log("i am post")
         const student = req.student;
-
         const course = await prisma.courses.findUnique({
             where: { course_id: req.params.course_id },
             include: {
@@ -63,8 +61,8 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', authStudent,
         // save it in Db
         // return back to frontend
         return res.status(201).json({ success: true, order: newOrder });
-
     } catch (err) {
+        console.log("i am post");
         if (err instanceof Error) {
             return res.status(500).json({ msg: err.message });
         }
@@ -92,7 +90,7 @@ paymentRouter.post('/webhook', async (req: any, res: Response, next: NextFunctio
                 razorpay_payment_id: paymentDetails.id,
             }
         });
-        // console.log(paymentDetails);
+        console.log(paymentDetails);
         // add course in myplaylist according to student
         if (paymentDetails.status == "captured") {
             console.log("i am captured");
