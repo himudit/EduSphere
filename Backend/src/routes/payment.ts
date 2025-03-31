@@ -72,7 +72,8 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', authStudent,
 
 paymentRouter.post('/webhook', async (req: any, res: Response, next: NextFunction) => {
     try {
-        console.log("i am webhook");
+        let i = 0;
+        console.log("i am webhook" + i);
         const webhookSignature = req.get("X-Razorpay-Signature");
 
         const isWebHookValid = validateWebhookSignature(JSON.stringify(req.body), webhookSignature, process.env.RAZORPAY_WEBHOOK_SECRET as string)
@@ -90,18 +91,14 @@ paymentRouter.post('/webhook', async (req: any, res: Response, next: NextFunctio
                 razorpay_payment_id: paymentDetails.id,
             }
         });
-        console.log(paymentDetails);
         // add course in myplaylist according to student
         if (paymentDetails.status == "captured") {
-            console.log("i am captured");
-            // console.log(paymentDetails.order_id);
-            // console.log(paymentDetails.notes.student_id,);
-            // console.log(paymentDetails.notes.course_id);
+            console.log("i am captured" + i);
             const purchasedCourse = await prisma.purchased_courses.create({
                 data: {
                     order_id: paymentDetails.order_id,
                     student_id: paymentDetails.notes.student_id,
-                    course_id: paymentDetails.neotes.course_id,
+                    course_id: paymentDetails.notes.course_id,
                     progress: 0,
                     purchase_date: new Date()
                 },

@@ -18,7 +18,6 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const prisma = new client_1.PrismaClient();
 const authStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log(" i am auth");
         const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader.split(' ')[1];
         if (!token) {

@@ -23,7 +23,6 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', auth_middlew
     try {
         console.log("i am post");
         const student = req.student;
-        console.log(student);
         const course = yield prisma.courses.findUnique({
             where: { course_id: req.params.course_id },
             include: {
@@ -54,7 +53,6 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', auth_middlew
         });
         // save it in Db
         // return back to frontend
-        console.log("i am post");
         return res.status(201).json({ success: true, order: newOrder });
     }
     catch (err) {
@@ -68,7 +66,8 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', auth_middlew
 paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     try {
-        console.log("i am webhook");
+        let i = 0;
+        console.log("i am webhook" + i);
         const webhookSignature = req.get("X-Razorpay-Signature");
         const isWebHookValid = (0, razorpay_utils_1.validateWebhookSignature)(JSON.stringify(req.body), webhookSignature, process.env.RAZORPAY_WEBHOOK_SECRET);
         if (!isWebHookValid) {
@@ -83,18 +82,14 @@ paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, voi
                 razorpay_payment_id: paymentDetails.id,
             }
         });
-        // console.log(paymentDetails);
         // add course in myplaylist according to student
         if (paymentDetails.status == "captured") {
-            console.log("i am captured");
-            // console.log(paymentDetails.order_id);
-            // console.log(paymentDetails.notes.student_id,);
-            // console.log(paymentDetails.notes.course_id);
+            console.log("i am captured" + i);
             const purchasedCourse = yield prisma.purchased_courses.create({
                 data: {
                     order_id: paymentDetails.order_id,
                     student_id: paymentDetails.notes.student_id,
-                    course_id: paymentDetails.neotes.course_id,
+                    course_id: paymentDetails.notes.course_id,
                     progress: 0,
                     purchase_date: new Date()
                 },
