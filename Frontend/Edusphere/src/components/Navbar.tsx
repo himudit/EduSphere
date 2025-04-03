@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import logo from '../assets/logo1.png'
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +9,15 @@ import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const suggestions: string[] = [
+    "Web Development",
+    "Js",
+    "JavaScript",
+    "Spring Boot",
+    "Gen-AI",
+    "Machine Learning",
+  ];
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -22,6 +31,44 @@ const Navbar: React.FC = () => {
   }, [dispatch]);
 
   const navigate = useNavigate();
+
+  const [query, setQuery] = useState<string>("");
+  const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setQuery(value);
+
+    if (value.trim() === "") {
+      setFilteredSuggestions([]);
+      setShowSuggestions(false);
+    } else {
+      setFilteredSuggestions(
+        suggestions.filter((item) =>
+          item.toLowerCase().includes(value.toLowerCase())
+        )
+      );
+      setShowSuggestions(true);
+    }
+  };
+
+  const handleSelect = (suggestion: string) => {
+    setQuery(suggestion);
+    setShowSuggestions(false);
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <nav className="relative bg-black text-white ">
@@ -68,31 +115,6 @@ const Navbar: React.FC = () => {
                   <Link to="/" className="text-2xl font-bold">
                     <img src={logo} alt="logo" className="w-[3rem] h-[3rem]" />
                   </Link>
-                </div>
-
-                {/* Center Section - Search (Desktop Only) */}
-                <div className="hidden md:block flex-1 max-w-xl mx-auto px-4">
-                  <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="Search courses..."
-                      className="w-full px-4 py-2 rounded-lg text-sm bg-gray-900 border border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all outline-none placeholder-gray-400"
-                    />
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M21 21l-4.35-4.35M16.5 10a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"
-                      />
-                    </svg>
-                  </div>
                 </div>
 
                 {/* Right Section */}
@@ -308,24 +330,19 @@ const Navbar: React.FC = () => {
                   </ul>
                 </div>
 
-                {/* Center Logo for Mobile */}
-                <div className="absolute left-1/2 transform -translate-x-1/2 md:hidden">
-                  <Link to="/" className="text-2xl font-bold">
-                    <img src={logo} alt="logo" className="w-[3rem] h-[3rem]" />
-                  </Link>
-                </div>
-
                 {/* Center Section - Search (Desktop Only) */}
-                <div className="hidden md:block flex-1 max-w-xl mx-auto px-4">
+                <div className="hidden md:block flex-1 max-w-xl mx-auto px-4" ref={searchRef}>
                   <div className="relative">
                     <input
                       type="text"
+                      value={query}
+                      onChange={handleChange}
                       placeholder="Search courses..."
-                      className="w-full px-4 py-2 rounded-lg text-sm bg-gray-900 border border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all outline-none placeholder-gray-400"
+                      className="w-full px-4 py-2 rounded-[3rem] text-sm bg-gray-900 border border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all outline-none placeholder-gray-400"
                     />
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                      className="h-5 w-5 absolute right-5 top-1/2 transform -translate-y-1/2 text-gray-400"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -338,28 +355,47 @@ const Navbar: React.FC = () => {
                       />
                     </svg>
                   </div>
+
+                  {/* Suggestions Dropdown */}
+                  {showSuggestions && filteredSuggestions.length > 0 && (
+                    <div className="absolute w-[45%] left-[38%] right-0 mt-2 bg-gray-800 text-white shadow-lg rounded-lg overflow-hidden z-10">
+                      <div className="p-2 font-semibold border-b border-gray-700">Popular on Edusphere</div>
+                      {filteredSuggestions.map((suggestion, index) => (
+                        <div
+                          key={index}
+                          className="p-2 flex items-center gap-2 cursor-pointer hover:bg-gray-600"
+                          onClick={() => handleSelect(suggestion)}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4 text-gray-300"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M21 21l-4.35-4.35M16.5 10a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"
+                            />
+                          </svg>
+                          <span>{suggestion}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Center Logo for Mobile */}
+                <div className="absolute left-1/2 transform -translate-x-1/2 md:hidden">
+                  <Link to="/" className="text-2xl font-bold">
+                    <img src={logo} alt="logo" className="w-[3rem] h-[3rem]" />
+                  </Link>
                 </div>
 
                 {/* Right Section */}
                 <div className="flex items-center gap-4">
-                  {/* Mobile Search Icon */}
-                  {/* <button className="md:hidden">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M21 21l-4.35-4.35M16.5 10a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"
-                      />
-                    </svg>
-                  </button> */}
-
                   {/* Profile Section */}
                   <div className="flex items-center gap-3">
                     {/* Notifications */}
@@ -533,7 +569,9 @@ const Navbar: React.FC = () => {
           <div className="relative">
             <input
               type="text"
-              placeholder="  Search courses..."
+              value={query}
+              onChange={handleChange}
+              placeholder="Search courses..."
               className="w-full h-[4rem] px-4 py-2 rounded-[3rem] text-lg bg-gray-900 border border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all outline-none placeholder-gray-400"
             />
             <svg
@@ -551,6 +589,35 @@ const Navbar: React.FC = () => {
               />
             </svg>
           </div>
+          {/* Suggestions Dropdown */}
+          {showSuggestions && filteredSuggestions.length > 0 && (
+            <div className="absolute left-0 right-0 mt-2 bg-black shadow-lg rounded-lg overflow-hidden">
+              <div className="p-2 font-semibold text-gray-700 border-b">Popular on Udemy</div>
+              {filteredSuggestions.map((suggestion, index) => (
+                <div
+                  key={index}
+                  className="p-2 flex items-center gap-2 cursor-pointer hover:bg-gray-600"
+                  onClick={() => handleSelect(suggestion)}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 text-gray-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M21 21l-4.35-4.35M16.5 10a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"
+                    />
+                  </svg>
+                  <span>{suggestion}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
