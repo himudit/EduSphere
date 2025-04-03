@@ -565,7 +565,7 @@ const Navbar: React.FC = () => {
           </>
       }
       <div className="block md:hidden">
-        <div className="flex-1 max-w-xl mx-auto px-4">
+        <div className="flex-1 max-w-xl mx-auto px-4" ref={searchRef}>
           <div className="relative">
             <input
               type="text"
@@ -592,7 +592,7 @@ const Navbar: React.FC = () => {
           {/* Suggestions Dropdown */}
           {showSuggestions && filteredSuggestions.length > 0 && (
             <div className="absolute left-0 right-0 mt-2 bg-black shadow-lg rounded-lg overflow-hidden">
-              <div className="p-2 font-semibold text-gray-700 border-b">Popular on Udemy</div>
+              <div className="p-2 font-semibold text-gray-700 border-b">Popular on Edusphere</div>
               {filteredSuggestions.map((suggestion, index) => (
                 <div
                   key={index}
