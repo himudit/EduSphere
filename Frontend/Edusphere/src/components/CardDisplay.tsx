@@ -42,7 +42,7 @@ const CardDisplay: React.FC<CardDisplayProps> = ({ image, creation, title, tags 
 
           {/* Tags */}
           <div className="flex flex-wrap gap-2 items-center">
-            {tags.map((tag, index) => (
+            {tags.slice(0, 4).map((tag, index) => (
               <span
                 key={index}
                 className="px-4 py-1 bg-gray-100 text-gray-600 rounded-full text-sm"

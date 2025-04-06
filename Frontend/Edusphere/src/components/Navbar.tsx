@@ -8,20 +8,47 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 
 const Navbar: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
 
+  const [isOpen, setIsOpen] = useState(false);
   const suggestions: string[] = [
     "Web Development",
-    "Js",
+    "Frontend",
     "JavaScript",
+    "TypeScript",
+    "React.js",
+    "Next.js",
+    "Angular",
+    "Node.js",
+    "Express.js",
     "Spring Boot",
-    "Gen-AI",
+    "Java",
+    "Python",
+    "C++",
+    "Data Structures & Algorithms",
     "Machine Learning",
+    "Generative AI",
+    "Prompt Engineering",
+    "Computer Vision",
+    "Docker",
+    "Kubernetes",
+    "DevOps",
+    "Git & GitHub",
+    "AWS",
+    "MongoDB",
+    "MySQL",
+    "PostgreSQL",
+    "Full Stack Development",
+    "Data Science",
+    "Big Data",
+    "Power BI",
+    "Excel for Data Analysis",
+    "UI/UX Design",
+    "Figma Design",
+    "System Design",
   ];
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+
+  const toggleMenu = () => setIsOpen(!isOpen);
 
   const { user, loading, error } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
@@ -35,11 +62,13 @@ const Navbar: React.FC = () => {
   const [query, setQuery] = useState<string>("");
   const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
+  const [activeIndex, setActiveIndex] = useState<number>(-1);
   const searchRef = useRef<HTMLDivElement>(null);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setQuery(value);
+    setActiveIndex(-1);
 
     if (value.trim() === "") {
       setFilteredSuggestions([]);
@@ -57,6 +86,10 @@ const Navbar: React.FC = () => {
   const handleSelect = (suggestion: string) => {
     setQuery(suggestion);
     setShowSuggestions(false);
+    setActiveIndex(-1);
+
+    const encodedQuery = encodeURIComponent(suggestion.trim());
+    navigate(`/search?q=${encodedQuery}`);
   };
 
   // Close dropdown when clicking outside
@@ -64,11 +97,40 @@ const Navbar: React.FC = () => {
     function handleClickOutside(event: MouseEvent) {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setShowSuggestions(false);
+        setActiveIndex(-1);
       }
     }
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (filteredSuggestions.length > 0) {
+        setActiveIndex((prev) =>
+          prev < filteredSuggestions.length - 1 ? prev + 1 : 0
+        );
+      }
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      if (filteredSuggestions.length > 0) {
+        setActiveIndex((prev) =>
+          prev > 0 ? prev - 1 : filteredSuggestions.length - 1
+        );
+      }
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      if (activeIndex >= 0 && filteredSuggestions[activeIndex]) {
+        handleSelect(filteredSuggestions[activeIndex]);
+      } else if (query.trim() !== "") {
+        const encodedQuery = encodeURIComponent(query.trim());
+        navigate(`/search?q=${encodedQuery}`);
+      }
+    }
+  };
+
 
   return (
     <nav className="relative bg-black text-white ">
@@ -331,12 +393,13 @@ const Navbar: React.FC = () => {
                 </div>
 
                 {/* Center Section - Search (Desktop Only) */}
-                <div className="hidden md:block flex-1 max-w-xl mx-auto px-4" ref={searchRef}>
+                {/* <div className="hidden md:block flex-1 max-w-xl mx-auto px-4" ref={searchRef}>
                   <div className="relative">
                     <input
                       type="text"
                       value={query}
                       onChange={handleChange}
+                      onKeyDown={handleKeyDown}
                       placeholder="Search courses..."
                       className="w-full px-4 py-2 rounded-[3rem] text-sm bg-gray-900 border border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all outline-none placeholder-gray-400"
                     />
@@ -355,8 +418,6 @@ const Navbar: React.FC = () => {
                       />
                     </svg>
                   </div>
-
-                  {/* Suggestions Dropdown */}
                   {showSuggestions && filteredSuggestions.length > 0 && (
                     <div className="absolute w-[45%] left-[38%] right-0 mt-2 bg-gray-800 text-white shadow-lg rounded-lg overflow-hidden z-10">
                       <div className="p-2 font-semibold border-b border-gray-700">Popular on Edusphere</div>
@@ -385,7 +446,67 @@ const Navbar: React.FC = () => {
                       ))}
                     </div>
                   )}
+                </div> */}
+                <div className="hidden md:block flex-1 max-w-xl mx-auto px-4" ref={searchRef}>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={query}
+                      onChange={handleChange}
+                      onKeyDown={handleKeyDown}
+                      placeholder="Search courses..."
+                      className="w-full px-4 py-2 rounded-[3rem] text-sm bg-gray-900 border border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all outline-none placeholder-gray-400"
+                    />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 absolute right-5 top-1/2 transform -translate-y-1/2 text-gray-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M21 21l-4.35-4.35M16.5 10a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"
+                      />
+                    </svg>
+                  </div>
+
+                  {/* Suggestions Dropdown */}
+                  {showSuggestions && filteredSuggestions.length > 0 && (
+                    <div className="absolute w-[45%] left-[38%] right-0 mt-2 bg-gray-800 text-white shadow-lg rounded-lg overflow-hidden z-10">
+                      <div className="p-2 font-semibold border-b border-gray-700">
+                        Popular on Edusphere
+                      </div>
+                      {filteredSuggestions.map((suggestion, index) => (
+                        <div
+                          key={index}
+                          className={`p-2 flex items-center gap-2 cursor-pointer ${index === activeIndex ? "bg-gray-700" : "hover:bg-gray-600"
+                            }`}
+                          onClick={() => handleSelect(suggestion)}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4 text-gray-300"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M21 21l-4.35-4.35M16.5 10a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"
+                            />
+                          </svg>
+                          <span>{suggestion}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
+
 
                 {/* Center Logo for Mobile */}
                 <div className="absolute left-1/2 transform -translate-x-1/2 md:hidden">
@@ -564,6 +685,7 @@ const Navbar: React.FC = () => {
             )}
           </>
       }
+
       <div className="block md:hidden">
         <div className="flex-1 max-w-xl mx-auto px-4" ref={searchRef}>
           <div className="relative">
@@ -571,6 +693,7 @@ const Navbar: React.FC = () => {
               type="text"
               value={query}
               onChange={handleChange}
+              onKeyDown={handleKeyDown}
               placeholder="Search courses..."
               className="w-full h-[4rem] px-4 py-2 rounded-[3rem] text-lg bg-gray-900 border border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all outline-none placeholder-gray-400"
             />
@@ -589,14 +712,17 @@ const Navbar: React.FC = () => {
               />
             </svg>
           </div>
-          {/* Suggestions Dropdown */}
+
           {showSuggestions && filteredSuggestions.length > 0 && (
-            <div className="absolute left-0 right-0 mt-2 bg-black shadow-lg rounded-lg overflow-hidden">
-              <div className="p-2 font-semibold text-gray-700 border-b">Popular on Edusphere</div>
+            <div className="absolute left-0 right-0 mt-2 bg-black shadow-lg rounded-lg overflow-hidden z-50">
+              <div className="p-2 font-semibold text-gray-400 border-b border-gray-700">
+                Popular on Edusphere
+              </div>
               {filteredSuggestions.map((suggestion, index) => (
                 <div
                   key={index}
-                  className="p-2 flex items-center gap-2 cursor-pointer hover:bg-gray-600"
+                  className={`p-2 flex items-center gap-2 cursor-pointer ${index === activeIndex ? "bg-gray-700" : "hover:bg-gray-600"
+                    }`}
                   onClick={() => handleSelect(suggestion)}
                 >
                   <svg
@@ -613,14 +739,13 @@ const Navbar: React.FC = () => {
                       d="M21 21l-4.35-4.35M16.5 10a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"
                     />
                   </svg>
-                  <span>{suggestion}</span>
+                  <span className="text-white">{suggestion}</span>
                 </div>
               ))}
             </div>
           )}
         </div>
       </div>
-
 
     </nav>
   );

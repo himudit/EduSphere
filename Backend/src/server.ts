@@ -96,17 +96,46 @@ app.get('/course/:course_id', async (req: Request, res: Response) => {
 })
 
 
+// app.get('/search', async (req: Request, res: Response) => {
+//     try {
+//         const course = await prisma.courses.findMany()
+//         if (!course) {
+//             return res.status(404).json({ error: 'Course not found' });
+//         }
+//         res.status(200).json(course);
+//     } catch (err) {
+//         res.status(500).json({ error: 'Failed to fetch course' });
+//     }
+// })
+
+
 app.get('/search', async (req: Request, res: Response) => {
     try {
-        const course = await prisma.courses.findMany()
-        if (!course) {
-            return res.status(404).json({ error: 'Course not found' });
+        const query = (req.query.q || req.query.query) as string;
+
+        if (!query || typeof query !== 'string') {
+            return res.status(400).json({ error: 'Search query is required' });
         }
-        res.status(200).json(course);
+        const searchTerm = query.toString().toLowerCase();
+        
+        const allCourses = await prisma.courses.findMany();
+
+        const filteredCourses = allCourses.filter(course =>
+            course.course_keywords.some(keyword =>
+                keyword.toLowerCase().includes(searchTerm)
+            )
+        );
+
+        if (!filteredCourses.length) {
+            return res.status(404).json({ error: "No matching courses found" });
+        }
+
+        res.status(200).json(filteredCourses);
+
     } catch (err) {
-        res.status(500).json({ error: 'Failed to fetch course' });
+        res.status(500).json({ error: 'Failed to search courses' });
     }
-})
+});
 
 
 app.get('/filterSearch', async (req: Request, res: Response) => {

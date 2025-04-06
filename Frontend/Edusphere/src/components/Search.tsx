@@ -49,11 +49,30 @@ const Search: React.FC = () => {
         const handleResize = () => {
             setIsDesktop(window.innerWidth >= 768);
         };
-
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
-    
+
+    const query = new URLSearchParams(location.search).get("q");
+
+    useEffect(() => {
+        if (!query || query.trim() === "") return;
+
+        const fetchCourses = async () => {
+            try {
+                const res = await axios.get<Course[]>(`${import.meta.env.VITE_BASE_URL}/search?query=${query}`);
+                setCourseData(res.data);
+            } catch (err: any) {
+                console.error('Error fetching courses:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchCourses();
+    }, [query]);
+
+
     useEffect(() => {
         const fetchCourses = async () => {
             try {
