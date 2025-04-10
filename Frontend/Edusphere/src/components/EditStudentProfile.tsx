@@ -30,7 +30,7 @@ const UserProfile = () => {
     const { register, handleSubmit, formState: { errors }, setValue } = useForm();
     const [studentData, setStudentData] = useState<Student | undefined>();
     const [newProfilePicture, setnewProfilePicture] = useState();
-    const { user, loading, error } = useSelector((state: RootState) => state.user);
+    // const { user, loading, error } = useSelector((state: RootState) => state.user);
     const dispatch = useDispatch();
     const [proileLoading, setProfileLoading] = useState(false);
     const [finalLoading, setFinalLoading] = useState(false);

@@ -9,7 +9,9 @@ function Login() {
     const dispatch = useDispatch();
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('');
+    const [emailError, setEmailError] = useState('');
     const [password, setPassword] = useState('');
+    const [passwordError, setPasswordError] = useState('');
     const [loading, setLoading] = useState(false);
     const [isStudent, setIsStudent] = useState(true);
 
@@ -26,7 +28,6 @@ function Login() {
                 email: email,
                 password: password
             });
-            console.log(response);
             if (isStudent == true) {
                 if (response.status === 200) {
                     const data = response.data;
@@ -42,12 +43,40 @@ function Login() {
                     navigate('/');
                 }
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error("Login failed:", error);
+            // 🔴 Show alert for invalid credentials
+            if (error.response && error.response.status === 401) {
+                alert("Invalid email or password.");
+            } else {
+                alert("Something went wrong. Please try again later.");
+            }
         } finally {
             setLoading(false);
         }
     };
+
+    const validateEmail = (value: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (value.trim() === "") {
+            setEmailError("");
+        } else if (!emailRegex.test(value)) {
+            setEmailError("Please enter a valid email address");
+        } else {
+            setEmailError("");
+        }
+    };
+
+    const validatePassword = (value: string) => {
+        if (value.trim() === "") {
+            setPasswordError("");
+        } else if (value.length < 8) {
+            setPasswordError("Password must be at least 8 characters");
+        } else {
+            setPasswordError("");
+        }
+    };
+
 
     return (
         <div className="min-h-screen bg-[#000000] relative flex items-center justify-center overflow-hidden">
@@ -93,16 +122,26 @@ function Login() {
                         type="text"
                         placeholder="Email or Phone"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                            validateEmail(e.target.value);
+
+                        }}
                         className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500/50"
                     />
+                    {emailError && (
+                        <p className="text-red-400 text-sm mt-1">{emailError}</p>
+                    )}
 
                     <div className="relative">
                         <input
                             type={showPassword ? "text" : "password"}
                             placeholder="Password"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                                validatePassword(e.target.value);
+                            }}
                             className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500/50"
                         />
                         <button
@@ -112,6 +151,9 @@ function Login() {
                         >
                             {showPassword ? "Hide" : "Show"}
                         </button>
+                        {passwordError && (
+                            <p className="text-red-400 text-sm mt-1">{passwordError}</p>
+                        )}
                     </div>
 
                     <button
@@ -140,7 +182,7 @@ function Login() {
                 </form>
 
                 <div className="mt-8 text-center text-sm">
-                    <span className="text-gray-400">New to Atomic? </span>
+                    <span className="text-gray-400">New to Edusphere? </span>
                     <Link to="/signup" className="text-purple-400 hover:text-purple-300">Join Now</Link>
                 </div>
             </div>

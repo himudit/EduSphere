@@ -16,6 +16,10 @@ function Signup() {
     const [isStudent, setIsStudent] = useState(true);
     const [loading, setLoading] = useState(false);
 
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+
+
     const formSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
@@ -53,6 +57,26 @@ function Signup() {
             setLoading(false);
         }
     };
+
+    const validateEmail = (value: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (value.trim() === "") {
+            setEmailError("");
+        } else if (!emailRegex.test(value)) {
+            setEmailError("Please enter a valid email address");
+        } else {
+            setEmailError("");
+        }
+    };
+
+    const validatePassword = (value: string) => {
+        if (value.length > 0 && value.length < 8) {
+            setPasswordError("Password must be at least 8 characters");
+        } else {
+            setPasswordError("");
+        }
+    };
+
 
     return (
         <div className="min-h-screen bg-[#0B0B1E] relative flex items-center justify-center overflow-hidden">
@@ -117,9 +141,11 @@ function Signup() {
                             value={email}
                             onChange={(e) => {
                                 setEmail(e.target.value);
+                                validateEmail(e.target.value);
                             }}
                             className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                         />
+                        {emailError && <p className="text-red-400 text-sm mt-1">{emailError}</p>}
                     </div>
                     <div className="relative">
                         <input
@@ -130,6 +156,7 @@ function Signup() {
                             value={password}
                             onChange={(e) => {
                                 setPassword(e.target.value);
+                                validatePassword(e.target.value);
                             }}
                             className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                         />
@@ -141,10 +168,11 @@ function Signup() {
                             {showPassword ? 'Hide' : 'Show'}
                         </button>
                     </div>
+                    {passwordError && <p className="text-red-400 text-sm mt-1">{passwordError}</p>}
 
                     <button
                         type="submit"
-                        disabled={loading}
+                        disabled={loading || emailError !== "" || passwordError !== ""}
                         className={`w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg py-3 transition-colors ${loading ? 'bg-purple-400 cursor-not-allowed' : ''
                             }`}
                     >
