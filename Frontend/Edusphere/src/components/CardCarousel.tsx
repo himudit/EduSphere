@@ -1,4 +1,4 @@
-import React,{ useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from "./Card";
 import axios from 'axios';
 
@@ -41,7 +41,7 @@ const CardCarousel = () => {
             } catch (err) {
                 console.log(err);
             } finally {
-                setLoading(false);
+                // setLoading(false);
             }
         };
         fetchCourses();
@@ -51,9 +51,20 @@ const CardCarousel = () => {
         ? Array(3).fill(null).map((_, index) => (
             <div
                 key={index}
-                className="w-64 h-[18rem] bg-gray-300 animate-pulse rounded-lg shadow-lg relative overflow-hidden"
-            >
-                <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900 to-gray-900 opacity-50 animate-[shimmer_1.5s_infinite]" />
+                className="bg-gray-900 rounded-2xl p-4 shadow-md w-[280px] h-[300px] animate-pulse">
+                <div className="bg-gray-700 h-36 w-full rounded-lg mb-4"></div>
+
+                <div className="h-4 bg-gray-600 rounded w-3/4 mb-2"></div>
+                <div className="h-3 bg-gray-600 rounded w-1/2 mb-2"></div>
+                <div className="h-3 bg-gray-700 rounded w-full mb-4"></div>
+
+                <div className="flex items-center gap-2 mb-2">
+                    <div className="h-4 w-4 bg-gray-600 rounded-full"></div>
+                    <div className="h-4 w-10 bg-gray-600 rounded"></div>
+                    <div className="h-4 w-8 bg-gray-600 rounded ml-auto"></div>
+                </div>
+
+                <div className="h-5 bg-gray-500 rounded w-16 mt-auto"></div>
             </div>
         ))
         : courses.map((it, index) => (

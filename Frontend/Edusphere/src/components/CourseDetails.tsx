@@ -68,6 +68,7 @@ const CourseDetails = () => {
     const [teacherData, setTeacherData] = useState<Teacher | undefined>(undefined);
     const { course_id } = useParams<{ course_id: string }>();
     const [loading, setLoading] = useState<Boolean>(true);
+    const [loadingBuy, setLoadingBuy] = useState<Boolean>(false);
 
     useEffect(() => {
         let isMounted = true;
@@ -109,7 +110,7 @@ const CourseDetails = () => {
 
     const handleBuyClick = async () => {
         try {
-            setLoading(true);
+            setLoadingBuy(true);
             const token = localStorage.getItem("token");
             if (!token) {
                 alert("Please log in to purchase this course.");
@@ -127,8 +128,7 @@ const CourseDetails = () => {
             // console.log(response.data);
             const { amount, currency, notes, razorpay_order_id } = response.data.order;
             if (response.data.success) {
-                setLoading(false);
-                console.log("Order created:", response.data.order);
+                setLoadingBuy(false);
                 const options = {
                     key: 'rzp_test_HduuapK5bWNRuY',
                     amount: amount,
@@ -153,7 +153,7 @@ const CourseDetails = () => {
             console.error("Error in handleBuyClick:", error);
             alert("Something went wrong. Please try again.");
         } finally {
-            setLoading(false);
+            setLoadingBuy(false);
         }
     };
 
@@ -414,19 +414,16 @@ const CourseDetails = () => {
                             <button onClick={() => {
                                 handleBuyClick();
                             }}
-                                className={`w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg py-3 mt-5 transition-colors ${loading ? 'bg-purple-400 cursor-not-allowed' : ''
+                                className={`w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg py-3 mt-5 transition-colors ${loadingBuy ? 'bg-purple-400 cursor-not-allowed' : ''
                                     }`}
                             >
-                                {loading && (
+                                {loadingBuy && (
                                     <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
                                 )}
                                 <>
-                                    {loading ? '' : 'Buy now'}
+                                    {loadingBuy ? '' : 'Buy now'}
                                 </>
                             </button>
-                            {/* //     className="bg-purple-600 hover:bg-purple-700 text-white w-full py-2 mt-5 rounded-lg font-semibold">
-                            //     Buy now
-                            // */}
                             <p className="text-gray-400 text-xs text-center mt-4">Lifetime access to all course materials</p>
 
                         </div>
