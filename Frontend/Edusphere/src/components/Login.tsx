@@ -45,7 +45,7 @@ function Login() {
             }
         } catch (error: any) {
             console.error("Login failed:", error);
-            // 🔴 Show alert for invalid credentials
+            //  Show alert for invalid credentials
             if (error.response && error.response.status === 401) {
                 alert("Invalid email or password.");
             } else {

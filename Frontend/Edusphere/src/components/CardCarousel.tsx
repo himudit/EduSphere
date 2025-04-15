@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React,{ useState, useEffect } from 'react';
 import Card from "./Card";
 import axios from 'axios';
 
@@ -132,4 +132,4 @@ const CardCarousel = () => {
     );
 };
 
-export default CardCarousel;
+export default React.memo(CardCarousel);

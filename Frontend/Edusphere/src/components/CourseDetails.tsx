@@ -68,6 +68,7 @@ const CourseDetails = () => {
     const [teacherData, setTeacherData] = useState<Teacher | undefined>(undefined);
     const { course_id } = useParams<{ course_id: string }>();
     const [loading, setLoading] = useState<Boolean>(true);
+
     useEffect(() => {
         let isMounted = true;
         const fetchCourses = async () => {
@@ -108,6 +109,7 @@ const CourseDetails = () => {
 
     const handleBuyClick = async () => {
         try {
+            setLoading(true);
             const token = localStorage.getItem("token");
             if (!token) {
                 alert("Please log in to purchase this course.");
@@ -122,9 +124,10 @@ const CourseDetails = () => {
                     },
                 }
             );
-            console.log(response.data);
+            // console.log(response.data);
             const { amount, currency, notes, razorpay_order_id } = response.data.order;
             if (response.data.success) {
+                setLoading(false);
                 console.log("Order created:", response.data.order);
                 const options = {
                     key: 'rzp_test_HduuapK5bWNRuY',
@@ -149,6 +152,8 @@ const CourseDetails = () => {
         } catch (error) {
             console.error("Error in handleBuyClick:", error);
             alert("Something went wrong. Please try again.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -375,64 +380,13 @@ const CourseDetails = () => {
 
                     {/* Author Section */}
                     <div className="flex justify-center items-center mt-8 border-t pt-6">
-                        {/* <h2 className="text-lg font-semibold mb-4">Teacher</h2> */}
-                        {/* <div className="bg-white rounded-lg p-4 shadow-sm">
-                            <div className="flex items-start gap-4">
-                                <img
-                                    src={teacherData?.teacher_profile_picture}
-                                    alt="Ryan Curtis"
-                                    className="w-12 h-12 rounded-full object-cover"
-                                />
-                                <div className="flex-1">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <h3 className="font-medium text-gray-900">{teacherData?.first_name}</h3>
-                                        <span className="text-sm text-gray-500">3D Artist</span>
-                                    </div>
-                                    <p className="text-sm text-gray-600 mb-3">
-                                        {teacherData?.teacher_about}
-                                    </p>
-                                    <div className="space-y-2">
-                                        <div className="flex items-center gap-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                            </svg>
-                                            <span className="text-sm text-gray-600">4.8 Instructor rating</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                                                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
-                                            </svg>
-                                            <span className="text-sm text-gray-600">889 Reviews</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                                                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
-                                            </svg>
-                                            <span className="text-sm text-gray-600">4,887 Students</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm0 4H4v2h1V9zm-1 4h1v2H4v-2z" clipRule="evenodd" />
-                                            </svg>
-                                            <span className="text-sm text-gray-600">6 Courses</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <button onClick={() => {
-                                                handleBuyClick();
-                                            }} className='w-20 h-10 border rounded-lg border-blue-600 text-white bg-blue-400'>Buy Now</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> */}
+
                         <div className="bg-white shadow-lg rounded-xl p-6 w-80 border border-gray-200">
                             {/* Course Title */}
                             <p className="text-gray-500 text-sm font-medium">Full course</p>
                             {/* Price Section */}
                             <div className="flex items-center gap-2 mt-2">
                                 <span className="text-2xl font-bold text-black">₹{courseData?.course_price}</span>
-                                {/* <span className="text-gray-400 line-through text-sm">$39.99</span>
-                                <span className="bg-purple-200 text-purple-700 text-xs font-semibold px-2 py-1 rounded-lg">60%</span> */}
                             </div>
 
                             {/* Course Includes */}
@@ -441,7 +395,6 @@ const CourseDetails = () => {
                                 <li className="flex items-center gap-2">
                                     <FaPlayCircle className="text-gray-500" />
                                     {courseData?.course_total_no_hours} on-demand video
-                                    {/* {courseData?.course_total_no_hours} hours on-demand video */}
                                 </li>
                                 <li className="flex items-center gap-2">
                                     <FaFileAlt className="text-gray-500" />
@@ -461,12 +414,19 @@ const CourseDetails = () => {
                             <button onClick={() => {
                                 handleBuyClick();
                             }}
-                                className="bg-purple-600 hover:bg-purple-700 text-white w-full py-2 mt-5 rounded-lg font-semibold">
-                                Buy now
+                                className={`w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg py-3 mt-5 transition-colors ${loading ? 'bg-purple-400 cursor-not-allowed' : ''
+                                    }`}
+                            >
+                                {loading && (
+                                    <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                                )}
+                                <>
+                                    {loading ? '' : 'Buy now'}
+                                </>
                             </button>
-                            {/* <button className="border border-purple-600 text-purple-600 hover:bg-purple-100 w-full py-2 mt-2 rounded-lg font-semibold">
-                               
-                            </button> */}
+                            {/* //     className="bg-purple-600 hover:bg-purple-700 text-white w-full py-2 mt-5 rounded-lg font-semibold">
+                            //     Buy now
+                            // */}
                             <p className="text-gray-400 text-xs text-center mt-4">Lifetime access to all course materials</p>
 
                         </div>
