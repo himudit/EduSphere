@@ -108,7 +108,7 @@ const CardCarousel = () => {
     };
 
     return (
-        <div className="relative w-full max-w-7xl mx-auto px-4 py-8">
+        <div className="relative w-full max-w-7xl mx-auto mr-[1rem] ">
             {/* Carousel Container */}
             <div className="relative h-[28rem] overflow-visible">
                 <div className="absolute w-full h-full flex justify-center items-center">

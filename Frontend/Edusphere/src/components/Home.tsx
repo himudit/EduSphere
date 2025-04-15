@@ -91,7 +91,7 @@ const Home: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="w-full lg:w-2/3 ml-[2rem]">
+        <div className="w-full lg:w-2/3">
           <CardCarousel />
         </div>
       </div>

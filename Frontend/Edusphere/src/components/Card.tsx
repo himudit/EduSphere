@@ -29,7 +29,7 @@ const Card: React.FC<CardProps> = ({
     navigate(`/course/${formattedTitle}`);
   };
   return (
-    <div onClick={handleClick} className="max-w-[19rem] sm:max-w-[16rem] cursor-pointer bg-black text-white rounded-xl shadow-lg overflow-hidden hover:scale-105 transition-transform duration-300">
+    <div onClick={handleClick} className="max-w-[19rem] sm:max-w-[16rem] h-[21rem] cursor-pointer bg-black text-white rounded-xl shadow-lg overflow-hidden hover:scale-105 transition-transform duration-300">
       <img
         src={thumbnail}
         alt={title}
