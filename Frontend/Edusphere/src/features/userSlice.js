@@ -8,37 +8,76 @@ export const fetchUserProfile = createAsyncThunk(
             const token = localStorage.getItem("token");
             const teacher_token = localStorage.getItem("teacher_token");
 
-            const studentRequest = token
-                ? axios.get(`${import.meta.env.VITE_BASE_URL}/students/profile`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                })
-                : null;
+            const promises = [];
 
-            const teacherRequest = teacher_token
-                ? axios.get(`${import.meta.env.VITE_BASE_URL}/teachers/profile`, {
-                    headers: { Authorization: `Bearer ${teacher_token}` },
-                })
-                : null;
+            if (token) {
+                promises.push(
+                    axios.get(`${import.meta.env.VITE_BASE_URL}/students/profile`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    })
+                );
+            }
 
-            const [studentResponse, teacherResponse] = await Promise.allSettled([
-                studentRequest,
-                teacherRequest,
-            ]);
-            
-            const studentData =
-                studentResponse.status === "fulfilled" ? studentResponse.value?.data : null;
-            const teacherData =
-                teacherResponse.status === "fulfilled" ? teacherResponse.value?.data : null;
-            if (studentData) return studentData;
-            if (teacherData) return teacherData;
+            if (teacher_token) {
+                promises.push(
+                    axios.get(`${import.meta.env.VITE_BASE_URL}/teachers/profile`, {
+                        headers: { Authorization: `Bearer ${teacher_token}` },
+                    })
+                );
+            }
 
-            throw new Error("No user data found");
+            if (promises.length === 0) {
+                throw new Error("No token found");
+            }
+
+            const result = await Promise.any(promises);
+            return result.data;
+
         } catch (error) {
             console.error("Error fetching profile:", error.message);
             return rejectWithValue(error.message || "Failed to fetch profile");
         }
     }
 );
+
+// export const fetchUserProfile = createAsyncThunk(
+//     "user/fetchProfile",
+//     async (_, { rejectWithValue }) => {
+//         try {
+//             const token = localStorage.getItem("token");
+//             const teacher_token = localStorage.getItem("teacher_token");
+
+//             const studentRequest = token
+//                 ? axios.get(`${import.meta.env.VITE_BASE_URL}/students/profile`, {
+//                     headers: { Authorization: `Bearer ${token}` },
+//                 })
+//                 : null;
+
+//             const teacherRequest = teacher_token
+//                 ? axios.get(`${import.meta.env.VITE_BASE_URL}/teachers/profile`, {
+//                     headers: { Authorization: `Bearer ${teacher_token}` },
+//                 })
+//                 : null;
+
+//             const [studentResponse, teacherResponse] = await Promise.allSettled([
+//                 studentRequest,
+//                 teacherRequest,
+//             ]);
+
+//             const studentData =
+//                 studentResponse.status === "fulfilled" ? studentResponse.value?.data : null;
+//             const teacherData =
+//                 teacherResponse.status === "fulfilled" ? teacherResponse.value?.data : null;
+//             if (studentData) return studentData;
+//             if (teacherData) return teacherData;
+
+//             throw new Error("No user data found");
+//         } catch (error) {
+//             console.error("Error fetching profile:", error.message);
+//             return rejectWithValue(error.message || "Failed to fetch profile");
+//         }
+//     }
+// );
 
 const initialState = {
     user: null,

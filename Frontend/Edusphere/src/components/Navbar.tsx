@@ -69,7 +69,6 @@ const Navbar: React.FC = () => {
     const value = event.target.value;
     setQuery(value);
     setActiveIndex(-1);
-
     if (value.trim() === "") {
       setFilteredSuggestions([]);
       setShowSuggestions(false);
@@ -100,7 +99,6 @@ const Navbar: React.FC = () => {
         setActiveIndex(-1);
       }
     }
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -164,11 +162,11 @@ const Navbar: React.FC = () => {
                         Upload Course
                       </Link>
                     </li>
-                    <li>
+                    {/* <li>
                       <Link to="/mylearning" className="text-sm font-medium hover:text-purple-400 transition-colors">
                         My Courses
                       </Link>
-                    </li>
+                    </li> */}
                   </ul>
                 </div>
 
@@ -238,7 +236,6 @@ const Navbar: React.FC = () => {
               </div>
             </div>
 
-            {/* Rest of the code (Sidebar and Overlay) remains the same */}
             {/* Sidebar */}
             <div
               className={`fixed top-0 left-0 h-full w-72 bg-gradient-to-b from-gray-900 to-black text-white z-50 transform ${isOpen ? "translate-x-0" : "-translate-x-full"
@@ -393,60 +390,6 @@ const Navbar: React.FC = () => {
                 </div>
 
                 {/* Center Section - Search (Desktop Only) */}
-                {/* <div className="hidden md:block flex-1 max-w-xl mx-auto px-4" ref={searchRef}>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={query}
-                      onChange={handleChange}
-                      onKeyDown={handleKeyDown}
-                      placeholder="Search courses..."
-                      className="w-full px-4 py-2 rounded-[3rem] text-sm bg-gray-900 border border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all outline-none placeholder-gray-400"
-                    />
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 absolute right-5 top-1/2 transform -translate-y-1/2 text-gray-400"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M21 21l-4.35-4.35M16.5 10a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"
-                      />
-                    </svg>
-                  </div>
-                  {showSuggestions && filteredSuggestions.length > 0 && (
-                    <div className="absolute w-[45%] left-[38%] right-0 mt-2 bg-gray-800 text-white shadow-lg rounded-lg overflow-hidden z-10">
-                      <div className="p-2 font-semibold border-b border-gray-700">Popular on Edusphere</div>
-                      {filteredSuggestions.map((suggestion, index) => (
-                        <div
-                          key={index}
-                          className="p-2 flex items-center gap-2 cursor-pointer hover:bg-gray-600"
-                          onClick={() => handleSelect(suggestion)}
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4 text-gray-300"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M21 21l-4.35-4.35M16.5 10a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"
-                            />
-                          </svg>
-                          <span>{suggestion}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div> */}
                 <div className="hidden md:block flex-1 max-w-xl mx-auto px-4" ref={searchRef}>
                   <div className="relative">
                     <input
