@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import useConvertTime from '../util/useConvertTime'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock } from "@fortawesome/free-solid-svg-icons";
+import { faClock, faLock } from "@fortawesome/free-solid-svg-icons";
 import { FaPlayCircle, FaFileAlt, FaDownload, FaMobileAlt } from "react-icons/fa";
 
 interface CourseData {
@@ -69,17 +69,20 @@ const CourseDetails = () => {
     const { course_id } = useParams<{ course_id: string }>();
     const [loading, setLoading] = useState<Boolean>(true);
     const [loadingBuy, setLoadingBuy] = useState<Boolean>(false);
+    const [selectedVideoUrl, setSelectedVideoUrl] = useState(courseData?.course_preview_video);
+    const [activeVideoId, setActiveVideoId] = useState(null);
 
     useEffect(() => {
         let isMounted = true;
         const fetchCourses = async () => {
             try {
-                console.log(loading);
+                // console.log(loading);
                 setLoading(true);
                 try {
                     const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/course/${course_id}`);
                     if (!isMounted) return;
                     const data = response.data;
+                    console.log(data);
                     setCourseData(data.course);
                     setTeacherData(data.teacherCourse.teacher);
                 } catch (err) {
@@ -157,16 +160,46 @@ const CourseDetails = () => {
         }
     };
 
+    // false -> Notpurchased show buy button
+    const [purchased, setPurchased] = useState<boolean>(false);
+
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                const token = localStorage.getItem("token");
+
+                const response = await axios.post<boolean>(
+                    `${import.meta.env.VITE_BASE_URL}/students/CheckPurchasedOrNot`,
+                    { courseId: course_id }, // request body
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+                console.log(response);
+                setPurchased(response.data);
+            } catch (err) {
+                console.error('Error fetching courses:', err);
+            }
+        };
+        fetchCourses();
+    }, []);
+
+    const showVideo = (video) => {
+        setSelectedVideoUrl(video.video_url);
+        setActiveVideoId(video.video_id);  // assuming each video has a unique ID
+    };
+
     return (
         <div className="flex min-h-screen bg-black">
             {/* Main Content */}
             <div className="w-full lg:w-[65%] bg-black p-4 overflow-y-auto">
 
-
                 {/* Video Preview */}
                 <div className="relative aspect-video bg-gray-100 rounded-lg mb-8 overflow-hidden">
                     <video
-                        src={courseData?.course_preview_video}
+                        src={selectedVideoUrl}
                         className="w-full h-full object-cover"
                         autoPlay
                         loop
@@ -217,7 +250,8 @@ const CourseDetails = () => {
                                     <span className="font-medium">{courseData?.rating}</span>
                                 </div>
                             </div>
-                        )}
+                        )
+                        }
                     </div>
 
                 </div>
@@ -318,15 +352,22 @@ const CourseDetails = () => {
                                                 className="w-full px-4 py-3 flex items-center justify-between hover:bg-purple-500"
                                                 onClick={() => toggleSection(lecture.lecture_id)}
                                             >
-                                                {/* <div className="flex"> */}
-                                                {/* <span className="text-sm font-medium">{lecture.lecture_title}</span> */}
-                                                {/* </div> */}
-                                                <span className="text-sm font-medium truncate w-full block">
+                                                <span className="text-sm font-medium truncate block">
                                                     {lecture.lecture_title}
                                                 </span>
 
                                                 <div className="flex items-center gap-2">
-                                                    <span className='ml-[6rem]'> <FontAwesomeIcon icon={faClock} className="text-gray-300 mr-3" /></span>
+                                                    {
+                                                        purchased == false
+                                                            ?
+                                                            <span className='ml-[6rem]'>
+                                                                <FontAwesomeIcon icon={faLock} className="text-gray-300 mr-3" />
+                                                            </span>
+                                                            :
+                                                            <span className='ml-[6rem]'>
+                                                                <FontAwesomeIcon icon={faClock} className="text-gray-300 mr-3" />
+                                                            </span>
+                                                    }
                                                     <span className="text-sm text-white">{useConvertTime(lecture.lecture_total_no_hours)}</span>
                                                     <svg
                                                         xmlns="http://www.w3.org/2000/svg"
@@ -349,7 +390,16 @@ const CourseDetails = () => {
                                                     {lecture.videos.map((video, index) => (
                                                         <div
                                                             key={index}
-                                                            className="px-4 py-2 flex items-center justify-between hover:bg-purple-400 cursor-pointer"
+                                                            // className="px-4 py-2 flex items-center justify-between hover:bg-purple-400 cursor-pointer"
+                                                            className={`px-4 py-2 flex items-center justify-between cursor-pointer ${activeVideoId === video.video_id
+                                                                    ? 'bg-purple-600 text-white' // Active video style
+                                                                    : 'hover:bg-purple-400'
+                                                                }`}
+                                                            onClick={() => {
+                                                                if (purchased) {
+                                                                    showVideo(video);
+                                                                }
+                                                            }}
                                                         >
                                                             <div className="flex items-center gap-2">
                                                                 <svg
@@ -364,9 +414,19 @@ const CourseDetails = () => {
                                                                         clipRule="evenodd"
                                                                     />
                                                                 </svg>
-                                                                <span className="text-sm text-white">{video.video_title}</span>
+                                                                <span className="text-sm font-small truncate w-[13rem] block">{video.video_title}</span>
                                                             </div>
-                                                            <span> <FontAwesomeIcon icon={faClock} className="text-gray-300 mr-3" /></span>
+                                                            {
+                                                                purchased == false
+                                                                    ?
+                                                                    <span >
+                                                                        <FontAwesomeIcon icon={faLock} className="text-gray-300 mr-3" />
+                                                                    </span>
+                                                                    :
+                                                                    <span>
+                                                                        <FontAwesomeIcon icon={faClock} className="text-gray-300 mr-3" />
+                                                                    </span>
+                                                            }
                                                             <span className="text-sm text-black-500">{useConvertTime(video.video_total_no_of_hours)}</span>
                                                         </div>
                                                     ))}
@@ -379,55 +439,61 @@ const CourseDetails = () => {
                     </div>
 
                     {/* Author Section */}
-                    <div className="flex justify-center items-center mt-8 border-t pt-6">
+                    {
+                        purchased == false ?
+                            <div className="flex justify-center items-center mt-8 border-t pt-6">
 
-                        <div className="bg-white shadow-lg rounded-xl p-6 w-80 border border-gray-200">
-                            {/* Course Title */}
-                            <p className="text-gray-500 text-sm font-medium">Full course</p>
-                            {/* Price Section */}
-                            <div className="flex items-center gap-2 mt-2">
-                                <span className="text-2xl font-bold text-black">₹{courseData?.course_price}</span>
+                                <div className="bg-white shadow-lg rounded-xl p-6 w-80 border border-gray-200">
+                                    {/* Course Title */}
+                                    <p className="text-gray-500 text-sm font-medium">Full course</p>
+                                    {/* Price Section */}
+                                    <div className="flex items-center gap-2 mt-2">
+                                        <span className="text-2xl font-bold text-black">₹{courseData?.course_price}</span>
+                                    </div>
+
+                                    {/* Course Includes */}
+                                    <p className="text-gray-700 font-semibold mt-4">Course includes:</p>
+                                    <ul className="mt-2 space-y-2 text-gray-600 text-sm">
+                                        <li className="flex items-center gap-2">
+                                            <FaPlayCircle className="text-gray-500" />
+                                            {courseData?.course_total_no_hours} on-demand video
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                            <FaFileAlt className="text-gray-500" />
+                                            {courseData?.lectures.length} Articles
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                            <FaDownload className="text-gray-500" />
+                                            8 Downloadable resources
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                            <FaMobileAlt className="text-gray-500" />
+                                            Mobile version
+                                        </li>
+                                    </ul>
+
+                                    {/* Buttons */}
+                                    <button onClick={() => {
+                                        handleBuyClick();
+                                    }}
+                                        className={`w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg py-3 mt-5 transition-colors ${loadingBuy ? 'bg-purple-400 cursor-not-allowed' : ''
+                                            }`}
+                                    >
+                                        {loadingBuy && (
+                                            <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                                        )}
+                                        <>
+                                            {loadingBuy ? '' : 'Buy now'}
+                                        </>
+                                    </button>
+                                    <p className="text-gray-400 text-xs text-center mt-4">Lifetime access to all course materials</p>
+
+                                </div>
                             </div>
+                            :
+                            <></>
+                    }
 
-                            {/* Course Includes */}
-                            <p className="text-gray-700 font-semibold mt-4">Course includes:</p>
-                            <ul className="mt-2 space-y-2 text-gray-600 text-sm">
-                                <li className="flex items-center gap-2">
-                                    <FaPlayCircle className="text-gray-500" />
-                                    {courseData?.course_total_no_hours} on-demand video
-                                </li>
-                                <li className="flex items-center gap-2">
-                                    <FaFileAlt className="text-gray-500" />
-                                    {courseData?.lectures.length} Articles
-                                </li>
-                                <li className="flex items-center gap-2">
-                                    <FaDownload className="text-gray-500" />
-                                    8 Downloadable resources
-                                </li>
-                                <li className="flex items-center gap-2">
-                                    <FaMobileAlt className="text-gray-500" />
-                                    Mobile version
-                                </li>
-                            </ul>
-
-                            {/* Buttons */}
-                            <button onClick={() => {
-                                handleBuyClick();
-                            }}
-                                className={`w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg py-3 mt-5 transition-colors ${loadingBuy ? 'bg-purple-400 cursor-not-allowed' : ''
-                                    }`}
-                            >
-                                {loadingBuy && (
-                                    <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                                )}
-                                <>
-                                    {loadingBuy ? '' : 'Buy now'}
-                                </>
-                            </button>
-                            <p className="text-gray-400 text-xs text-center mt-4">Lifetime access to all course materials</p>
-
-                        </div>
-                    </div>
                 </div>
             </div>
         </div >

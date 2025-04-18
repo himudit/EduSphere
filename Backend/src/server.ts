@@ -54,6 +54,30 @@ app.get('/students/mylearning', authStudent, async (req: StudentRequest, res: Re
     }
 })
 
+app.post('/students/CheckPurchasedOrNot', authStudent, async (req: StudentRequest, res: Response) => {
+    try {
+        const { courseId } = req.body;
+
+        if (!courseId) {
+            return res.status(400).json({ message: "Course ID is required." });
+        }
+
+        const purchasedCourse = await prisma.purchased_courses.findFirst({
+            where: {
+                student_id: req.student?.student_id,
+                course_id: courseId,
+            },
+        });
+
+        const isPurchased = !!purchasedCourse; // true if found, false otherwise
+
+        res.status(200).json(isPurchased);
+    } catch (error) {
+        console.error("Error checking purchased course:", error);
+        res.status(500).json({ message: "Failed to check purchased course", error });
+    }
+});
+
 app.get('/rating', async (req: Request, res: Response) => {
     try {
         const courses = await prisma.courses.findMany();
@@ -95,20 +119,6 @@ app.get('/course/:course_id', async (req: Request, res: Response) => {
     }
 })
 
-
-// app.get('/search', async (req: Request, res: Response) => {
-//     try {
-//         const course = await prisma.courses.findMany()
-//         if (!course) {
-//             return res.status(404).json({ error: 'Course not found' });
-//         }
-//         res.status(200).json(course);
-//     } catch (err) {
-//         res.status(500).json({ error: 'Failed to fetch course' });
-//     }
-// })
-
-
 app.get('/search', async (req: Request, res: Response) => {
     try {
         const query = (req.query.q || req.query.query) as string;
@@ -117,7 +127,7 @@ app.get('/search', async (req: Request, res: Response) => {
             return res.status(400).json({ error: 'Search query is required' });
         }
         const searchTerm = query.toString().toLowerCase();
-        
+
         const allCourses = await prisma.courses.findMany();
 
         const filteredCourses = allCourses.filter(course =>
