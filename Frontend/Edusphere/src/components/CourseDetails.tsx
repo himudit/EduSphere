@@ -69,7 +69,7 @@ const CourseDetails = () => {
     const { course_id } = useParams<{ course_id: string }>();
     const [loading, setLoading] = useState<Boolean>(true);
     const [loadingBuy, setLoadingBuy] = useState<Boolean>(false);
-    const [selectedVideoUrl, setSelectedVideoUrl] = useState(courseData?.course_preview_video);
+    const [selectedVideoUrl, setSelectedVideoUrl] = useState('');
     const [activeVideoId, setActiveVideoId] = useState(null);
 
     useEffect(() => {
@@ -84,6 +84,7 @@ const CourseDetails = () => {
                     const data = response.data;
                     console.log(data);
                     setCourseData(data.course);
+                    setSelectedVideoUrl(courseData?.course_preview_video);
                     setTeacherData(data.teacherCourse.teacher);
                 } catch (err) {
                     console.log(err);
@@ -95,9 +96,7 @@ const CourseDetails = () => {
                 console.log(err);
             }
         };
-
         fetchCourses();
-
         return () => {
             isMounted = false;
         };
@@ -392,8 +391,8 @@ const CourseDetails = () => {
                                                             key={index}
                                                             // className="px-4 py-2 flex items-center justify-between hover:bg-purple-400 cursor-pointer"
                                                             className={`px-4 py-2 flex items-center justify-between cursor-pointer ${activeVideoId === video.video_id
-                                                                    ? 'bg-purple-600 text-white' // Active video style
-                                                                    : 'hover:bg-purple-400'
+                                                                ? 'bg-purple-600 text-white' // Active video style
+                                                                : 'hover:bg-purple-400'
                                                                 }`}
                                                             onClick={() => {
                                                                 if (purchased) {
