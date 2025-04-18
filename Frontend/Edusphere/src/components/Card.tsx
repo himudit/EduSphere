@@ -30,11 +30,17 @@ const Card: React.FC<CardProps> = ({
   };
   return (
     <div onClick={handleClick} className="max-w-[19rem] sm:max-w-[16rem] h-[21rem] cursor-pointer bg-black text-white rounded-xl shadow-lg overflow-hidden hover:scale-105 transition-transform duration-300">
-      <img
+      {/* <img
         src={thumbnail}
         alt={title}
         className="w-full h-32 sm:h-40 object-fill"
+      /> */}
+      <img
+        src={thumbnail}
+        alt={title}
+        className="w-full h-32 sm:h-40 object-cover rounded"
       />
+
       <div className="p-3 sm:p-4">
         <h2 className="text-base sm:text-lg font-bold -mt-1 sm:-mt-3 mb-1 line-clamp-1">{title}</h2>
         <p className="text-xs sm:text-sm text-[#baf1ba] mb-1 sm:mb-2">{author}</p>

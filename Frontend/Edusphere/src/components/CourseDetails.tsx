@@ -69,22 +69,21 @@ const CourseDetails = () => {
     const { course_id } = useParams<{ course_id: string }>();
     const [loading, setLoading] = useState<Boolean>(true);
     const [loadingBuy, setLoadingBuy] = useState<Boolean>(false);
-    const [selectedVideoUrl, setSelectedVideoUrl] = useState('');
+    const [selectedVideoUrl, setSelectedVideoUrl] = useState<String>('');
     const [activeVideoId, setActiveVideoId] = useState(null);
 
     useEffect(() => {
         let isMounted = true;
         const fetchCourses = async () => {
             try {
-                // console.log(loading);
                 setLoading(true);
                 try {
                     const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/course/${course_id}`);
                     if (!isMounted) return;
                     const data = response.data;
-                    console.log(data);
+                    console.log(data.course);
                     setCourseData(data.course);
-                    setSelectedVideoUrl(courseData?.course_preview_video);
+                    setSelectedVideoUrl(data.course.course_preview_video);
                     setTeacherData(data.teacherCourse.teacher);
                 } catch (err) {
                     console.log(err);

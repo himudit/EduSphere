@@ -5,6 +5,9 @@ import image from '../assets/pic1-removebg-preview.png'
 import { useEffect, useState } from 'react';
 import Card from "./Card";
 import axios from 'axios';
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../app/store";
+import { fetchUserProfile, addUser, removeUser } from "../features/userSlice";
 
 interface Course {
     course_id: string;
@@ -27,9 +30,9 @@ interface PurchasedCourse {
 }
 
 const MyLearning = () => {
-
     const [courses, setCourses] = useState<PurchasedCourse[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loading1, setLoading] = useState(true);
+    const { user, loading, error } = useSelector((state: RootState) => state.user);
 
     useEffect(() => {
         const fetchCourses = async () => {
@@ -54,21 +57,7 @@ const MyLearning = () => {
         fetchCourses();
     }, []);
 
-    // const Arr: JSX.Element[] = courses.map((purchase, index) => (
-    //     <Card
-    //         id={purchase.course.course_id}
-    //         key={index}
-    //         thumbnail={purchase.course.course_thumbnail}
-    //         title={purchase.course.course_title}
-    //         author={purchase.course.course_author}
-    //         description={purchase.course.course_description}
-    //         rating={purchase.course.rating}
-    //         reviews={146}
-    //         price={purchase.course.course_price}
-    //     />
-    // ))
-
-    const Arr: JSX.Element[] = loading
+    const Arr: JSX.Element[] = loading1
         ? Array(3).fill(null).map((_, index) => (
             <div
                 key={index}
@@ -107,23 +96,23 @@ const MyLearning = () => {
         <div className="p-6 w-full lg:w-[80%] mx-auto">
 
             {/* Welcome Section */}
-            <div className="text-2xl font-semibold mb-2">
-                Welcome back, <span className="text-purple-600">Naveed Abbas</span> 👋
+            <div className="text-2xl font-semibold mb-2 ml-4">
+                Welcome back, <span className="text-purple-600">{user.first_name}</span> 👋
             </div>
 
             {/* Banner */}
             <div className="bg-black text-white rounded-xl p-6 flex items-center justify-between mb-8">
                 <div>
-                    <div className="text-sm uppercase text-gray-400">Online Courses</div>
-                    <div className="text-xl font-bold mt-1 mb-4">
+                    <div className="text-xl font-bold mt-1 mb-1">
                         Develop Professional Skills Through Online Training
                     </div>
-                    <button className="bg-white text-black px-4 py-2 rounded-md font-semibold flex items-center gap-2">
-                        Explore <FontAwesomeIcon icon={faArrowRight} />
-                    </button>
+                    <div className="text-md text-gray-300">
+                        Consistency is the key — keep learning, keep growing. Your future self will thank you.
+                    </div>
                 </div>
+
                 <img
-                    src={image} // Replace with your banner image path
+                    src={image}
                     alt="Banner"
                     className="w-[200px] h-[150px] object-cover"
                 />
