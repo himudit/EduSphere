@@ -39,17 +39,40 @@ const Profile: React.FC = () => {
                             <h1 className="text-2xl lg:ml-[2rem] font-bold">{user?.first_name || "John Doe"}</h1>
                             <p className="text-sm lg:ml-[2rem] text-gray-400">{user?.role}</p>
                         </div>
-                        <div className="flex items-center justify-center gap-6 w-full">
-                            {/* Edit Profile Button */}
-                            <button
+                        <div className="flex items-center md:ml-[-8rem] mt-[2rem] justify-center gap-6 w-full">
+                            {/* <button
                                 onClick={() => navigate(`/profile/${user.role}/edit`)}
-                                className="flex items-center gap-2 bg-white w-[8rem] h-[3rem] border border-white rounded-lg text-black font-bold hover:bg-slate-400 transition-all duration-300 px-4"
+                                className="flex items-center gap-2 bg-black w-[8rem] h-[3rem] border border-gray-500 rounded-lg text-white font-bold hover:bg-slate-400 transition-all duration-300 px-4"
                             >
-                                <FontAwesomeIcon icon={faPenToSquare} className="text-black mr-3" />
+                                <FontAwesomeIcon icon={faPenToSquare} className="text-white mr-3" />
                                 Edit Profile
+                            </button> */}
+                            <button
+                                onClick={() => navigate(`/profile/${user?.role}/edit`)}
+                                className="flex items-center gap-2 bg-[#1A1F2C] hover:bg-gray-800 transition-colors duration-200 rounded-md px-4 py-2"
+                            >
+                                <FontAwesomeIcon icon={faPenToSquare} className="text-white" />
+                                <span className="text-white font-medium">Edit Profile</span>
                             </button>
-
-                            {/* Logout Button */}
+                            {/* <button
+                                onClick={() => {
+                                    if (localStorage.getItem('token')) {
+                                        localStorage.removeItem('token');
+                                        console.log("'token' has been deleted from local storage.");
+                                    } else if (localStorage.getItem('teacher_token')) {
+                                        localStorage.removeItem('teacher_token');
+                                        console.log("'teacher_token' has been deleted from local storage.");
+                                    } else {
+                                        console.log("No token found in local storage.");
+                                    }
+                                    dispatch(removeUser());
+                                    navigate('/');
+                                }}
+                                className="flex items-center gap-2 bg-white w-[8rem] h-[3rem] border border-white rounded-lg text-black font-bold hover:bg-red-600 transition-all duration-300 px-4"
+                            >
+                                <FontAwesomeIcon icon={faRightFromBracket} className="text-black mr-3" />
+                                Logout
+                            </button> */}
                             <button
                                 onClick={() => {
                                     if (localStorage.getItem('token')) {
@@ -64,11 +87,10 @@ const Profile: React.FC = () => {
                                     dispatch(removeUser());
                                     navigate('/');
                                 }}
-                                className="flex items-center gap-2 bg-red-500 w-[8rem] h-[3rem] border border-white rounded-lg text-white font-bold hover:bg-red-600 transition-all duration-300 px-4"
+                                className="flex items-center gap-2 bg-white hover:bg-gray-100 transition-colors duration-200 rounded-md px-4 py-2"
                             >
-
-                                <FontAwesomeIcon icon={faRightFromBracket} className="text-gray-300 mr-3" />
-                                Logout
+                                <FontAwesomeIcon icon={faRightFromBracket} className="text-black mr-3" />
+                                <span className="text-gray-900 font-medium">Logout</span>
                             </button>
                         </div>
 

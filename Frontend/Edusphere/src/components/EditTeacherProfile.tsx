@@ -6,6 +6,10 @@ import axios from 'axios';
 import '../index.css'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../app/store";
+import { fetchUserProfile, addUser, removeUser } from "../features/userSlice";
+
 
 interface Teacher {
     first_name: string,
@@ -20,9 +24,16 @@ const UserProfile = () => {
     const notify = () => toast.success("Profile updated Successfully!");
     const { register, handleSubmit, formState: { errors }, setValue } = useForm();
     const [teacherData, setTeacherData] = useState<Teacher | undefined>();
+    const [newProfilePicture, setnewProfilePicture] = useState();
+    const dispatch = useDispatch();
+    const [proileLoading, setProfileLoading] = useState(false);
+    const [finalLoading, setFinalLoading] = useState(false);
+
 
     const onSubmit = async (data: any) => {
         try {
+
+            setFinalLoading(true);
             const payload = {
                 ...data,
                 teacher_skills: skills
@@ -36,9 +47,12 @@ const UserProfile = () => {
                     }
                 }
             );
+            dispatch(fetchUserProfile());
             notify();
-        } catch (err) {
+        } catch (err: any) {
             console.error('Failed to update profile:', err.response?.data || err.message);
+        } finally {
+            setFinalLoading(false);
         }
     };
 
@@ -55,6 +69,7 @@ const UserProfile = () => {
                 if (response.data) {
                     setValue("first_name", response.data.first_name);
                     setValue("last_name", response.data.last_name);
+                    setnewProfilePicture(response.data.teacher_profile_picture);
                     setValue("teacher_gender", response.data.teacher_gender);
                     setValue("teacher_about", response.data.teacher_about);
                     setSkills(response.data.teacher_skills);
@@ -87,11 +102,13 @@ const UserProfile = () => {
         if (file) {
             setSelectedFile(file);
             setPreview(URL.createObjectURL(file));
+            setnewProfilePicture(URL.createObjectURL(file));
         }
     };
 
     const handleUpload = async () => {
         if (!selectedFile) return;
+        setProfileLoading(true);
         const formData = new FormData();
         formData.append("image", selectedFile);
         try {
@@ -105,10 +122,15 @@ const UserProfile = () => {
                     }
                 }
             );
+            dispatch(fetchUserProfile());
+            setnewProfilePicture(response?.data?.imageUrl);
         } catch (error) {
             console.error("Upload error:", error);
             alert("Failed to upload image.");
-        }
+        } finally {
+            setSelectedFile(null);
+            setProfileLoading(false);
+        };
     };
 
     return (
@@ -122,7 +144,7 @@ const UserProfile = () => {
                         <div className="bg-[#212529] shadow-md rounded-lg p-6 flex flex-col items-center">
                             <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-gray-300 mb-4">
                                 <img
-                                    src={teacherData?.teacher_profile_picture}
+                                    src={newProfilePicture}
                                     alt="Profile"
                                     className="w-full h-full object-cover"
                                 />
@@ -140,19 +162,32 @@ const UserProfile = () => {
                             />
 
                             <button
+                                type="button"
                                 className="mt-4 px-6 py-2 bg-[#A48AFB] text-white rounded-lg hover:bg-[#D1C4FF]"
-                                onClick={() => fileInputRef.current.click()}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    fileInputRef.current.click()
+                                }}
                             >
                                 {selectedFile ? "Change File" : "Upload New"}
                             </button>
 
                             {selectedFile ?
-                                <button
-                                    className="mt-2 px-6 py-2 border rounded-lg hover:bg-gray-100"
-                                    onClick={handleUpload}
-                                >
-                                    Save Changes
-                                </button>
+                                <>
+                                    <button
+                                        type="button"
+                                        disabled={proileLoading}
+                                        className={`mt-2 px-6 py-2 border rounded-lg hover:bg-purple-700 flex items-center justify-center gap-2 ${proileLoading ? 'bg-purple-400 cursor-not-allowed' : ''
+                                            }`}
+                                        onClick={handleUpload}
+                                    >
+                                        {proileLoading && (
+                                            <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                                        )}
+                                        {proileLoading ? 'Saving...' : 'Save Changes'}
+                                    </button>
+                                </>
+
                                 :
                                 <></>
                             }
@@ -310,15 +345,28 @@ const UserProfile = () => {
                                             </button>
                                         </div>
                                     </div>
+
                                 </div>
                             )}
                         </div>
 
-                        <button type='submit' className='w-20 h-15 bg-blue-500 border rounded-lg'>Save Changes</button>
-                        <ToastContainer />
+                        {/* <button type='submit' className='w-20 h-15 bg-blue-500 border rounded-lg'>Save Changes</button>
+                        <ToastContainer /> */}
                     </div>
                 </div>
+                <button
+                    type="submit"
+                    disabled={finalLoading}
+                    className={`w-full mt-5 flex items-center justify-center gap-2 bg-purple-700 hover:bg-purple-900 text-white rounded-lg py-3 transition-colors ${finalLoading ? 'bg-purple-400 cursor-not-allowed' : ''
+                        }`}
+                >
+                    {finalLoading && (
+                        <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                    )}
+                    {finalLoading ? 'Updating Profile...' : 'Update Profile'}
+                </button>
             </div>
+            <ToastContainer />
         </form >
     );
 };
