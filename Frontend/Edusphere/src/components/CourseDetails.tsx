@@ -297,7 +297,7 @@ const CourseDetails = () => {
             {/* Mobile Hamburger Button */}
             <button
                 onClick={toggleSidebar}
-                className="fixed right-4 top-20 lg:hidden z-50 bg-purple-600 text-white p-2 rounded-lg shadow-lg"
+                className="fixed right-4 top-[9rem] lg:hidden z-50 bg-purple-600 text-white p-2 rounded-lg shadow-lg"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -399,6 +399,7 @@ const CourseDetails = () => {
                                                                 onClick={() => {
                                                                     if (purchased) {
                                                                         showVideo(video);
+                                                                        setIsSidebarOpen(!isSidebarOpen);
                                                                     }
                                                                 }}
                                                             >

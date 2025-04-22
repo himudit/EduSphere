@@ -638,7 +638,7 @@ const Navbar: React.FC = () => {
               onChange={handleChange}
               onKeyDown={handleKeyDown}
               placeholder="Search courses..."
-              className="w-full h-[4rem] px-4 py-2 rounded-[3rem] text-lg bg-gray-900 border border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all outline-none placeholder-gray-400"
+              className="w-full h-[3rem] px-4 py-2 rounded-[3rem] text-lg bg-gray-900 border border-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all outline-none placeholder-gray-400"
             />
             <svg
               xmlns="http://www.w3.org/2000/svg"
