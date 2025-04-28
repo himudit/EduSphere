@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import logo from '../assets/logo1.png'
 
 interface CardProps {
   id: string;
@@ -36,9 +37,9 @@ const Card: React.FC<CardProps> = ({
         className="w-full h-32 sm:h-40 object-fill"
       /> */}
       <img
-        src={thumbnail}
+        src={logo}
         alt={title}
-        className="w-full h-32 sm:h-40 object-cover rounded"
+        className="w-full h-[11rem] object-cover rounded"
       />
 
       <div className="p-3 sm:p-4">
