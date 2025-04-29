@@ -37,7 +37,7 @@ const Card: React.FC<CardProps> = ({
         className="w-full h-32 sm:h-40 object-fill"
       /> */}
       <img
-        src={logo}
+        src={thumbnail}
         alt={title}
         className="w-full h-[11rem] object-cover rounded"
       />

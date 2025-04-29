@@ -105,14 +105,25 @@ paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, voi
         return res.status(500).json({ msg: "An unknown error occurred" });
     }
 }));
-// paymentRouter.post('/webhook', async (req: any, res: Response, next: NextFunction) => {
-//     try {
-//     } catch (err) {
-//         if (err instanceof Error) {
-//             return res.status(500).json({ msg: err.message });
-//         }
-//         return res.status(500).json({ msg: "An unknown error occurred" });
-//     }
-// }
-// )
+paymentRouter.post('/purchased', auth_middleware_1.authStudent, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const { courseId } = req.body;
+        if (!courseId) {
+            return res.status(400).json({ message: "Course ID is required." });
+        }
+        const purchasedCourse = yield prisma.purchased_courses.findFirst({
+            where: {
+                student_id: (_a = req.student) === null || _a === void 0 ? void 0 : _a.student_id,
+                course_id: courseId,
+            },
+        });
+        const isPurchased = !!purchasedCourse; // true if found, false otherwise
+        res.status(200).json(isPurchased);
+    }
+    catch (error) {
+        console.error("Error checking purchased course:", error);
+        res.status(500).json({ message: "Failed to check purchased course", error });
+    }
+}));
 exports.default = paymentRouter;

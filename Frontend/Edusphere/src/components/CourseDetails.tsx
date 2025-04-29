@@ -72,6 +72,19 @@ const CourseDetails = () => {
     const [selectedVideoUrl, setSelectedVideoUrl] = useState<String>('');
     const [activeVideoId, setActiveVideoId] = useState(null);
 
+    const verifyPaymentCourse = async () => {
+        const response = await axios.post<boolean>(
+            `${import.meta.env.VITE_BASE_URL}/payments/purchased`,
+            { courseId: course_id }, // request body
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        console.log(response);
+    }
+
     useEffect(() => {
         let isMounted = true;
         const fetchCourses = async () => {
@@ -144,6 +157,7 @@ const CourseDetails = () => {
                     theme: {
                         color: '#F37254'
                     },
+                    handler: verifyPaymentCourse
                 };
                 const rzp = new window.Razorpay(options);
                 rzp.open();
@@ -175,7 +189,6 @@ const CourseDetails = () => {
                         },
                     }
                 );
-                console.log(response);
                 setPurchased(response.data);
             } catch (err) {
                 console.error('Error fetching courses:', err);
