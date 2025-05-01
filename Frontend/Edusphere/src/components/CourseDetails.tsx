@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import useConvertTime from '../util/useConvertTime'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -71,6 +71,10 @@ const CourseDetails = () => {
     const [loadingBuy, setLoadingBuy] = useState<Boolean>(false);
     const [selectedVideoUrl, setSelectedVideoUrl] = useState<String>('');
     const [activeVideoId, setActiveVideoId] = useState(null);
+    const navigate = useNavigate();
+
+    // false -> Notpurchased show buy button
+    const [purchased, setPurchased] = useState<boolean>(false);
 
     const verifyPaymentCourse = async () => {
         const token = localStorage.getItem("token");
@@ -84,9 +88,10 @@ const CourseDetails = () => {
             }
         );
         console.log("verifypaymentResponse", response);
-        // if(response===true){
-
-        // }
+        setPurchased(response.data);
+        if (response.data === true) {
+            navigate('/mylearning')
+        }
     }
 
     useEffect(() => {
@@ -175,8 +180,6 @@ const CourseDetails = () => {
         }
     };
 
-    // false -> Notpurchased show buy button
-    const [purchased, setPurchased] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchCourses = async () => {
