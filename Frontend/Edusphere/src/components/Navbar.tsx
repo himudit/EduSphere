@@ -51,8 +51,6 @@ const Navbar: React.FC = () => {
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const { user, loading, error } = useSelector((state: RootState) => state.user);
-
-  console.log(loading);
   const dispatch = useDispatch();
 
   useEffect(() => {
