@@ -82,7 +82,10 @@ const CourseDetails = () => {
                 },
             }
         );
-        console.log(response);
+        console.log("verifypaymentResponse",response);
+        // if(response===true){
+
+        // }
     }
 
     useEffect(() => {
@@ -94,7 +97,6 @@ const CourseDetails = () => {
                     const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/course/${course_id}`);
                     if (!isMounted) return;
                     const data = response.data;
-                    console.log(data.course);
                     setCourseData(data.course);
                     setSelectedVideoUrl(data.course.course_preview_video);
                     setTeacherData(data.teacherCourse.teacher);
