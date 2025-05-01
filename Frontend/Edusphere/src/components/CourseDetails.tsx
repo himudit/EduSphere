@@ -75,7 +75,7 @@ const CourseDetails = () => {
     const verifyPaymentCourse = async () => {
         const token = localStorage.getItem("token");
         const response = await axios.post<boolean>(
-            `${import.meta.env.VITE_BASE_URL}/payments/purchased`,
+            `${import.meta.env.VITE_BASE_URL}/payment/purchased`,
             { courseId: course_id },
             {
                 headers: {
