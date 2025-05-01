@@ -73,16 +73,17 @@ const CourseDetails = () => {
     const [activeVideoId, setActiveVideoId] = useState(null);
 
     const verifyPaymentCourse = async () => {
+        const token = localStorage.getItem("token");
         const response = await axios.post<boolean>(
             `${import.meta.env.VITE_BASE_URL}/payments/purchased`,
-            { courseId: course_id }, // request body
+            { courseId: course_id },
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             }
         );
-        console.log("verifypaymentResponse",response);
+        console.log("verifypaymentResponse", response);
         // if(response===true){
 
         // }
