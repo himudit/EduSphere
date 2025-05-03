@@ -3,6 +3,9 @@ import { motion } from "framer-motion";
 import CardCarousel from "./CardCarousel";
 import MiddleSection from './MiddleSection';
 import { Try } from './Try';
+import AchievementSection from "./AcheivementSection";
+import OurServices from "./OurServices";
+import Footer from "./Footer";
 
 const Home: React.FC = () => {
   return (
@@ -50,7 +53,7 @@ const Home: React.FC = () => {
       </div>
 
       {/* _____________________ */}
-      <div className="flex flex-col lg:flex-row justify-center items-center min-h-screen p-4 gap-8 lg:gap-4">
+      <div className="flex flex-col lg:flex-row justify-center items-center min-h-screen p-4 gap-8 lg:gap-4  -mt-[7rem]">
         {/* Left Content */}
         <div className="w-full lg:w-1/3 lg:pr-8 relative ml-[2rem]">
           <div className="hidden lg:block absolute top-0 right-0 w-[2px] h-full bg-gradient-to-b from-purple-600 via-pink-500 to-transparent"></div>
@@ -91,15 +94,25 @@ const Home: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="w-full lg:w-2/3">
+        <div className="w-full lg:w-2/3 ">
           <CardCarousel />
         </div>
       </div>
       <MiddleSection />
 
-      <div className="mt-10 flex justify-center items-center ">
+      <div className="-mt-[10rem] flex justify-center items-center ">
         <Try />
       </div>
+
+      <div className="w-full mt-[5rem]">
+        <OurServices />
+        <AchievementSection />
+      </div>
+
+<div className="mt-[5rem]">
+<Footer />
+
+</div>
 
     </>
   );

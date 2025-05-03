@@ -71,7 +71,7 @@ const ShowcaseRow = ({ items, direction }: ShowcaseRowProps) => {
 
 export const Try = () => {
     return (
-        <div className="flex h-[40rem] w-[22rem] border-transparent rounded-2xl  min-w-[60%] items-center justify-center bg-[#111111] px-2 sm:px-4 py-16">
+        <div className="flex h-[35rem] w-[22rem] border-transparent rounded-2xl  min-w-[60%] items-center justify-center bg-[#111111] px-2 sm:px-4 py-16">
             <div className="w-full max-w-6xl rounded-xl bg-[#111111] p-4 sm:p-8">
                 <div className="flex flex-col gap-1">
                     {/* Showcase rows first */}
@@ -85,28 +85,11 @@ export const Try = () => {
                             <h2 className="text-2xl  font-medium tracking-tight text-gray-500">
                                 Shaping & Educating
                             </h2>
-                            <div className="-mt-1 text-[5rem] tracking-tight text-white">
+                            <div className="-mt-1 text-[4rem] tracking-tight text-white">
                                 Using EduSphere
                             </div>
                         </div>
-
-                        {/* Buttons */}
-                        {/* <div className="-mt-[1rem] flex justify-center gap-3 sm:gap-4">
-                            <a
-                                href="#"
-                                className="inline-flex items-center justify-center rounded-md bg-white px-4 py-2 sm:px-6 sm:py-3 text-xs sm:text-sm font-medium text-black transition-colors hover:bg-gray-100"
-                            >
-                                See full showcase
-                            </a>
-                            <a
-                                href="#"
-                                className="inline-flex items-center justify-center rounded-md border border-gray-700 bg-transparent px-4 py-2 sm:px-6 sm:py-3 text-xs sm:text-sm font-medium text-white transition-colors hover:bg-gray-800"
-                            >
-                                Become an Expert
-                            </a>
-                        </div> */}
                     </div>
-
                 </div>
             </div>
         </div>
