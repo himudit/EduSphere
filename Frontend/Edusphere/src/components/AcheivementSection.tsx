@@ -50,7 +50,7 @@ const AchievementSection = () => {
                         <div className="bg-gradient-to-r from-[#6A5B8F] to-[#9385a7] rounded-3xl p-4 md:p-6 mb-8 flex items-center">
                             <div className="bg-white p-2 rounded-full mr-4">
                                 <div className="bg-[#6A5B8F] rounded-full w-10 h-10 flex items-center justify-center">
-                                    <svg
+                                    {/* <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         width="24"
                                         height="24"
@@ -65,6 +65,10 @@ const AchievementSection = () => {
                                         <circle cx="12" cy="8" r="5" />
                                         <path d="M12 13v9" />
                                         <path d="M9 16.5h6" />
+                                    </svg> */}
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                                             stroke="#9b87f5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
                                 </div>
                             </div>

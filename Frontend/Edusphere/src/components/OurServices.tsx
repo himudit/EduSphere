@@ -48,7 +48,7 @@ const OurServices = () => {
       <div className="max-w-7xl mx-auto">
         {/* Service Section Header */}
         <div className="flex flex-col items-center justify-center text-center mb-16">
-          <div className="inline-flex items-center justify-center mb-4 px-6 py-2 rounded-full border border-[#433b6b] bg-[#0D0A19]/80">
+          {/* <div className="inline-flex items-center justify-center mb-4 px-6 py-2 rounded-full border border-[#433b6b] bg-[#0D0A19]/80">
             <span className="text-sm md:text-base text-[#9b87f5] font-medium flex items-center gap-2">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" 
@@ -56,7 +56,7 @@ const OurServices = () => {
               </svg>
               Our Services
             </span>
-          </div>
+          </div> */}
           
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 md:mb-6">
             Your Success Story Begins <span className="text-[#9b87f5]">With Edusphere</span>

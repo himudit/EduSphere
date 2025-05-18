@@ -1,24 +1,22 @@
 import React from 'react';
 import logo from '../assets/logo1.png'
 import { Link } from "react-router-dom";
+import razorpayImage from '../assets/image.png'
 
 const Footer = () => {
     const projectLinks = [
-        { label: 'About the Project', href: '/about' },
-        { label: 'Features', href: '/features' },
-        { label: 'Docs or Demo', href: 'https://yourdemo.com' },
-        { label: 'GitHub Repository', href: 'https://github.com/yourrepo' },
+        { label: 'About the Project', href: 'https://github.com/himudit/EduSphere/blob/main/README.md' },
+        { label: 'Features', href: 'https://github.com/himudit/EduSphere' },
+        { label: 'Docs or Demo', href: 'https://github.com/himudit/EduSphere' },
+        { label: 'GitHub Repository', href: 'https://github.com/himudit/EduSphere' },
         { label: 'Privacy Policy / Terms', href: '/privacy' },
     ];
 
     const developerLinks = [
-        { label: 'Portfolio', href: 'https://yourportfolio.com' },
-        { label: 'Resume', href: 'https://yourresume.com' },
-        { label: 'GitHub', href: 'https://github.com/yourusername' },
-        { label: 'LinkedIn', href: 'https://linkedin.com/in/yourprofile' },
-        { label: 'Email', href: 'mailto:youremail@example.com' },
-        // Optional
-        { label: 'Twitter', href: 'https://twitter.com/yourhandle' },
+        { label: 'Portfolio', href: 'https://himudit.github.io/my-portfolio/' },
+        { label: 'GitHub', href: 'https://github.com/himudit' },
+        { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mudit-garg-03m/' },
+        { label: 'Email', href: 'gargmudit662@gmail.com' },
     ];
 
     const FooterColumn = ({ title, links }: { title: string; links: { label: string; href: string }[] }) => (
@@ -51,13 +49,21 @@ const Footer = () => {
                         <div className="flex items-center gap-2 mb-4">
                             {/* <div className="w-10 h-10 rounded-md bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center"> */}
                             {/* <span className="text-white font-bold text-xl">F</span> */}
-                            <Link to="/" className="text-2xl font-bold mr-8">
+                            <Link to="/" className="text-2xl font-bold mr-3">
                                 <img src={logo} alt="logo" className="w-[4rem] h-[4rem]" />
                             </Link>
                             {/* </div> */}
-                            <span className="text-white font-bold text-xl">Edusphere</span>
+                            <span className="text-white font-bold text-3xl">Edusphere</span>
                         </div>
-                        <p className="text-gray-300 text-sm max-w-sm">
+                        <div className="flex items-center gap-2 mt-4">
+                            <span className="text-gray-400 text-sm">Powered by</span>
+                            <img
+                                src={razorpayImage}
+                                alt="Razorpay Logo"
+                                className="h-7"
+                            />
+                        </div>
+                        <p className="text-gray-300 text-sm max-w-sm mt-6">
                             Skip the search, find dream learning opportunities with verified courses, secure payments, and seamless learning workflows.
                         </p>
                     </div>
