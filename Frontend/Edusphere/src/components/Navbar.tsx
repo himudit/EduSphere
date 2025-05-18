@@ -381,11 +381,11 @@ const Navbar: React.FC = () => {
                         Explore Courses
                       </Link>
                     </li>
-                    <li>
+                    {/* <li>
                       <Link to="/mylearning" className="text-sm font-medium hover:text-purple-400 transition-colors">
                         My Learning
                       </Link>
-                    </li>
+                    </li> */}
                   </ul>
                 </div>
 
@@ -570,49 +570,58 @@ const Navbar: React.FC = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      to="/mylearning"
-                      onClick={toggleMenu}
-                      className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
-                    >
-                      <svg
-                        className="w-5 h-5 mr-3"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                        />
-                      </svg>
-                      My Learning
-                    </Link>
+                    {
+                      user ?
+                        <Link
+                          to="/mylearning"
+                          onClick={toggleMenu}
+                          className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                        >
+                          < svg
+                            className="w-5 h-5 mr-3"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                            />
+                          </svg>
+                          My Learning
+                        </Link> :
+                        <></>
+                    }
                   </li>
                   <li>
                     {user ?
-                      <> <Link
-                        onClick={toggleMenu}
-                        to="/profile"
-                        className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
-                      >
-                        <svg
-                          className="w-5 h-5 mr-3"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
+                      <>
+                        <Link
+                          onClick={toggleMenu}
+                          to="/profile"
+                          className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                          />
-                        </svg>
-                        Profile
-                      </Link></> : <></>}
+                          <svg
+                            className="w-5 h-5 mr-3"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                            />
+                          </svg>
+                          Profile
+                        </Link>
+                      </>
+                      :
+                      <></>
+                    }
 
                   </li>
                 </ul>
@@ -620,12 +629,14 @@ const Navbar: React.FC = () => {
             </div>
 
             {/* Overlay */}
-            {isOpen && (
-              <div
-                onClick={toggleMenu}
-                className="fixed inset-0 bg-black bg-opacity-50 z-40 backdrop-blur-sm transition-opacity"
-              ></div>
-            )}
+            {
+              isOpen && (
+                <div
+                  onClick={toggleMenu}
+                  className="fixed inset-0 bg-black bg-opacity-50 z-40 backdrop-blur-sm transition-opacity"
+                ></div>
+              )
+            }
           </>
       }
 
@@ -690,7 +701,7 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-    </nav>
+    </nav >
   );
 };
 
