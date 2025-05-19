@@ -51,21 +51,28 @@ const CardCarousel = () => {
         ? Array(3).fill(null).map((_, index) => (
             <div
                 key={index}
-                className="bg-gray-900 rounded-2xl p-4 shadow-md w-[280px] h-[300px] animate-pulse">
-                <div className="bg-gray-700 h-36 w-full rounded-lg mb-4"></div>
+                className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-4 shadow-[0_4px_20px_rgba(0,0,0,0.4)] w-[280px] h-[300px]"
+            >
+                {/* Image Placeholder */}
+                <div className="bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700 h-36 w-full rounded-xl mb-4 animate-pulse"></div>
 
-                <div className="h-4 bg-gray-600 rounded w-3/4 mb-2"></div>
-                <div className="h-3 bg-gray-600 rounded w-1/2 mb-2"></div>
-                <div className="h-3 bg-gray-700 rounded w-full mb-4"></div>
+                {/* Text Line Placeholders */}
+                <div className="h-4 bg-gray-600 rounded-lg w-3/4 mb-2 animate-pulse"></div>
+                <div className="h-3 bg-gray-500 rounded-lg w-1/2 mb-2 animate-pulse"></div>
+                <div className="h-3 bg-gray-600 rounded-lg w-full mb-4 animate-pulse"></div>
 
+                {/* Icon Row Placeholder */}
                 <div className="flex items-center gap-2 mb-2">
-                    <div className="h-4 w-4 bg-gray-600 rounded-full"></div>
-                    <div className="h-4 w-10 bg-gray-600 rounded"></div>
-                    <div className="h-4 w-8 bg-gray-600 rounded ml-auto"></div>
+                    <div className="h-4 w-4 bg-gray-500 rounded-full animate-pulse"></div>
+                    <div className="h-4 w-10 bg-gray-500 rounded animate-pulse"></div>
+                    <div className="h-4 w-8 bg-gray-500 rounded ml-auto animate-pulse"></div>
                 </div>
 
-                <div className="h-5 bg-gray-500 rounded w-16 mt-auto"></div>
+                {/* Bottom Button Placeholder */}
+                <div className="h-5 bg-gradient-to-r from-gray-600 to-gray-500 rounded-lg w-16 mt-auto animate-pulse"></div>
             </div>
+
+
         ))
         : courses.map((it, index) => (
             <Card
