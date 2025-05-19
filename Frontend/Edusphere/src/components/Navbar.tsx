@@ -381,11 +381,16 @@ const Navbar: React.FC = () => {
                         Explore Courses
                       </Link>
                     </li>
-                    {/* <li>
-                      <Link to="/mylearning" className="text-sm font-medium hover:text-purple-400 transition-colors">
-                        My Learning
-                      </Link>
-                    </li> */}
+                    {
+                      user ?
+                        <li>
+                          <Link to="/mylearning" className="text-sm font-medium hover:text-purple-400 transition-colors">
+                            My Learning
+                          </Link>
+                        </li> :
+                        <></>
+                    }
+
                   </ul>
                 </div>
 
