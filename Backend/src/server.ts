@@ -45,7 +45,10 @@ app.get('/students/mylearning', authStudent, async (req: StudentRequest, res: Re
         });
 
         if (purchasedCourses.length === 0) {
-            return res.status(404).json({ message: "No purchased courses found for this student." });
+            return res.status(200).json({
+                message: "No purchased courses found.",
+                purchasedCourses: []
+            });
         }
         res.status(200).json({ purchasedCourses });
     } catch (error) {

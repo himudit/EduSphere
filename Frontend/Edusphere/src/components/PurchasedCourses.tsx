@@ -1,6 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faUser, faGraduationCap } from "@fortawesome/free-solid-svg-icons";
 import image from '../assets/pic1-removebg-preview.png'
 import { useEffect, useState } from 'react';
 import Card from "./Card";
@@ -37,14 +37,12 @@ const MyLearning = () => {
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                // console.log("hi");
                 const token = localStorage.getItem("token");
 
                 const response = await axios.get<{ purchasedCourses: PurchasedCourse[] }>(
                     `${import.meta.env.VITE_BASE_URL}/students/mylearning`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
-                console.log(response.data);
                 if (response.data && response.data.purchasedCourses) {
                     setCourses(response.data.purchasedCourses);
                 }
@@ -126,15 +124,31 @@ const MyLearning = () => {
             </div>
 
             {/* Course Cards */}
-            <div className="flex flex-wrap gap-4">
-                <div className="flex flex-wrap gap-6 justify-center">
-                    {Arr.map((card, index) => (
-                        <div key={index}>
-                            {card}
+            {
+                courses.length === 0 ?
+                    <>
+                        <div className="flex justify-center items-center">
+                            <div className="flex flex-col items-center gap-4 text-gray-600 text-xl">
+                                <FontAwesomeIcon icon={faGraduationCap} className="text-[10rem] text-gray-400" />
+                                <div className="text-white">No course found</div>
+                                <div className="text-sm text-gray-500">Browse our courses and begin your learning adventure!</div>
+                            </div>
                         </div>
-                    ))}
-                </div>
-            </div>
+                    </>
+                    :
+                    <div className="flex flex-wrap gap-4">
+                        <div className="flex flex-wrap gap-6 justify-center">
+                            {Arr.map((card, index) => (
+                                <div key={index}>
+                                    {card}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+            }
+
+
         </div >
     );
 };
