@@ -97,7 +97,7 @@ const Profile: React.FC = () => {
                     </div>
 
                     {/* Intro Section - 35% */}
-                    <div className="flex-[30%] min-w-[30%] bg-[#212529] rounded-lg p-4">
+                    {/* <div className="flex-[30%] min-w-[30%] bg-[#212529] rounded-lg p-4">
                         <h2 className="text-lg font-semibold mb-4">Intro</h2>
                         <hr className="border-gray-700 mb-4" />
                         <ul className="space-y-3">
@@ -126,7 +126,8 @@ const Profile: React.FC = () => {
                                 <span>LinkedIn: <a href="#" className="text-blue-400 underline">{user?.student_linkedin}</a></span>
                             </li>
                         </ul>
-                    </div>
+                    </div> */}
+
                 </div>
             </div>
 

@@ -114,7 +114,7 @@ const Search: React.FC = () => {
                 <div className="flex">
                     {/* Desktop Left Sidebar Filters */}
                     <div className="hidden ml-1 mt-1 lg:block w-64 shrink-0 border border-[#212529] rounded-lg min-h-screen bg-[#161a1d]">
-                        <div className="top-0 p-6 space-y-8">
+                        <div className=" top-0 p-6 space-y-8">
                             <h2 className="text-lg font-semibold text-white">Filters</h2>
 
                             <div className="space-y-6">
