@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 
-const MiddleSection = () => {
+const AnimatedText  = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -37,4 +37,4 @@ const MiddleSection = () => {
   );
 };
 
-export default MiddleSection;
+export default AnimatedText ;

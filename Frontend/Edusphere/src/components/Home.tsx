@@ -1,8 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import CardCarousel from "./CardCarousel";
-import MiddleSection from './MiddleSection';
-import { Try } from './Try';
+import MiddleSection from './AnimatedText ';
+import { SlidingGallery } from './SlidingGallery';
 import AchievementSection from "./AcheivementSection";
 import OurServices from "./OurServices";
 import Footer from "./Footer";
@@ -101,7 +101,7 @@ const Home: React.FC = () => {
       <MiddleSection />
 
       <div className="-mt-[10rem] flex justify-center items-center ">
-        <Try />
+        <SlidingGallery />
       </div>
 
       <div className="w-full mt-[5rem]">

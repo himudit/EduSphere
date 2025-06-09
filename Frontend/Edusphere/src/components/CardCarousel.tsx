@@ -37,6 +37,7 @@ const CardCarousel = () => {
                 const course = response.data
                     .sort((a, b) => b.rating - a.rating)
                     .slice(0, 3);
+                console.log(response);
                 setCourses(course);
             } catch (err) {
                 console.log(err);

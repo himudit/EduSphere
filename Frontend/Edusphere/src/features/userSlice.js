@@ -1,48 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-
-// Async thunk to fetch user profile based on login type
-// export const fetchUserProfile = createAsyncThunk(
-//     "user/fetchProfile",
-//     async (_, { rejectWithValue }) => {
-//       try {
-//         const token = localStorage.getItem("token");
-//         const teacherToken = localStorage.getItem("teacher_token");
-
-//         if (token) {
-//           // Student is logged in
-//           const response = await axios.get(
-//             `${import.meta.env.VITE_BASE_URL}/students/profile`,
-//             {
-//               headers: {
-//                 Authorization: `Bearer ${token}`,
-//               },
-//             }
-//           );
-//           return response.data;
-//         } else if (teacherToken) {
-//           // Teacher is logged in
-//           const response = await axios.get(
-//             `${import.meta.env.VITE_BASE_URL}/teachers/profile`,
-//             {
-//               headers: {
-//                 Authorization: `Bearer ${teacherToken}`,
-//               },
-//             }
-//           );
-//           return response.data;
-//         } else {
-//           // No token found
-//           throw new Error("User is not logged in");
-//         }
-//       } catch (error) {
-//         console.error("Error fetching profile:", error.message);
-//         return rejectWithValue(error.message || "Failed to fetch profile");
-//       }
-//     }
-//   );
-
 export const fetchUserProfile = createAsyncThunk(
     "user/fetchProfile",
     async (_, { rejectWithValue }) => {

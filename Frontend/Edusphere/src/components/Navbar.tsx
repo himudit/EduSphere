@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from '../assets/logo1.png'
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
-import { fetchUserProfile, addUser, removeUser } from "../features/userSlice";
+import { fetchUserProfile } from "../features/userSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 
@@ -35,7 +35,7 @@ const Navbar: React.FC = () => {
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  const { user, loading, error } = useSelector((state: RootState) => state.user);
+  const { user, loading } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {

@@ -69,7 +69,7 @@ const ShowcaseRow = ({ items, direction }: ShowcaseRowProps) => {
     );
 };
 
-export const Try = () => {
+export const SlidingGallery = () => {
     return (
         <div className="flex h-[35rem] w-[22rem] border-transparent rounded-2xl  min-w-[60%] items-center justify-center bg-[#111111] px-2 sm:px-4 py-16">
             <div className="w-full max-w-6xl rounded-xl bg-[#111111] p-4 sm:p-8">
