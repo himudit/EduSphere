@@ -500,6 +500,7 @@ const Navbar: React.FC = () => {
                 <button
                   onClick={toggleMenu}
                   className="p-2 hover:bg-gray-800 rounded-full transition-colors"
+                  aria-label="Close menu" 
                 >
                   <svg
                     className="w-6 h-6"

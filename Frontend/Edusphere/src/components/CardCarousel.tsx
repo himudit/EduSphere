@@ -135,7 +135,7 @@ const CardCarousel = () => {
 
             {/* Navigation Dots */}
             <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                {Arr.map((_, index) => (
+                {/* {Arr.map((_, index) => (
                     <button
                         key={index}
                         onClick={() => setCurrentIndex(index)}
@@ -145,7 +145,21 @@ const CardCarousel = () => {
                             }`}
                         aria-label={`Go to slide ${index + 1}`}
                     />
+                ))} */}
+                {Arr.map((_, index) => (
+                    <button
+                        key={index}
+                        onClick={() => setCurrentIndex(index)}
+                        aria-label={`Go to slide ${index + 1}`}
+                        className={`
+      h-5 w-5 sm:h-4 sm:w-4
+      mx-1 sm:mx-1.5
+      rounded-full transition-all duration-300
+      ${currentIndex === index ? 'bg-purple-600' : 'bg-gray-400 hover:bg-purple-400'}
+    `}
+                    />
                 ))}
+
             </div>
         </div>
     );
