@@ -21,7 +21,7 @@ const Home: React.FC = () => {
           Welcome to
         </motion.h1> */}
 
-        <h1 className="text-7xl md:text-6xl mb-4 text-center">
+        <h1 className="text-7xl md:text-6xl mb-4 text-center font-bold min-h-[100px]">
           Welcome to
         </h1>
 

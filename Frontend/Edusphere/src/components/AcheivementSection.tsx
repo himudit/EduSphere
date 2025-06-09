@@ -38,10 +38,7 @@ const AchievementSection = () => {
                         <p className="text-sm md:text-base text-gray-300 mb-6">
                             We are committed to providing high-quality content and seamless learning experiences to students across the globe. Our platform brings together innovation, accessibility, and expert guidance.
                         </p>
-                        <button className="flex items-center text-gray-300 hover:text-white transition-colors">
-                            {/* <span className="mr-2">Learn More</span> */}
-                            {/* <ArrowRight size={18} /> */}
-                        </button>
+                     
                     </div>
 
                     {/* Achievements Column */}

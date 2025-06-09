@@ -231,6 +231,7 @@ const Navbar: React.FC = () => {
                 <Link to="/" className="text-2xl font-bold text-purple-400"> <img src={logo} alt="logo" className="w-[3rem] h-[3rem]" /></Link>
                 <button
                   onClick={toggleMenu}
+                  aria-label="Close menu"
                   className="p-2 hover:bg-gray-800 rounded-full transition-colors"
                 >
                   <svg

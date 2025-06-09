@@ -76,11 +76,16 @@ const Footer = () => {
                 </div>
 
                 {/* Bottom Section */}
-                <div className="mt-16 pt-8 border-t border-[#1A1A2E]/30 text-center text-gray-500 text-sm">
+                {/* <div className="mt-16 pt-8 border-t border-[#1A1A2E]/30 text-center text-gray-500 text-sm">
                     © 2025 Edusphere. All rights reserved. <br />
                     Built with ❤️ to transform learning through innovation and technology.
 
+                </div> */}
+                <div className="mt-16 pt-8 border-t border-[#1A1A2E]/30 text-center text-gray-300 text-sm">
+                    © 2025 Edusphere. All rights reserved. <br />
+                    Built with ❤️ to transform learning through innovation and technology.
                 </div>
+
             </div>
         </footer>
     );
