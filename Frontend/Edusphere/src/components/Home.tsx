@@ -12,14 +12,18 @@ const Home: React.FC = () => {
     <>
       <div className="flex flex-col items-center justify-center min-h-screen text-white px-6 overflow-hidden">
         {/* Main Heading */}
-        <motion.h1
+        {/* <motion.h1
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
           className="text-7xl md:text-6xl  mb-4 text-center"
         >
           Welcome to
-        </motion.h1>
+        </motion.h1> */}
+
+        <h1 className="text-7xl md:text-6xl mb-4 text-center">
+          Welcome to
+        </h1>
 
         {/* Highlighted Gradient Text */}
         <motion.h1
@@ -109,10 +113,10 @@ const Home: React.FC = () => {
         <AchievementSection />
       </div>
 
-<div className="mt-[5rem]">
-<Footer />
+      <div className="mt-[5rem]">
+        <Footer />
 
-</div>
+      </div>
 
     </>
   );
