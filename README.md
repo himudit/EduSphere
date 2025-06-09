@@ -26,7 +26,7 @@ EduSphere is a full-stack web application built using the **PERN stack** (Postgr
 
 ### Database
 
-- PostgreSQL / MySQL
+- PostgreSQL 
 
 ### Payment Integration
 
@@ -35,7 +35,8 @@ EduSphere is a full-stack web application built using the **PERN stack** (Postgr
 ### Hosting
 
 - Vercel (Frontend)
-- Render (Backend & Database)
+- Render (Backend)
+- NeonDB (Database)
 
 ## Installation & Setup
 
