@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Card from "./Card";
 import axios from 'axios';
 
@@ -47,6 +47,8 @@ const CardCarousel = () => {
         };
         fetchCourses();
     }, []);
+
+
 
     const Arr: JSX.Element[] = loading
         ? Array(3).fill(null).map((_, index) => (
@@ -166,3 +168,4 @@ const CardCarousel = () => {
 };
 
 export default React.memo(CardCarousel);
+// export default CardCarousel;
