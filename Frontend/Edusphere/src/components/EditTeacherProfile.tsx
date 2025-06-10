@@ -1,14 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGithub, faLinkedin, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import axios from 'axios';
 import '../index.css'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
-import { fetchUserProfile, addUser, removeUser } from "../features/userSlice";
+import { fetchUserProfile } from "../features/userSlice";
 
 
 interface Teacher {
