@@ -165,7 +165,7 @@ const Navbar: React.FC = () => {
                 {/* Right Section */}
                 <div className="flex items-center gap-4">
                   {/* Mobile Search Icon */}
-                  <button className="md:hidden">
+                  {/* <button className="md:hidden">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-6 w-6"
@@ -180,7 +180,7 @@ const Navbar: React.FC = () => {
                         d="M21 21l-4.35-4.35M16.5 10a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"
                       />
                     </svg>
-                  </button>
+                  </button> */}
 
                   {/* Profile Section */}
                   <div className="flex items-center gap-3">

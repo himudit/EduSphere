@@ -60,7 +60,10 @@ const Footer = () => {
                             <img
                                 src={razorpayImage}
                                 alt="Razorpay Logo"
-                                className="h-7"
+                                width={100}
+                                height={28}
+                                loading="lazy"
+                                className="w-auto h-7"
                             />
                         </div>
                         <p className="text-gray-300 text-sm max-w-sm mt-6">
