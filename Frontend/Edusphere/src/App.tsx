@@ -4,10 +4,6 @@ import { createBrowserRouter, createRoutesFromElements, RouterProvider, Route } 
 
 import Layout from './Layout.tsx';
 import Home from './components/Home';
-// import Login from './components/Login.tsx';
-// import Signup from './components/Signup.tsx';
-// import CourseDetails from './components/CourseDetails.tsx';
-// import Search from './components/Search.tsx';
 
 const LazyTeacherProfile = React.lazy(() => import('./components/EditTeacherProfile.tsx'));
 const LazyStudentProfile = React.lazy(() => import('./components/EditStudentProfile.tsx'));

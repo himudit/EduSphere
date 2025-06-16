@@ -27,10 +27,10 @@ const Profile: React.FC = () => {
                         <div className="-mt-14 lg:ml-[1rem] flex justify-center md:justify-start">
                             {(user != null && user.role === "students") ?
                                 <img
-                                    src={user?.student_profile_picture || "https://static.vecteezy.com/system/resources/previews/045/944/199/non_2x/male-default-placeholder-avatar-profile-gray-picture-isolated-on-background-man-silhouette-picture-for-user-profile-in-social-media-forum-chat-greyscale-illustration-vector.jpg"} alt="StudentProfile"
+                                    src={user?.student_profile_picture} alt="StudentProfile"
                                     className="w-[9rem] h-[9rem] rounded-full border-4 border-white" /> :
                                 <img
-                                    src={user?.teacher_profile_picture || "https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png"}
+                                    src={user?.teacher_profile_picture}
                                     alt="TeacherProfile"
                                     className="w-[9rem] h-[9rem] rounded-full border-4 border-white"
                                 />}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import logo from '../assets/logo1.png'
+import logo from '../assets/logo1.webp'
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { fetchUserProfile } from "../features/userSlice";
@@ -180,14 +180,14 @@ const Navbar: React.FC = () => {
                         <div className="flex items-center space-x-2">
                           <Link
                             to="/login"
-                            className="text-gray-500 hover:text-white transition duration-300"
+                            className="text-white hover:text-white transition duration-300"
                           >
                             Login
                           </Link>
-                          <span className="text-gray-400">or</span>
+                          <span className="text-white">or</span>
                           <Link
                             to="/signup"
-                            className="text-gray-500 hover:text-white transition duration-300"
+                            className="text-white hover:text-white transition duration-300"
                           >
                             Signup
                           </Link>
@@ -449,14 +449,14 @@ const Navbar: React.FC = () => {
                         <div className="flex items-center space-x-2">
                           <Link
                             to="/login"
-                            className="text-gray-500 hover:text-white transition duration-300"
+                            className="text-white hover:text-white transition duration-300"
                           >
                             Login
                           </Link>
-                          <span className="text-gray-400">or</span>
+                          <span className="text-white">or</span>
                           <Link
                             to="/signup"
-                            className="text-gray-500 hover:text-white transition duration-300"
+                            className="text-white hover:text-white transition duration-300"
                           >
                             Signup
                           </Link>
@@ -478,7 +478,7 @@ const Navbar: React.FC = () => {
                 <button
                   onClick={toggleMenu}
                   className="p-2 hover:bg-gray-800 rounded-full transition-colors"
-                  aria-label="Close menu" 
+                  aria-label="Close menu"
                 >
                   <svg
                     className="w-6 h-6"
