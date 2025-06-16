@@ -11,17 +11,19 @@ const Home: React.FC = () => {
   return (
     <>
       <div className="flex flex-col items-center justify-center min-h-screen text-white px-6 overflow-hidden">
-        
-
-        {/* <h1 className="text-7xl md:text-6xl mb-4 text-center font-bold min-h-[100px]">
+        {/* Main Heading */}
+        {/* <motion.h1
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="text-7xl md:text-6xl  mb-4 text-center"
+        >
           Welcome to
-        </h1> */}
-        <h1
-  className="text-[clamp(2rem,6vw,4.5rem)] mb-4 text-center font-bold leading-tight"
->
-  Welcome to
-</h1>
+        </motion.h1> */}
 
+        <h1 className="text-7xl md:text-6xl mb-4 text-center font-bold min-h-[100px]">
+          Welcome to
+        </h1>
 
         {/* Highlighted Gradient Text */}
         <motion.h1
