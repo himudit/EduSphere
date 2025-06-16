@@ -16,14 +16,19 @@ const Home: React.FC = () => {
         {/* <h1 className="text-7xl md:text-6xl mb-4 text-center font-bold min-h-[100px]">
           Welcome to
         </h1> */}
-        <h1
+        {/* <h1
           className="text-5xl md:text-6xl font-bold text-center leading-snug"
           style={{ fontFamily: `'Segoe UI', Roboto, Helvetica, Arial, sans-serif` }}
         >
           Welcome to
+        </h1> */}
+           <h1
+          className="text-4xl md:text-5xl font-bold text-center leading-snug"
+          style={{ fontFamily: `'Segoe UI', Roboto, Helvetica, Arial, sans-serif` }}
+        >
+          Welcome to
         </h1>
-        ̥̥
-
+        
         {/* Highlighted Gradient Text */}
         <motion.h1
           initial={{ opacity: 0, y: 50 }}
