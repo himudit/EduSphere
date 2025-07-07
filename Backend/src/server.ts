@@ -21,6 +21,7 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
 app.use('/api', (req, res) => {
     res.send('Hello from server')
 });
@@ -472,4 +473,3 @@ const server = http.createServer(app);
 server.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
-

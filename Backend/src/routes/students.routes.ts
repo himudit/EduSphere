@@ -32,6 +32,5 @@ router.get('/logout',
     logoutStudent
 )
 
-// router.get('/mylearning', authStudent, getStudentCourses)
 
 export default router;

@@ -13,7 +13,6 @@ const registerStudent = async (req: Request, res: Response, next: NextFunction) 
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        console.log("controllers");
         const { first_name, last_name, email, password } = req.body;
         const hashedPassword = await AuthService.hashPassword(password);
         const student_id = uuidv4();
