@@ -110,5 +110,3 @@ Contributions are welcome! Feel free to fork the project and submit pull request
 
 🚀 **EduSphere** – Empowering Education with Seamless Course Management
 
-
-deployed

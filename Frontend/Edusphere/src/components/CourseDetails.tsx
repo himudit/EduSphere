@@ -130,62 +130,11 @@ const CourseDetails = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
 
-    // const handleBuyClick = async () => {
-    //     try {
-    //         setLoadingBuy(true);
-    //         const token = localStorage.getItem("token");
-    //         if (!token) {
-    //             alert("Please log in to purchase this course.");
-    //             return;
-    //         }
-    //         const response = await axios.post(
-    //             `${import.meta.env.VITE_BASE_URL}/payment/create/course/${course_id}/teacher/${teacherData?.teacher_id}`,
-    //             {},
-    //             {
-    //                 headers: {
-    //                     Authorization: `Bearer ${token}`,
-    //                 },
-    //             }
-    //         );
-    //         // console.log(response.data);
-    //         const { amount, currency, notes, razorpay_order_id } = response.data.order;
-    //         if (response.data.success) {
-    //             setLoadingBuy(false);
-    //             const options = {
-    //                 key: 'rzp_test_HduuapK5bWNRuY',
-    //                 amount: amount,
-    //                 currency: currency,
-    //                 name: 'EduSphere',
-    //                 description: 'Let the world be more smater',
-    //                 order_id: razorpay_order_id,
-    //                 prefill: {
-    //                     name: notes?.first_name + " " + notes?.last_name,
-    //                     email: notes?.email,
-    //                 },
-    //                 theme: {
-    //                     color: '#F37254'
-    //                 },
-    //                 handler: verifyPaymentCourse
-    //             };
-    //             const rzp = new window.Razorpay(options);
-    //             rzp.open();
-    //         } else {
-    //             alert("Failed to create order.");
-    //         }
-    //     } catch (error) {
-    //         console.error("Error in handleBuyClick:", error);
-    //         alert("Something went wrong. Please try again.");
-    //     } finally {
-    //         setLoadingBuy(false);
-    //     }
-    // };
-
     const loadRazorpayScript = () => {
         return new Promise((resolve) => {
             if (document.getElementById('razorpay-script')) {
-                return resolve(true); // Script already loaded
+                return resolve(true);
             }
-
             const script = document.createElement("script");
             script.src = "https://checkout.razorpay.com/v1/checkout.js";
             script.id = "razorpay-script";

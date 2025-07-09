@@ -1,11 +1,9 @@
 import express from 'express'
 const paymentRouter = express.Router();
-import { body } from 'express-validator';
 import { Request, Response, NextFunction } from "express";
 import { authStudent } from '../middlewares/auth.middleware'
 import razorpayinstance from '../services/razorpay'
 import { PrismaClient } from "@prisma/client";
-import { v4 as uuidv4 } from "uuid"; // Import UUID generator
 import { validateWebhookSignature } from 'razorpay/dist/utils/razorpay-utils';
 
 const prisma = new PrismaClient();
@@ -26,8 +24,22 @@ interface RazorpayOrderOptions {
 
 paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', authStudent, async (req: any, res: Response, next: NextFunction) => {
     try {
-        console.log("i am post")
         const student = req.student;
+        const existing = await prisma.payments.findFirst({
+            where: {
+                student_id: student.student_id,
+                course_id: req.params.course_id,
+                payment_status: 'PENDING',
+            },
+        });
+
+        if (existing) {
+            return res.status(200).json({ message: 'Pending order already exists', order: existing });
+        }
+
+        // Otherwise, create new Razorpay order & save
+
+        // get course price 
         const course = await prisma.courses.findUnique({
             where: { course_id: req.params.course_id },
             include: {
@@ -72,7 +84,6 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', authStudent,
 paymentRouter.post('/webhook', async (req: any, res: Response, next: NextFunction) => {
     try {
         let i = 0;
-        console.log("i am webhook" + i);
         const webhookSignature = req.get("X-Razorpay-Signature");
 
         const isWebHookValid = validateWebhookSignature(JSON.stringify(req.body), webhookSignature, process.env.RAZORPAY_WEBHOOK_SECRET as string)
