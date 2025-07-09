@@ -53,6 +53,21 @@ const MyLearning = () => {
         fetchCourses();
     }, []);
 
+
+    const Arr: JSX.Element[] = courses.map((purchase, index) => (
+        <Card
+            id={purchase.course.course_id}
+            key={index}
+            thumbnail={purchase.course.course_thumbnail}
+            title={purchase.course.course_title}
+            author={purchase.course.course_author}
+            description={purchase.course.course_description}
+            rating={purchase.course.rating}
+            reviews={146}
+            price={purchase.course.course_price}
+        />
+    ));
+
     return (
         <div className="p-6 w-full lg:w-[80%] mx-auto">
 
