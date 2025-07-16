@@ -11,6 +11,7 @@ import { PrismaClient } from "@prisma/client";
 import { authStudent, authTeacher } from './middlewares/auth.middleware';
 import upload from './multerConfig';
 import cloudinary from "./cloudinaryConfig";
+import { redis } from './utils/redis'
 const app = express();
 
 const prisma = new PrismaClient();
@@ -88,6 +89,30 @@ app.get('/rating', async (req: Request, res: Response) => {
         res.status(200).json(courses);
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch courses' });
+    }
+});
+
+app.get('/v2/rating', async (req: Request, res: Response) => {
+    try {
+        const cacheKey = 'courses_rating_all';
+
+        // Check cache
+        const cachedCourses = await redis.get(cacheKey);
+
+        if (cachedCourses) {
+            return res.status(200).json(cachedCourses); // Cache hit
+        }
+
+        // If not in cache, query DB
+        const courses = await prisma.courses.findMany();
+
+        // Save to cache with TTL of 1 hour (3600 seconds)
+        await redis.set(cacheKey, courses, { ex: 3600 });
+
+        return res.status(200).json(courses);
+    } catch (error) {
+        console.error('Error fetching ratings:', error);
+        return res.status(500).json({ error: 'Failed to fetch courses' });
     }
 });
 

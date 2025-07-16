@@ -33,7 +33,7 @@ const CardCarousel = () => {
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const response = await axios.get<Course[]>(`${import.meta.env.VITE_BASE_URL}/rating`);
+                const response = await axios.get<Course[]>(`${import.meta.env.VITE_BASE_URL}/v2/rating`);
                 const course = response.data
                     .sort((a, b) => b.rating - a.rating)
                     .slice(0, 3);

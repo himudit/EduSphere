@@ -19,5 +19,4 @@ router.post('/login', [
 ], students_controller_1.loginStudent);
 router.get('/profile', auth_middleware_1.authStudent, students_controller_1.getStudentProfile);
 router.get('/logout', students_controller_1.logoutStudent);
-// router.get('/mylearning', authStudent, getStudentCourses)
 exports.default = router;

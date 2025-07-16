@@ -25,7 +25,6 @@ const registerStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        console.log("controllers");
         const { first_name, last_name, email, password } = req.body;
         const hashedPassword = yield Authstudents_service_1.default.hashPassword(password);
         const student_id = (0, uuid_1.v4)();

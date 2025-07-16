@@ -23,6 +23,7 @@ const client_1 = require("@prisma/client");
 const auth_middleware_1 = require("./middlewares/auth.middleware");
 const multerConfig_1 = __importDefault(require("./multerConfig"));
 const cloudinaryConfig_1 = __importDefault(require("./cloudinaryConfig"));
+const redis_1 = require("./utils/redis");
 const app = (0, express_1.default)();
 const prisma = new client_1.PrismaClient();
 app.use((0, cookie_parser_1.default)());
@@ -86,6 +87,25 @@ app.get('/rating', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
     catch (error) {
         res.status(500).json({ error: 'Failed to fetch courses' });
+    }
+}));
+app.get('/v2/rating', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const cacheKey = 'courses_rating_all';
+        // Check cache
+        const cachedCourses = yield redis_1.redis.get(cacheKey);
+        if (cachedCourses) {
+            return res.status(200).json(cachedCourses); // Cache hit
+        }
+        // If not in cache, query DB
+        const courses = yield prisma.courses.findMany();
+        // Save to cache with TTL of 1 hour (3600 seconds)
+        yield redis_1.redis.set(cacheKey, courses, { ex: 3600 });
+        return res.status(200).json(courses);
+    }
+    catch (error) {
+        console.error('Error fetching ratings:', error);
+        return res.status(500).json({ error: 'Failed to fetch courses' });
     }
 }));
 app.get('/course/:course_id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
