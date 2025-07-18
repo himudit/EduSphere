@@ -12,6 +12,7 @@ import upload from './multerConfig';
 import cloudinary from "./cloudinaryConfig";
 import { redis } from './utils/redis'
 import { redisCloud } from './utils/redisCloud'; // adjust path as needed
+import compression from 'compression';
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(cookieParser());
 app.use(cors({
     credentials: true,
 }));
+app.use(compression());
 
 app.use(express.json());
 

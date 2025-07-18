@@ -24,12 +24,14 @@ const auth_middleware_1 = require("./middlewares/auth.middleware");
 const multerConfig_1 = __importDefault(require("./multerConfig"));
 const cloudinaryConfig_1 = __importDefault(require("./cloudinaryConfig"));
 const redisCloud_1 = require("./utils/redisCloud"); // adjust path as needed
+const compression_1 = __importDefault(require("compression"));
 const app = (0, express_1.default)();
 const prisma = new client_1.PrismaClient();
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
     credentials: true,
 }));
+app.use((0, compression_1.default)());
 app.use(express_1.default.json());
 app.use('/api', (req, res) => {
     res.send('Hello from server');
