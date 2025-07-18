@@ -4,7 +4,6 @@ import cors from 'cors';
 import studentRoutes from './routes/students.routes'
 import teacherRoutes from './routes/teachers.routes'
 import paymentRoutes from './routes/payment'
-
 import cookieParser from 'cookie-parser'
 import { Request, Response, NextFunction } from "express";
 import { PrismaClient } from "@prisma/client";
@@ -12,6 +11,8 @@ import { authStudent, authTeacher } from './middlewares/auth.middleware';
 import upload from './multerConfig';
 import cloudinary from "./cloudinaryConfig";
 import { redis } from './utils/redis'
+import { redisCloud } from './utils/redisCloud'; // adjust path as needed
+
 const app = express();
 
 const prisma = new PrismaClient();
@@ -85,7 +86,12 @@ app.post('/students/CheckPurchasedOrNot', authStudent, async (req: StudentReques
 
 app.get('/rating', async (req: Request, res: Response) => {
     try {
-        const courses = await prisma.courses.findMany();
+        const courses = await prisma.courses.findMany({
+            orderBy: {
+                rating: 'desc',
+            },
+            take: 3,
+        });
         res.status(200).json(courses);
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch courses' });
@@ -98,13 +104,18 @@ app.get('/v2/rating', async (req: Request, res: Response) => {
 
         // Check cache
         const cachedCourses = await redis.get(cacheKey);
-
         if (cachedCourses) {
+            console.log(cachedCourses);
             return res.status(200).json(cachedCourses); // Cache hit
         }
 
         // If not in cache, query DB
-        const courses = await prisma.courses.findMany();
+        const courses = await prisma.courses.findMany({
+            orderBy: {
+                rating: 'desc',
+            },
+            take: 3,
+        });
 
         // Save to cache with TTL of 1 hour (3600 seconds)
         await redis.set(cacheKey, courses, { ex: 3600 });
@@ -112,6 +123,35 @@ app.get('/v2/rating', async (req: Request, res: Response) => {
         return res.status(200).json(courses);
     } catch (error) {
         console.error('Error fetching ratings:', error);
+        return res.status(500).json({ error: 'Failed to fetch courses' });
+    }
+});
+
+app.get('/v3/rating', async (req: Request, res: Response) => {
+    try {
+        const cacheKey = 'courses_rating_all_v3';
+
+        // Check Redis Cloud cache
+        const cachedCourses = await redisCloud.get(cacheKey);
+        if (cachedCourses) {
+            console.log('✅ Cache hit (Redis Cloud)');
+            return res.status(200).json(JSON.parse(cachedCourses));
+        }
+
+        // Query from DB if not in cache
+        const courses = await prisma.courses.findMany({
+            orderBy: {
+                rating: 'desc',
+            },
+            take: 3,
+        });
+
+        // Save result to Redis Cloud with TTL of 1 hour
+        await redisCloud.set(cacheKey, JSON.stringify(courses), { EX: 3600 });
+
+        return res.status(200).json(courses);
+    } catch (error) {
+        console.error('❌ Error in /v3/rating:', error);
         return res.status(500).json({ error: 'Failed to fetch courses' });
     }
 });

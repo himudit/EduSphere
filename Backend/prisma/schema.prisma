@@ -54,6 +54,7 @@ model purchased_courses {
   student students @relation(fields: [student_id], references: [student_id], onDelete: Cascade)
   course  courses  @relation(fields: [course_id], references: [course_id], onDelete: Cascade)
 
+  @@index([student_id])
   @@map("purchased_courses")
 }
 
