@@ -23,7 +23,6 @@ const client_1 = require("@prisma/client");
 const auth_middleware_1 = require("./middlewares/auth.middleware");
 const multerConfig_1 = __importDefault(require("./multerConfig"));
 const cloudinaryConfig_1 = __importDefault(require("./cloudinaryConfig"));
-const redis_1 = require("./utils/redis");
 const redisCloud_1 = require("./utils/redisCloud"); // adjust path as needed
 const app = (0, express_1.default)();
 const prisma = new client_1.PrismaClient();
@@ -95,31 +94,6 @@ app.get('/rating', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(500).json({ error: 'Failed to fetch courses' });
     }
 }));
-app.get('/v2/rating', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const cacheKey = 'courses_rating_all';
-        // Check cache
-        const cachedCourses = yield redis_1.redis.get(cacheKey);
-        if (cachedCourses) {
-            console.log(cachedCourses);
-            return res.status(200).json(cachedCourses); // Cache hit
-        }
-        // If not in cache, query DB
-        const courses = yield prisma.courses.findMany({
-            orderBy: {
-                rating: 'desc',
-            },
-            take: 3,
-        });
-        // Save to cache with TTL of 1 hour (3600 seconds)
-        yield redis_1.redis.set(cacheKey, courses, { ex: 3600 });
-        return res.status(200).json(courses);
-    }
-    catch (error) {
-        console.error('Error fetching ratings:', error);
-        return res.status(500).json({ error: 'Failed to fetch courses' });
-    }
-}));
 app.get('/v3/rating', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const cacheKey = 'courses_rating_all_v3';
@@ -178,22 +152,57 @@ app.get('/course/:course_id', (req, res) => __awaiter(void 0, void 0, void 0, fu
         res.status(500).json({ error: 'Failed to fetch course' });
     }
 }));
-app.get('/search', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+// app.get('/search', async (req: Request, res: Response) => {
+//     try {
+//         console.log("een");
+//         const query = (req.query.q || req.query.query) as string;
+//         if (!query || typeof query !== 'string') {
+//             return res.status(400).json({ error: 'Search query is required' });
+//         }
+//         const searchTerm = query.toString().toLowerCase();
+//         const allCourses = await prisma.courses.findMany();
+//         const filteredCourses = allCourses.filter(course =>
+//             course.course_keywords.some(keyword =>
+//                 keyword.toLowerCase().includes(searchTerm)
+//             )
+//         );
+//         if (!filteredCourses.length) {
+//             return res.status(404).json({ error: "No matching courses found" });
+//         }
+//         res.status(200).json(filteredCourses);
+//     } catch (err) {
+//         res.status(500).json({ error: 'Failed to search courses' });
+//     }
+// });
+app.get('v1/search', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const query = (req.query.q || req.query.query);
-        if (!query || typeof query !== 'string') {
-            return res.status(400).json({ error: 'Search query is required' });
-        }
-        const searchTerm = query.toString().toLowerCase();
         const allCourses = yield prisma.courses.findMany();
-        const filteredCourses = allCourses.filter(course => course.course_keywords.some(keyword => keyword.toLowerCase().includes(searchTerm)));
-        if (!filteredCourses.length) {
-            return res.status(404).json({ error: "No matching courses found" });
-        }
-        res.status(200).json(filteredCourses);
+        return res.status(200).json(allCourses);
     }
     catch (err) {
-        res.status(500).json({ error: 'Failed to search courses' });
+        console.error('Error fetching courses:', err);
+        return res.status(500).json({ error: 'Failed to fetch courses' });
+    }
+}));
+app.get('v2/search', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const cacheKey = 'all_courses';
+        // Check cache
+        const cachedCourses = yield redisCloud_1.redisCloud.get(cacheKey);
+        if (cachedCourses) {
+            console.log('✅ Cache hit for /search');
+            return res.status(200).json(JSON.parse(cachedCourses));
+        }
+        // Cache miss: fetch from DB
+        const allCourses = yield prisma.courses.findMany();
+        // Store in cache with 1-hour TTL
+        yield redisCloud_1.redisCloud.set(cacheKey, JSON.stringify(allCourses), { EX: 3600 });
+        console.log('💾 Cache set for /search');
+        return res.status(200).json(allCourses);
+    }
+    catch (err) {
+        console.error('❌ Error fetching courses:', err);
+        return res.status(500).json({ error: 'Failed to fetch courses' });
     }
 }));
 app.get('/filterSearch', (req, res) => __awaiter(void 0, void 0, void 0, function* () {

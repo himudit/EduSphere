@@ -97,36 +97,6 @@ app.get('/rating', async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Failed to fetch courses' });
     }
 });
-
-app.get('/v2/rating', async (req: Request, res: Response) => {
-    try {
-        const cacheKey = 'courses_rating_all';
-
-        // Check cache
-        const cachedCourses = await redis.get(cacheKey);
-        if (cachedCourses) {
-            console.log(cachedCourses);
-            return res.status(200).json(cachedCourses); // Cache hit
-        }
-
-        // If not in cache, query DB
-        const courses = await prisma.courses.findMany({
-            orderBy: {
-                rating: 'desc',
-            },
-            take: 3,
-        });
-
-        // Save to cache with TTL of 1 hour (3600 seconds)
-        await redis.set(cacheKey, courses, { ex: 3600 });
-
-        return res.status(200).json(courses);
-    } catch (error) {
-        console.error('Error fetching ratings:', error);
-        return res.status(500).json({ error: 'Failed to fetch courses' });
-    }
-});
-
 app.get('/v3/rating', async (req: Request, res: Response) => {
     try {
         const cacheKey = 'courses_rating_all_v3';
@@ -188,31 +158,69 @@ app.get('/course/:course_id', async (req: Request, res: Response) => {
     }
 })
 
-app.get('/search', async (req: Request, res: Response) => {
+// app.get('/search', async (req: Request, res: Response) => {
+//     try {
+//         console.log("een");
+//         const query = (req.query.q || req.query.query) as string;
+
+//         if (!query || typeof query !== 'string') {
+//             return res.status(400).json({ error: 'Search query is required' });
+//         }
+//         const searchTerm = query.toString().toLowerCase();
+
+//         const allCourses = await prisma.courses.findMany();
+
+//         const filteredCourses = allCourses.filter(course =>
+//             course.course_keywords.some(keyword =>
+//                 keyword.toLowerCase().includes(searchTerm)
+//             )
+//         );
+
+//         if (!filteredCourses.length) {
+//             return res.status(404).json({ error: "No matching courses found" });
+//         }
+
+//         res.status(200).json(filteredCourses);
+
+//     } catch (err) {
+//         res.status(500).json({ error: 'Failed to search courses' });
+//     }
+// });
+
+app.get('v1/search', async (req: Request, res: Response) => {
     try {
-        const query = (req.query.q || req.query.query) as string;
+        const allCourses = await prisma.courses.findMany();
+        return res.status(200).json(allCourses);
+    } catch (err) {
+        console.error('Error fetching courses:', err);
+        return res.status(500).json({ error: 'Failed to fetch courses' });
+    }
+});
 
-        if (!query || typeof query !== 'string') {
-            return res.status(400).json({ error: 'Search query is required' });
+
+app.get('v2/search', async (req: Request, res: Response) => {
+    try {
+        const cacheKey = 'all_courses';
+
+        // Check cache
+        const cachedCourses = await redisCloud.get(cacheKey);
+        if (cachedCourses) {
+            console.log('✅ Cache hit for /search');
+            return res.status(200).json(JSON.parse(cachedCourses));
         }
-        const searchTerm = query.toString().toLowerCase();
 
+        // Cache miss: fetch from DB
         const allCourses = await prisma.courses.findMany();
 
-        const filteredCourses = allCourses.filter(course =>
-            course.course_keywords.some(keyword =>
-                keyword.toLowerCase().includes(searchTerm)
-            )
-        );
+        // Store in cache with 1-hour TTL
+        await redisCloud.set(cacheKey, JSON.stringify(allCourses), { EX: 3600 });
 
-        if (!filteredCourses.length) {
-            return res.status(404).json({ error: "No matching courses found" });
-        }
-
-        res.status(200).json(filteredCourses);
+        console.log('💾 Cache set for /search');
+        return res.status(200).json(allCourses);
 
     } catch (err) {
-        res.status(500).json({ error: 'Failed to search courses' });
+        console.error('❌ Error fetching courses:', err);
+        return res.status(500).json({ error: 'Failed to fetch courses' });
     }
 });
 

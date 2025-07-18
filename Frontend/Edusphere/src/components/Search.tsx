@@ -76,7 +76,7 @@ const Search: React.FC = () => {
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const response = await axios.get<Course[]>(`${import.meta.env.VITE_BASE_URL}/search`);
+                const response = await axios.get<Course[]>(`${import.meta.env.VITE_BASE_URL}/v2/search`);
                 setCourseData(response.data);
             } catch (err) {
                 console.error('Error fetching courses:', err);
