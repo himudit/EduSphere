@@ -174,7 +174,7 @@ app.get('/course/:course_id', (req, res) => __awaiter(void 0, void 0, void 0, fu
 //         res.status(500).json({ error: 'Failed to search courses' });
 //     }
 // });
-app.get('v1/search', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get('/v1/search', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const allCourses = yield prisma.courses.findMany();
         return res.status(200).json(allCourses);
@@ -184,13 +184,12 @@ app.get('v1/search', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         return res.status(500).json({ error: 'Failed to fetch courses' });
     }
 }));
-app.get('v2/search', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get('/v2/search', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const cacheKey = 'all_courses';
         // Check cache
         const cachedCourses = yield redisCloud_1.redisCloud.get(cacheKey);
         if (cachedCourses) {
-            console.log('✅ Cache hit for /search');
             return res.status(200).json(JSON.parse(cachedCourses));
         }
         // Cache miss: fetch from DB

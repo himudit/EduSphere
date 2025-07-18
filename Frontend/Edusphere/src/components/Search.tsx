@@ -55,22 +55,22 @@ const Search: React.FC = () => {
 
     const query = new URLSearchParams(location.search).get("q");
 
-    useEffect(() => {
-        if (!query || query.trim() === "") return;
+    // useEffect(() => {
+    //     if (!query || query.trim() === "") return;
 
-        const fetchCourses = async () => {
-            try {
-                const res = await axios.get<Course[]>(`${import.meta.env.VITE_BASE_URL}/search?query=${query}`);
-                setCourseData(res.data);
-            } catch (err: any) {
-                console.error('Error fetching courses:', err);
-            } finally {
-                setLoading(false);
-            }
-        };
+    //     const fetchCourses = async () => {
+    //         try {
+    //             const res = await axios.get<Course[]>(`${import.meta.env.VITE_BASE_URL}/search?query=${query}`);
+    //             setCourseData(res.data);
+    //         } catch (err: any) {
+    //             console.error('Error fetching courses:', err);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
 
-        fetchCourses();
-    }, [query]);
+    //     fetchCourses();
+    // }, [query]);
 
 
     useEffect(() => {

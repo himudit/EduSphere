@@ -187,7 +187,7 @@ app.get('/course/:course_id', async (req: Request, res: Response) => {
 //     }
 // });
 
-app.get('v1/search', async (req: Request, res: Response) => {
+app.get('/v1/search', async (req: Request, res: Response) => {
     try {
         const allCourses = await prisma.courses.findMany();
         return res.status(200).json(allCourses);
@@ -198,14 +198,13 @@ app.get('v1/search', async (req: Request, res: Response) => {
 });
 
 
-app.get('v2/search', async (req: Request, res: Response) => {
+app.get('/v2/search', async (req: Request, res: Response) => {
     try {
         const cacheKey = 'all_courses';
 
         // Check cache
         const cachedCourses = await redisCloud.get(cacheKey);
         if (cachedCourses) {
-            console.log('✅ Cache hit for /search');
             return res.status(200).json(JSON.parse(cachedCourses));
         }
 
