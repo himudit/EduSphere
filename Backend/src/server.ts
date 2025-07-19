@@ -16,6 +16,7 @@ import compression from 'compression';
 
 const app = express();
 
+
 const prisma = new PrismaClient();
 
 app.use(cookieParser());
@@ -159,6 +160,8 @@ app.get('/course/:course_id', async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Failed to fetch course' });
     }
 })
+
+// eubuehihii3
 
 // app.get('/search', async (req: Request, res: Response) => {
 //     try {
