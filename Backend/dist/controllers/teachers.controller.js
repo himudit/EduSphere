@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -19,7 +10,7 @@ const Authteachers_service_1 = __importDefault(require("../services/Authteachers
 const uuid_1 = require("uuid");
 const express_validator_1 = require("express-validator");
 const prisma = new client_1.PrismaClient();
-const registerTeacher = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const registerTeacher = async (req, res, next) => {
     try {
         console.log("controllers");
         const errors = (0, express_validator_1.validationResult)(req);
@@ -27,9 +18,9 @@ const registerTeacher = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
             return res.status(400).json({ errors: errors.array() });
         }
         const { first_name, last_name, email, password } = req.body;
-        const hashedPassword = yield Authteachers_service_1.default.hashPassword(password);
+        const hashedPassword = await Authteachers_service_1.default.hashPassword(password);
         const teacher_id = (0, uuid_1.v4)();
-        const teacher = yield (0, teachers_service_1.createTeacher)({ teacher_id, first_name, last_name, email, password: hashedPassword });
+        const teacher = await (0, teachers_service_1.createTeacher)({ teacher_id, first_name, last_name, email, password: hashedPassword });
         const teacher_token = Authteachers_service_1.default.generateAuthToken(teacher);
         console.log(teacher_token);
         res.cookie('tacher_token', teacher_token);
@@ -38,9 +29,9 @@ const registerTeacher = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
     catch (err) {
         console.log(err);
     }
-});
+};
 exports.registerTeacher = registerTeacher;
-const loginTeacher = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const loginTeacher = async (req, res, next) => {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
         if (!errors.isEmpty()) {
@@ -48,7 +39,7 @@ const loginTeacher = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         }
         console.log("controllers");
         const { email, password } = req.body;
-        const teacher = yield prisma.teachers.findFirst({
+        const teacher = await prisma.teachers.findFirst({
             where: {
                 email: email,
             }
@@ -56,7 +47,7 @@ const loginTeacher = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         if (!teacher) {
             return res.status(401).json({ message: "Invalid email or password" });
         }
-        const isMatch = yield Authteachers_service_1.default.comparePassword(password, teacher.password);
+        const isMatch = await Authteachers_service_1.default.comparePassword(password, teacher.password);
         if (!isMatch) {
             return res.status(401).json({ message: "Invalid email or password" });
         }
@@ -67,14 +58,14 @@ const loginTeacher = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     catch (err) {
         console.log(err);
     }
-});
+};
 exports.loginTeacher = loginTeacher;
-const getTeacherProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const getTeacherProfile = async (req, res, next) => {
     res.status(200).json(req.teacher);
-});
+};
 exports.getTeacherProfile = getTeacherProfile;
-const logoutTeacher = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const logoutTeacher = async (req, res, next) => {
     res.clearCookie('token');
     res.status(200).json({ message: "Logged Out Successfully" });
-});
+};
 exports.logoutTeacher = logoutTeacher;

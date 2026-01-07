@@ -109,14 +109,15 @@
 //     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
 //   }
 // }
+
 {
   "compilerOptions": {
     "target": "ES2020",
     "module": "commonjs",
-    "rootDir": "src",
-    "outDir": "api",
+    "outDir": "dist",       // compile TS to dist/
+    "rootDir": "src",       // only compile src/
     "esModuleInterop": true,
     "strict": true
   },
-  "include": ["src"]
+  "include": ["src"]        // only TS in src/
 }

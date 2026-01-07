@@ -1,8 +1,5 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const serverless_http_1 = __importDefault(require("serverless-http"));
-const app_1 = __importDefault(require("./app"));
-exports.default = (0, serverless_http_1.default)(app_1.default);
+// api/index.js
+const serverless = require('serverless-http');
+const app = require('../dist/app').default;  // point to compiled JS in dist/
+
+module.exports = serverless(app);

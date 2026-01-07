@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -19,10 +10,10 @@ const razorpay_1 = __importDefault(require("../services/razorpay"));
 const client_1 = require("@prisma/client");
 const razorpay_utils_1 = require("razorpay/dist/utils/razorpay-utils");
 const prisma = new client_1.PrismaClient();
-paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', auth_middleware_1.authStudent, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', auth_middleware_1.authStudent, async (req, res, next) => {
     try {
         const student = req.student;
-        const existing = yield prisma.payments.findFirst({
+        const existing = await prisma.payments.findFirst({
             where: {
                 student_id: student.student_id,
                 course_id: req.params.course_id,
@@ -34,14 +25,14 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', auth_middlew
         }
         // Otherwise, create new Razorpay order & save
         // get course price 
-        const course = yield prisma.courses.findUnique({
+        const course = await prisma.courses.findUnique({
             where: { course_id: req.params.course_id },
             include: {
                 lectures: true,
             },
         });
         const options = {
-            amount: Number(course === null || course === void 0 ? void 0 : course.course_price) * 100,
+            amount: Number(course?.course_price) * 100,
             currency: "INR",
             receipt: "receipt#1",
             notes: {
@@ -52,8 +43,8 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', auth_middlew
                 student_id: student.student_id,
             },
         };
-        const order = yield razorpay_1.default.orders.create(options);
-        const newOrder = yield prisma.payments.create({
+        const order = await razorpay_1.default.orders.create(options);
+        const newOrder = await prisma.payments.create({
             data: {
                 student_id: student.student_id,
                 teacher_id: req.params.teacher_id,
@@ -73,9 +64,8 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', auth_middlew
         }
         return res.status(500).json({ msg: "An unknown error occurred" });
     }
-}));
-paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+});
+paymentRouter.post('/webhook', async (req, res, next) => {
     try {
         let i = 0;
         const webhookSignature = req.get("X-Razorpay-Signature");
@@ -83,9 +73,9 @@ paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, voi
         if (!isWebHookValid) {
             return res.status(400).json({ msg: "Invalid Webhook Signature" });
         }
-        const paymentDetails = (_b = (_a = req.body.payload) === null || _a === void 0 ? void 0 : _a.payment) === null || _b === void 0 ? void 0 : _b.entity;
+        const paymentDetails = req.body.payload?.payment?.entity;
         // update order in DB
-        const updatedOrder = yield prisma.payments.updateMany({
+        const updatedOrder = await prisma.payments.updateMany({
             where: { razorpay_order_id: paymentDetails.order_id },
             data: {
                 payment_status: paymentDetails.status,
@@ -95,7 +85,7 @@ paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, voi
         // add course in myplaylist according to student
         if (paymentDetails.status == "captured") {
             console.log("i am captured" + i);
-            const purchasedCourse = yield prisma.purchased_courses.create({
+            const purchasedCourse = await prisma.purchased_courses.create({
                 data: {
                     order_id: paymentDetails.order_id,
                     student_id: paymentDetails.notes.student_id,
@@ -114,17 +104,16 @@ paymentRouter.post('/webhook', (req, res, next) => __awaiter(void 0, void 0, voi
         }
         return res.status(500).json({ msg: "An unknown error occurred" });
     }
-}));
-paymentRouter.post('/purchased', auth_middleware_1.authStudent, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+});
+paymentRouter.post('/purchased', auth_middleware_1.authStudent, async (req, res, next) => {
     try {
         const { courseId } = req.body;
         if (!courseId) {
             return res.status(400).json({ message: "Course ID is required." });
         }
-        const purchasedCourse = yield prisma.purchased_courses.findFirst({
+        const purchasedCourse = await prisma.purchased_courses.findFirst({
             where: {
-                student_id: (_a = req.student) === null || _a === void 0 ? void 0 : _a.student_id,
+                student_id: req.student?.student_id,
                 course_id: courseId,
             },
         });
@@ -135,5 +124,5 @@ paymentRouter.post('/purchased', auth_middleware_1.authStudent, (req, res, next)
         console.error("Error checking purchased course:", error);
         res.status(500).json({ message: "Failed to check purchased course", error });
     }
-}));
+});
 exports.default = paymentRouter;
