@@ -1,3 +1,4 @@
+"use strict";
 // import http from 'http';
 // import express from 'express';
 // import cors from 'cors';
@@ -13,33 +14,29 @@
 // import { redis } from './utils/redis'
 // import { redisCloud } from './utils/redisCloud'; // adjust path as needed
 // import compression from 'compression';
-
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
 // const app = express();
-
 // const prisma = new PrismaClient();
-
 // app.use(cookieParser());
 // app.use(cors({
 //     credentials: true,
 // }));
 // app.use(compression());
-
 // app.use(express.json());
-
 // app.use('/api', (req, res) => {
 //     res.send('Hello from server')
 // });
-
 // app.use('/students', studentRoutes);
 // app.use('/teachers', teacherRoutes);
 // app.use('/payment', paymentRoutes);
-
 // interface StudentRequest extends Request {
 //     student?: {
 //         student_id: string;
 //     }
 // }
-
 // app.get('/students/mylearning', authStudent, async (req: StudentRequest, res: Response) => {
 //     try {
 //         const purchasedCourses = await prisma.purchased_courses.findMany({
@@ -48,7 +45,6 @@
 //                 course: true
 //             }
 //         });
-
 //         if (purchasedCourses.length === 0) {
 //             return res.status(200).json({
 //                 message: "No purchased courses found.",
@@ -61,31 +57,25 @@
 //         res.status(500).json({ message: "Failed to fetch purchased courses", error });
 //     }
 // })
-
 // app.post('/students/CheckPurchasedOrNot', authStudent, async (req: StudentRequest, res: Response) => {
 //     try {
 //         const { courseId } = req.body;
-
 //         if (!courseId) {
 //             return res.status(400).json({ message: "Course ID is required." });
 //         }
-
 //         const purchasedCourse = await prisma.purchased_courses.findFirst({
 //             where: {
 //                 student_id: req.student?.student_id,
 //                 course_id: courseId,
 //             },
 //         });
-
 //         const isPurchased = !!purchasedCourse; // true if found, false otherwise
-
 //         res.status(200).json(isPurchased);
 //     } catch (error) {
 //         console.error("Error checking purchased course:", error);
 //         res.status(500).json({ message: "Failed to check purchased course", error });
 //     }
 // });
-
 // app.get('/rating', async (req: Request, res: Response) => {
 //     try {
 //         const courses = await prisma.courses.findMany({
@@ -102,14 +92,12 @@
 // app.get('/v3/rating', async (req: Request, res: Response) => {
 //     try {
 //         const cacheKey = 'courses_rating_all_v3';
-
 //         // Check Redis Cloud cache
 //         const cachedCourses = await redisCloud.get(cacheKey);
 //         if (cachedCourses) {
 //             console.log('✅ Cache hit (Redis Cloud)');
 //             return res.status(200).json(JSON.parse(cachedCourses));
 //         }
-
 //         // Query from DB if not in cache
 //         const courses = await prisma.courses.findMany({
 //             orderBy: {
@@ -117,17 +105,14 @@
 //             },
 //             take: 3,
 //         });
-
 //         // Save result to Redis Cloud with TTL of 1 hour
 //         await redisCloud.set(cacheKey, JSON.stringify(courses), { EX: 3600 });
-
 //         return res.status(200).json(courses);
 //     } catch (error) {
 //         console.error('❌ Error in /v3/rating:', error);
 //         return res.status(500).json({ error: 'Failed to fetch courses' });
 //     }
 // });
-
 // app.get('/course/:course_id', async (req: Request, res: Response) => {
 //     try {
 //         const course = await prisma.courses.findUnique({
@@ -159,38 +144,29 @@
 //         res.status(500).json({ error: 'Failed to fetch course' });
 //     }
 // })
-
 // // eubuehihii3
-
 // // app.get('/search', async (req: Request, res: Response) => {
 // //     try {
 // //         console.log("een");
 // //         const query = (req.query.q || req.query.query) as string;
-
 // //         if (!query || typeof query !== 'string') {
 // //             return res.status(400).json({ error: 'Search query is required' });
 // //         }
 // //         const searchTerm = query.toString().toLowerCase();
-
 // //         const allCourses = await prisma.courses.findMany();
-
 // //         const filteredCourses = allCourses.filter(course =>
 // //             course.course_keywords.some(keyword =>
 // //                 keyword.toLowerCase().includes(searchTerm)
 // //             )
 // //         );
-
 // //         if (!filteredCourses.length) {
 // //             return res.status(404).json({ error: "No matching courses found" });
 // //         }
-
 // //         res.status(200).json(filteredCourses);
-
 // //     } catch (err) {
 // //         res.status(500).json({ error: 'Failed to search courses' });
 // //     }
 // // });
-
 // app.get('/v1/search', async (req: Request, res: Response) => {
 //     try {
 //         const allCourses = await prisma.courses.findMany();
@@ -200,43 +176,31 @@
 //         return res.status(500).json({ error: 'Failed to fetch courses' });
 //     }
 // });
-
-
 // app.get('/v2/search', async (req: Request, res: Response) => {
 //     try {
 //         const cacheKey = 'all_courses';
-
 //         // Check cache
 //         const cachedCourses = await redisCloud.get(cacheKey);
 //         if (cachedCourses) {
 //             return res.status(200).json(JSON.parse(cachedCourses));
 //         }
-
 //         // Cache miss: fetch from DB
 //         const allCourses = await prisma.courses.findMany();
-
 //         // Store in cache with 1-hour TTL
 //         await redisCloud.set(cacheKey, JSON.stringify(allCourses), { EX: 3600 });
-
 //         console.log('💾 Cache set for /search');
 //         return res.status(200).json(allCourses);
-
 //     } catch (err) {
 //         console.error('❌ Error fetching courses:', err);
 //         return res.status(500).json({ error: 'Failed to fetch courses' });
 //     }
 // });
-
-
 // app.get('/filterSearch', async (req: Request, res: Response) => {
 //     try {
 //         const { topic, level, rating } = req.query;
-
 //         let filter: any = {};
-
 //         let minRating: number | undefined;
 //         const ratingStr = typeof rating === "string" ? rating : undefined;
-
 //         if (ratingStr) {
 //             if (ratingStr.includes("& up")) {
 //                 minRating = parseFloat(ratingStr.split(" & up")[0]);
@@ -244,16 +208,13 @@
 //                 minRating = parseFloat(ratingStr.split(" & below")[0]);
 //             }
 //         }
-
 //         let topicsArray: string[] = [];
 //         if (typeof topic === "string") {
 //             topicsArray = [topic];
 //         } else if (Array.isArray(topic)) {
 //             topicsArray = topic.map(t => String(t));
 //         }
-
 //         const levelStr = typeof level === "string" ? level : undefined;
-
 //         const courses = await prisma.courses.findMany({
 //             where: {
 //                 AND: [
@@ -275,8 +236,6 @@
 //         res.status(500).json({ error: 'Failed to fetch courses' });
 //     }
 // });
-
-
 // interface StudentRequest extends Request {
 //     student?: {
 //         student_id: string;
@@ -319,14 +278,12 @@
 //                 student_university
 //             }
 //         });
-
 //         res.status(200).json(updatedStudent);
 //     } catch (err) {
 //         console.error('Error updating student profile:', err);
 //         res.status(500).json({ error: 'Failed to update profile', details: err });
 //     }
 // });
-
 // app.post("/students/profile/upload/image", upload.single("image"), authStudent, async (req: StudentRequest, res: Response) => {
 //     try {
 //         if (!req.file) {
@@ -348,7 +305,6 @@
 //         res.status(500).json({ error: "Internal server error" });
 //     }
 // });
-
 // interface TeacherRequest extends Request {
 //     teacher?: {
 //         teacher_id: string;
@@ -379,14 +335,12 @@
 //                 teacher_skills,
 //             }
 //         });
-
 //         res.status(200).json(updatedTeacher);
 //     } catch (err) {
 //         console.error('Error updating student profile:', err);
 //         res.status(500).json({ error: 'Failed to update profile', details: err });
 //     }
 // });
-
 // app.post("/teachers/profile/upload/image", upload.single("image"), authTeacher, async (req: TeacherRequest, res: Response) => {
 //     try {
 //         if (!req.file) {
@@ -408,8 +362,6 @@
 //         res.status(500).json({ error: "Internal server error" });
 //     }
 // });
-
-
 // app.post('/teachers/course/upload', authTeacher, async (req: TeacherRequest, res: Response) => {
 //     try {
 //         const teacher_id = req.teacher?.teacher_id;
@@ -470,7 +422,6 @@
 //         }
 //     }
 // })
-
 // app.post('/teachers/lecture/upload', authTeacher, async (req, res) => {
 //     try {
 //         const {
@@ -494,7 +445,6 @@
 //             }
 //         })
 //         return res.json(response);
-
 //     } catch (err: unknown) {
 //         if (err instanceof Error) {
 //             console.error("Error uploading Lecture Data:", err);
@@ -506,7 +456,6 @@
 //         }
 //     }
 // })
-
 // app.post('/teachers/video/upload', authTeacher, async (req, res) => {
 //     try {
 //         const {
@@ -541,23 +490,16 @@
 //         }
 //     }
 // })
-
 // const port = process.env.PORT || 3000;
-
 // // const server = http.createServer(app);
-
 // // server.listen(port, () => {
 // //     console.log(`Server is running on port ${port}`);
 // // });
-
 // src/server.ts
-import http from "http";
-import app from "./app";
-
+const http_1 = __importDefault(require("http"));
+const app_1 = __importDefault(require("./app"));
 const port = process.env.PORT || 3000;
-
-const server = http.createServer(app);
-
+const server = http_1.default.createServer(app_1.default);
 server.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+    console.log(`Server running on port ${port}`);
 });
