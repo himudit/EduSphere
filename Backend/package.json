@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "nodemon --exec",
     "build": "tsc",
-    "prisma:generate": "prisma generate"
+    "prisma:generate": "prisma generate",
+     "vercel-build": "prisma generate && tsc"
   },
   "keywords": [],
   "author": "",
