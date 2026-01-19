@@ -18,16 +18,19 @@ const AnimatedText  = () => {
     <div ref={containerRef} className="relative min-h-screen w-ful py-20">
       {/* Main Heading Section */}
       <div className="flex flex-col items-center justify-center px-4 pt-20">
-        <div className="relative flex flex-wrap items-center justify-center gap-4">
+        <div
+          className="relative flex flex-wrap items-center justify-center gap-4"
+          style={{ fontFamily: '"Instrument Serif", serif' }}
+        >
           <motion.span
             style={{ y: shipY, opacity: shipOpacity }}
-            className="text-[8rem]  font-bold text-gray-300"
+            className="text-[8rem] font-light text-gray-300"
           >
             Learn
           </motion.span>
           <motion.span
             style={{ y: fasterY, opacity: fasterOpacity }}
-            className="text-[8rem] font-bold text-[#ff4d4d]"
+            className="text-[8rem] font-light text-[#ff4d4d]"
           >
             faster
           </motion.span>

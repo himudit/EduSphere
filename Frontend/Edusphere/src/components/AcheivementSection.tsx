@@ -15,7 +15,7 @@ const StatCard = ({
     const suffix = value.replace(/[0-9.]/g, '');
     return (
         <div ref={ref} className="flex flex-col items-center">
-            <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
+            <h3 className="text-3xl md:text-4xl lg:text-5xl font-light text-white">
                 {inView ? (
                     <CountUp end={numericValue} duration={2} suffix={suffix} />
                 ) : (
@@ -29,12 +29,15 @@ const StatCard = ({
 
 const AchievementSection = () => {
     return (
-        <div className="w-full  py-10 md:py-16 px-6 md:px-10 rounded-md">
+        <div
+            className="w-full  py-10 md:py-16 px-6 md:px-10 rounded-md"
+            style={{ fontFamily: '"Instrument Serif", serif' }}
+        >
             <div className="max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Why Choose Us Card */}
                     <div className="bg-[#22153A] rounded-3xl p-6 md:p-8 flex flex-col items-start">
-                        <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-4 md:mb-6">Why Choose Us?</h2>
+                        <h2 className="text-xl md:text-2xl lg:text-3xl font-light text-white mb-4 md:mb-6">Why Choose Us?</h2>
                         <p className="text-sm md:text-base text-gray-300 mb-6">
                             We are committed to providing high-quality content and seamless learning experiences to students across the globe. Our platform brings together innovation, accessibility, and expert guidance.
                         </p>
@@ -70,7 +73,7 @@ const AchievementSection = () => {
                                 </div>
                             </div>
                             <div>
-                                <h3 className="text-xl md:text-2xl font-bold text-white">Our Achievement</h3>
+                                <h3 className="text-xl md:text-2xl font-light text-white">Our Achievement</h3>
                                 {/* <p className="text-xs md:text-sm text-gray-200">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
                 </p> */}

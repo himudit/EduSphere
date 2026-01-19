@@ -19,9 +19,9 @@ const Footer = () => {
         { label: 'Email', href: 'gargmudit662@gmail.com' },
     ];
 
-    const FooterColumn = ({ title, links }: { title: string; links: { label: string; href: string }[] }) => (
+const FooterColumn = ({ title, links }: { title: string; links: { label: string; href: string }[] }) => (
         <div className="flex flex-col space-y-2">
-            <h3 className="text-white font-medium text-lg mb-2">{title}</h3>
+            <h3 className="text-white font-light text-lg mb-2">{title}</h3>
             <ul className="space-y-2">
                 {links.map((link, index) => (
                     <li key={index}>
@@ -40,7 +40,10 @@ const Footer = () => {
     );
 
     return (
-        <footer className="bg-[#0D0A19] border-t border-[#1A1A2E]/30 pt-16 pb-8 px-6 md:px-10">
+        <footer
+            className="bg-[#0D0A19] border-t border-[#1A1A2E]/30 pt-16 pb-8 px-6 md:px-10"
+            style={{ fontFamily: '"Instrument Serif", serif' }}
+        >
             <div className="max-w-7xl mx-auto">
                 {/* Three Column Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -49,11 +52,11 @@ const Footer = () => {
                         <div className="flex items-center gap-2 mb-4">
                             {/* <div className="w-10 h-10 rounded-md bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center"> */}
                             {/* <span className="text-white font-bold text-xl">F</span> */}
-                            <Link to="/" className="text-2xl font-bold mr-3">
+                            <Link to="/" className="text-2xl font-light mr-3">
                                 <img src={logo} alt="logo" className="w-[4rem] h-[4rem]" />
                             </Link>
                             {/* </div> */}
-                            <span className="text-white font-bold text-3xl">Edusphere</span>
+                            <span className="text-white font-light text-3xl">Edusphere</span>
                         </div>
                         <div className="flex items-center gap-2 mt-4">
                             <span className="text-gray-400 text-sm">Powered by</span>
@@ -84,7 +87,7 @@ const Footer = () => {
                     Built with ❤️ to transform learning through innovation and technology.
 
                 </div> */}
-                <div className="mt-16 pt-8 border-t border-[#1A1A2E]/30 text-center text-gray-300 text-sm">
+                <div className="mt-16 pt-8 border-t border-[#1A1A2E]/30 text-center text-gray-300 text-sm font-light">
                     © 2025 Edusphere. All rights reserved. <br />
                     Built with ❤️ to transform learning through innovation and technology.
                 </div>

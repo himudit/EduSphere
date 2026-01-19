@@ -73,7 +73,10 @@ const ShowcaseRow = ({ items, direction }: ShowcaseRowProps) => {
 
 export const SlidingGallery = () => {
     return (
-        <div className="flex h-[35rem] w-[22rem] border-transparent rounded-2xl  min-w-[60%] items-center justify-center bg-[#111111] px-2 sm:px-4 py-16">
+        <div
+            className="flex h-[35rem] w-[22rem] border-transparent rounded-2xl  min-w-[60%] items-center justify-center bg-[#111111] px-2 sm:px-4 py-16"
+            style={{ fontFamily: '"Instrument Serif", serif' }}
+        >
             <div className="w-full max-w-6xl rounded-xl bg-[#111111] p-4 sm:p-8">
                 <div className="flex flex-col gap-1">
                     {/* Showcase rows first */}
@@ -84,10 +87,10 @@ export const SlidingGallery = () => {
                     <div className="flex mt-[0.5rem] justify-center items-center flex-wrap gap-10">
                         {/* Text content below */}
                         <div className="lg:-ml-[3rem]">
-                            <h2 className="text-2xl  font-medium tracking-tight text-gray-500">
+                            <h2 className="text-2xl font-light tracking-tight text-gray-500">
                                 Shaping & Educating
                             </h2>
-                            <div className="-mt-1 text-[4rem] tracking-tight text-white">
+                            <div className="-mt-1 text-[4rem] tracking-tight text-white font-light">
                                 Using EduSphere
                             </div>
                         </div>
