@@ -79,10 +79,19 @@ function Login() {
 
 
     return (
-        <div className="min-h-screen bg-[#000000] relative flex items-center justify-center overflow-hidden">
-            {/* Background Glow Effect */}
-            <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full bg-gradient-to-br from-purple-600/20 via-purple-900/20 to-transparent blur-3xl"></div>
-            <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] rounded-full bg-gradient-to-br from-indigo-500/30 via-purple-500/30 to-pink-500/30 blur-3xl"></div>
+        <div className="min-h-screen w-full bg-black relative flex items-center justify-center overflow-hidden">
+            {/* Dark White Dotted Grid Background */}
+            <div
+                className="absolute inset-0 z-0"
+                style={{
+                    background: "#000000",
+                    backgroundImage: `
+                        radial-gradient(circle, rgba(255, 255, 255, 0.2) 1.5px, transparent 1.5px)
+                    `,
+                    backgroundSize: "30px 30px",
+                    backgroundPosition: "0 0",
+                }}
+            />
 
             {/* Login Card */}
             <div className="w-[400px] -mt-[5rem] p-8 rounded-3xl bg-black/30 backdrop-blur-xl border border-t-transparent border-l-white/20 border-b-white/20 border-r-white/20 shadow-2xl relative z-10">

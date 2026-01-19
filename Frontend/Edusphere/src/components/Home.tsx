@@ -29,27 +29,33 @@ const Home: React.FC = () => {
           {/* Main Heading */}
 
           <h1
-            className="text-5xl md:text-6xl mb-2 text-center min-h-[70px] max-w-xl mx-auto"
+            className="text-5xl md:text-7xl mb-2 text-center min-h-[70px] max-w-5xl mx-auto"
             style={{ fontFamily: '"Instrument Serif", serif' }}
           >
             Welcome to
           </h1>
 
-          {/* <h1
-            className="text-5xl md:text-6xl font-bold text-center leading-snug"
-            style={{ fontFamily: `'Segoe UI', Roboto, Helvetica, Arial, sans-serif` }}
-          >
-            Welcome to
-          </h1> */}
-          
 
           {/* Highlighted Gradient Text */}
+          {/* <motion.h1
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2 }}
+            className="text-6xl text-center leading-snug max-w-5xl mx-auto"
+            style={{ fontFamily: '"Instrument Serif", serif', color: '#895bf5', fontSize: 'clamp(5rem, 12vw, 10rem)' }}
+          >
+            EduSphere
+          </motion.h1> */}
           <motion.h1
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2 }}
-            className="text-6xl md:text-7xl text-center leading-snug max-w-2xl mx-auto"
-            style={{ fontFamily: '"Instrument Serif", serif', color: '#895bf5' }}
+            className="text-center leading-snug max-w-5xl mx-auto"
+            style={{
+              fontFamily: '"Instrument Serif", serif',
+              color: '#895bf5',
+              fontSize: 'clamp(8rem, 6vw, 10rem)',
+            }}
           >
             EduSphere
           </motion.h1>
@@ -70,7 +76,7 @@ const Home: React.FC = () => {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.6, delay: 0.4 }}
-            className="text-sm md:text-base text-gray-400 max-w-2xl text-center"
+            className="text-xl md:text-2xl text-gray-400 max-w-4xl text-center"
             style={{ fontFamily: '"Instrument Serif", serif' }}
           >
             Access the Latest Online Learning System and Materials to Fuel Your knowledge Growth.
