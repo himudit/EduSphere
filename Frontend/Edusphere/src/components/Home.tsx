@@ -62,7 +62,7 @@ const Home: React.FC = () => {
             className="text-lg md:text-2xl font-medium mt-6 text-center"
             style={{ fontFamily: '"Instrument Serif", serif' }}
           >
-            When Learning Meets Progress
+            {/* When Learning Meets Progress */}
           </motion.h2>
 
           {/* Description */}
