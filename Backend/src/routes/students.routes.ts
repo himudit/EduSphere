@@ -1,10 +1,10 @@
 import express from 'express'
-import { registerStudent, loginStudent, getStudentProfile, logoutStudent } from '../controllers/students.controller'
+import { registerStudent, loginStudent, getStudentProfile, logoutStudent, getMyLearning, checkPurchasedOrNot, editProfile, uploadProfileImage } from '../controllers/students.controller'
 const router = express.Router();
 import { body } from 'express-validator';
 import { Request, Response, NextFunction } from "express";
 import { authStudent } from '../middlewares/auth.middleware'
-
+import upload from '../multerConfig';
 router.post(
     '/register',
     [
@@ -32,5 +32,9 @@ router.get('/logout',
     logoutStudent
 )
 
+router.get('/mylearning', authStudent, getMyLearning);
+router.post('/CheckPurchasedOrNot', authStudent, checkPurchasedOrNot);
+router.patch('/profile/edit', authStudent, editProfile);
+router.post("/profile/upload/image", authStudent, upload.single("image"), uploadProfileImage);
 
 export default router;

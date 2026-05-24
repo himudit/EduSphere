@@ -45,7 +45,12 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
 
   const [query, setQuery] = useState<string>("");
-  const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
+  const [
+    
+    , set
+    
+    
+  ] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
   const [activeIndex, setActiveIndex] = useState<number>(-1);
   const searchRef = useRef<HTMLDivElement>(null);

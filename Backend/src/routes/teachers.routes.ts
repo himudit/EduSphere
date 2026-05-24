@@ -1,10 +1,10 @@
 import express from 'express'
-import { registerTeacher, loginTeacher, getTeacherProfile, logoutTeacher } from '../controllers/teachers.controller'
+import { registerTeacher, loginTeacher, getTeacherProfile, logoutTeacher, editProfile, uploadProfileImage, uploadCourse, uploadLecture, uploadVideo } from '../controllers/teachers.controller'
 const router = express.Router();
 import { body } from 'express-validator';
 import { Request, Response, NextFunction } from "express";
 import { authTeacher } from '../middlewares/auth.middleware'
-
+import upload from '../multerConfig';
 router.post(
     '/register',
     [
@@ -33,5 +33,11 @@ router.get(
 router.get('/logout',
     logoutTeacher
 )
+
+router.patch('/profile/edit', authTeacher, editProfile);
+router.post("/profile/upload/image", authTeacher, upload.single("image"), uploadProfileImage);
+router.post('/course/upload', authTeacher, uploadCourse);
+router.post('/lecture/upload', authTeacher, uploadLecture);
+router.post('/video/upload', authTeacher, uploadVideo);
 
 export default router;
