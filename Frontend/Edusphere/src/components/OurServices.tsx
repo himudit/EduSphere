@@ -13,8 +13,8 @@ const ServiceCard = ({ icon, title, description }: ServiceCardProps) => {
       <div className="bg-[#FFDBD4] rounded-full p-3 mb-4">
         <div className="text-[#0D0A19]">{icon}</div>
       </div>
-      <h3 className="text-xl md:text-2xl font-normal text-white mb-3" style={{ fontFamily: "'Instrument Serif', serif" }}>{title}</h3>
-      <p className="text-sm text-gray-300 font-normal" style={{ fontFamily: "'Instrument Serif', serif" }}>{description}</p>
+      <h3 className="text-xl md:text-2xl font-normal text-white mb-3" style={{ fontFamily: "'Finlandica Headline', sans-serif" }}>{title}</h3>
+      <p className="text-sm text-gray-300 font-normal" style={{ fontFamily: "'Finlandica Headline', sans-serif" }}>{description}</p>
     </div>
   );
 };
@@ -58,11 +58,11 @@ const OurServices = () => {
             </span>
           </div> */}
 
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-normal text-white mb-4 md:mb-6" style={{ fontFamily: "'Instrument Serif', serif" }}>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-normal text-white mb-4 md:mb-6" style={{ fontFamily: "'Finlandica Headline', sans-serif" }}>
             Your Success Story Begins <span className="text-[#9b87f5]">With Edusphere</span>
           </h2>
 
-          <p className="text-sm md:text-base text-gray-300 max-w-3xl font-normal" style={{ fontFamily: "'Instrument Serif', serif" }}>
+          <p className="text-sm md:text-base text-gray-300 max-w-3xl font-normal" style={{ fontFamily: "'Finlandica Headline', sans-serif" }}>
             We provide innovative learning solutions designed to empower educators and students alike with cutting-edge tools and resources for academic success.
           </p>
         </div>

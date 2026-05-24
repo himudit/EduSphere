@@ -20,7 +20,7 @@ const AnimatedText  = () => {
       <div className="flex flex-col items-center justify-center px-4 pt-20">
         <div
           className="relative flex flex-wrap items-center justify-center gap-4"
-          style={{ fontFamily: '"Instrument Serif", serif' }}
+          style={{ fontFamily: '"Finlandica Headline", sans-serif' }}
         >
           <motion.span
             style={{ y: shipY, opacity: shipOpacity }}

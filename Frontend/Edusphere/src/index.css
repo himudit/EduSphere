@@ -3,10 +3,11 @@
 @tailwind utilities;
 
 body {
-  background: #000000;
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.2) 1.5px, transparent 1.5px);
-  background-size: 30px 30px;
-  background-position: 0 0;
+  font-family: "Finlandica Headline", sans-serif;
+  background-color: #0f0f0f;
+  background-image: linear-gradient(to right, #262626 1px, transparent 1px),
+    linear-gradient(to bottom, #262626 1px, transparent 1px);
+  background-size: 20px 20px;
   min-height: 100vh;
   margin: 0;
   color: #fff;

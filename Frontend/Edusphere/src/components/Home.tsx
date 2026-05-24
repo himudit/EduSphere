@@ -9,17 +9,16 @@ import Footer from "./Footer";
 
 const Home: React.FC = () => {
   return (
-    <div className="min-h-screen w-full relative bg-black">
-      {/* Dark White Dotted Grid Background */}
+    <div className="min-h-screen w-full bg-[#0f0f0f] relative text-white">
+      {/* Small Grid Pattern */}
       <div
         className="absolute inset-0 z-0"
         style={{
-          background: "#000000",
           backgroundImage: `
-            radial-gradient(circle, rgba(255, 255, 255, 0.2) 1.5px, transparent 1.5px)
+            linear-gradient(to right, #262626 1px, transparent 1px),
+            linear-gradient(to bottom, #262626 1px, transparent 1px)
           `,
-          backgroundSize: "30px 30px",
-          backgroundPosition: "0 0",
+          backgroundSize: "20px 20px",
         }}
       />
 
@@ -30,7 +29,7 @@ const Home: React.FC = () => {
 
           <h1
             className="text-5xl md:text-7xl mb-2 text-center min-h-[70px] max-w-5xl mx-auto"
-            style={{ fontFamily: '"Instrument Serif", serif' }}
+            style={{ fontFamily: '"Finlandica Headline", sans-serif' }}
           >
             Welcome to
           </h1>
@@ -42,7 +41,7 @@ const Home: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2 }}
             className="text-6xl text-center leading-snug max-w-5xl mx-auto"
-            style={{ fontFamily: '"Instrument Serif", serif', color: '#895bf5', fontSize: 'clamp(5rem, 12vw, 10rem)' }}
+            style={{ fontFamily: '"Finlandica Headline", sans-serif', color: '#895bf5', fontSize: 'clamp(5rem, 12vw, 10rem)' }}
           >
             EduSphere
           </motion.h1> */}
@@ -52,7 +51,7 @@ const Home: React.FC = () => {
             transition={{ duration: 1.2 }}
             className="text-center leading-snug max-w-5xl mx-auto"
             style={{
-              fontFamily: '"Instrument Serif", serif',
+              fontFamily: '"Finlandica Headline", sans-serif',
               color: '#895bf5',
               fontSize: 'clamp(8rem, 6vw, 10rem)',
             }}
@@ -66,7 +65,7 @@ const Home: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.4, delay: 0.2 }}
             className="text-lg md:text-2xl font-medium mt-6 text-center"
-            style={{ fontFamily: '"Instrument Serif", serif' }}
+            style={{ fontFamily: '"Finlandica Headline", sans-serif' }}
           >
             {/* When Learning Meets Progress */}
           </motion.h2>
@@ -77,7 +76,7 @@ const Home: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.6, delay: 0.4 }}
             className="text-xl md:text-2xl text-gray-400 max-w-4xl text-center"
-            style={{ fontFamily: '"Instrument Serif", serif' }}
+            style={{ fontFamily: '"Finlandica Headline", sans-serif' }}
           >
             Access the Latest Online Learning System and Materials to Fuel Your knowledge Growth.
           </motion.p>
@@ -93,7 +92,7 @@ const Home: React.FC = () => {
             </h1>
             <div
               className="space-y-4 text-gray-300"
-              style={{ fontFamily: '"Instrument Serif", serif' }}
+              style={{ fontFamily: '"Finlandica Headline", sans-serif' }}
             >
               <div className="flex items-center gap-3">
                 <div className="w-7 h-7 lg:w-8 lg:h-8 rounded-full bg-[#895bf5] text-white flex items-center justify-center flex-shrink-0 text-sm lg:text-base">

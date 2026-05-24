@@ -41,8 +41,8 @@ const FooterColumn = ({ title, links }: { title: string; links: { label: string;
 
     return (
         <footer
-            className="bg-[#0D0A19] border-t border-[#1A1A2E]/30 pt-16 pb-8 px-6 md:px-10"
-            style={{ fontFamily: '"Instrument Serif", serif' }}
+            className="bg-black border-t border-[#1A1A2E]/30 pt-16 pb-8 px-6 md:px-10"
+            style={{ fontFamily: '"Finlandica Headline", sans-serif' }}
         >
             <div className="max-w-7xl mx-auto">
                 {/* Three Column Grid */}

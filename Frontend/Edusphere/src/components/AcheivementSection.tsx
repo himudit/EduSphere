@@ -31,7 +31,7 @@ const AchievementSection = () => {
     return (
         <div
             className="w-full  py-10 md:py-16 px-6 md:px-10 rounded-md"
-            style={{ fontFamily: '"Instrument Serif", serif' }}
+            style={{ fontFamily: '"Finlandica Headline", sans-serif' }}
         >
             <div className="max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

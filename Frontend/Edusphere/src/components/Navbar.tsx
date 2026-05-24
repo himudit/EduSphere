@@ -141,14 +141,14 @@ const Navbar: React.FC = () => {
                 {/* Desktop Left Section */}
                 <div className="hidden md:flex items-center">
                   {/* Logo for Desktop */}
-                  <Link to="/" className="text-3xl mr-8" style={{ fontFamily: '"Instrument Serif", serif' }}>
+                  <Link to="/" className="text-3xl mr-8" style={{ fontFamily: '"Finlandica Headline", sans-serif' }}>
                     <img src={logo} alt="logo" className="w-[3rem] h-[3rem]" />
                   </Link>
 
                   {/* Desktop Navigation */}
                   <ul className="flex items-center gap-8">
                     <li>
-                      <Link to="/teacher/courseupload" className="text-base hover:text-purple-400 transition-colors" style={{ fontFamily: '"Instrument Serif", serif' }}>
+                      <Link to="/teacher/courseupload" className="text-base hover:text-purple-400 transition-colors" style={{ fontFamily: '"Finlandica Headline", sans-serif' }}>
                         Upload Course
                       </Link>
                     </li>
@@ -157,7 +157,7 @@ const Navbar: React.FC = () => {
 
                 {/* Center Logo for Mobile */}
                 <div className="absolute left-1/2 transform -translate-x-1/2 md:hidden">
-                  <Link to="/" className="text-3xl" style={{ fontFamily: '"Instrument Serif", serif' }}>
+                  <Link to="/" className="text-3xl" style={{ fontFamily: '"Finlandica Headline", sans-serif' }}>
                     <img src={logo} alt="logo" className="w-[3rem] h-[3rem]" />
                   </Link>
                 </div>
@@ -186,15 +186,15 @@ const Navbar: React.FC = () => {
                           <Link
                             to="/login"
                             className="text-white hover:text-white transition duration-300 text-base"
-                            style={{ fontFamily: '"Instrument Serif", serif' }}
+                            style={{ fontFamily: '"Finlandica Headline", sans-serif' }}
                           >
                             Login
                           </Link>
-                          <span className="text-white text-base" style={{ fontFamily: '"Instrument Serif", serif' }}>or</span>
+                          <span className="text-white text-base" style={{ fontFamily: '"Finlandica Headline", sans-serif' }}>or</span>
                           <Link
                             to="/signup"
                             className="text-white hover:text-white transition duration-300 text-base"
-                            style={{ fontFamily: '"Instrument Serif", serif' }}
+                            style={{ fontFamily: '"Finlandica Headline", sans-serif' }}
                           >
                             Signup
                           </Link>
@@ -248,8 +248,8 @@ const Navbar: React.FC = () => {
                           className="w-[4rem] h-[4rem] rounded-full border-2 border-purple-500"
                         />
                         <div>
-                          <h3 className="text-base" style={{ fontFamily: '"Instrument Serif", serif' }}>{user?.first_name} {user?.last_name}</h3>
-                          <p className="text-sm text-gray-400" style={{ fontFamily: '"Instrument Serif", serif' }}>{user?.email}</p>
+                          <h3 className="text-base" style={{ fontFamily: '"Finlandica Headline", sans-serif' }}>{user?.first_name} {user?.last_name}</h3>
+                          <p className="text-sm text-gray-400" style={{ fontFamily: '"Finlandica Headline", sans-serif' }}>{user?.email}</p>
                         </div>
                       </> : <></>
                   }
@@ -261,7 +261,7 @@ const Navbar: React.FC = () => {
                       to="/teacher/courseupload"
                       onClick={toggleMenu}
                       className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors text-base"
-                      style={{ fontFamily: '"Instrument Serif", serif' }}
+                      style={{ fontFamily: '"Finlandica Headline", sans-serif' }}
                     >
                       <FontAwesomeIcon icon={faCloudArrowUp} className="text-gray-300 mr-3" />
                       Upload Course
@@ -272,7 +272,7 @@ const Navbar: React.FC = () => {
                       to="/mylearning"
                       onClick={toggleMenu}
                       className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors text-base"
-                      style={{ fontFamily: '"Instrument Serif", serif' }}
+                      style={{ fontFamily: '"Finlandica Headline", sans-serif' }}
                     >
                       <svg
                         className="w-5 h-5 mr-3"
@@ -296,7 +296,7 @@ const Navbar: React.FC = () => {
                         to="/profile"
                         onClick={toggleMenu}
                         className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors text-base"
-                        style={{ fontFamily: '"Instrument Serif", serif' }}
+                        style={{ fontFamily: '"Finlandica Headline", sans-serif' }}
                       >
                         <svg
                           className="w-5 h-5 mr-3"
@@ -344,21 +344,21 @@ const Navbar: React.FC = () => {
                 {/* Desktop Left Section */}
                 <div className="hidden md:flex items-center">
                   {/* Logo for Desktop */}
-                  <Link to="/" className="text-2xl mr-8" style={{ fontFamily: '"Instrument Serif", serif' }}>
+                  <Link to="/" className="text-2xl mr-8" style={{ fontFamily: '"Finlandica Headline", sans-serif' }}>
                     <img src={logo} alt="logo" className="w-[3rem] h-[3rem]" />
                   </Link>
 
                   {/* Desktop Navigation */}
                   <ul className="flex items-center gap-8">
                     <li>
-                      <Link to="/search" className="text-base hover:text-purple-400 transition-colors" style={{ fontFamily: '"Instrument Serif", serif' }}>
+                      <Link to="/search" className="text-base hover:text-purple-400 transition-colors" style={{ fontFamily: '"Finlandica Headline", sans-serif' }}>
                         Explore Courses
                       </Link>
                     </li>
                     {
                       user ?
                         <li>
-                          <Link to="/mylearning" className="text-base hover:text-purple-400 transition-colors" style={{ fontFamily: '"Instrument Serif", serif' }}>
+                          <Link to="/mylearning" className="text-base hover:text-purple-400 transition-colors" style={{ fontFamily: '"Finlandica Headline", sans-serif' }}>
                             My Learning
                           </Link>
                         </li> :
@@ -378,7 +378,7 @@ const Navbar: React.FC = () => {
                       onKeyDown={handleKeyDown}
                       placeholder="Search courses..."
                       className="w-full px-4 py-2 rounded-lg text-sm bg-transparent border border-white/30 focus:border-white focus:ring-1 focus:ring-white/50 transition-all outline-none placeholder-gray-400 text-white"
-                      style={{ fontFamily: '"Instrument Serif", serif' }}
+                      style={{ fontFamily: '"Finlandica Headline", sans-serif' }}
                     />
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -399,7 +399,7 @@ const Navbar: React.FC = () => {
                   {/* Suggestions Dropdown */}
                   {showSuggestions && filteredSuggestions.length > 0 && (
                     <div className="absolute w-[45%] left-[38%] right-0 mt-2 bg-black/20 backdrop-blur-xl border border-white/20 text-white shadow-2xl rounded-lg overflow-hidden z-10" style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
-                      <div className="p-2 font-semibold border-b border-white/20" style={{ fontFamily: '"Instrument Serif", serif' }}>
+                      <div className="p-2 font-semibold border-b border-white/20" style={{ fontFamily: '"Finlandica Headline", sans-serif' }}>
                         Popular on Edusphere
                       </div>
                       {filteredSuggestions.map((suggestion, index) => (
@@ -423,7 +423,7 @@ const Navbar: React.FC = () => {
                               d="M21 21l-4.35-4.35M16.5 10a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"
                             />
                           </svg>
-                          <span style={{ fontFamily: '"Instrument Serif", serif' }}>{suggestion}</span>
+                          <span style={{ fontFamily: '"Finlandica Headline", sans-serif' }}>{suggestion}</span>
                         </div>
                       ))}
                     </div>
@@ -433,7 +433,7 @@ const Navbar: React.FC = () => {
 
                 {/* Center Logo for Mobile */}
                 <div className="absolute left-1/2 transform -translate-x-1/2 md:hidden">
-                  <Link to="/" className="text-3xl" style={{ fontFamily: '"Instrument Serif", serif' }}>
+                  <Link to="/" className="text-3xl" style={{ fontFamily: '"Finlandica Headline", sans-serif' }}>
                     <img src={logo} alt="logo" className="w-[3rem] h-[3rem]" />
                   </Link>
                 </div>
@@ -461,15 +461,15 @@ const Navbar: React.FC = () => {
                           <Link
                             to="/login"
                             className="text-white hover:text-white transition duration-300 text-base"
-                            style={{ fontFamily: '"Instrument Serif", serif' }}
+                            style={{ fontFamily: '"Finlandica Headline", sans-serif' }}
                           >
                             Login
                           </Link>
-                          <span className="text-white text-base" style={{ fontFamily: '"Instrument Serif", serif' }}>or</span>
+                          <span className="text-white text-base" style={{ fontFamily: '"Finlandica Headline", sans-serif' }}>or</span>
                           <Link
                             to="/signup"
                             className="text-white hover:text-white transition duration-300 text-base"
-                            style={{ fontFamily: '"Instrument Serif", serif' }}
+                            style={{ fontFamily: '"Finlandica Headline", sans-serif' }}
                           >
                             Signup
                           </Link>
@@ -522,8 +522,8 @@ const Navbar: React.FC = () => {
                           className="w-[4rem] h-[4rem] rounded-full border-2 border-purple-500"
                         />
                         <div>
-                          <h3 className="text-base" style={{ fontFamily: '"Instrument Serif", serif' }}>{user?.first_name} {user?.last_name}</h3>
-                          <p className="text-sm text-gray-400" style={{ fontFamily: '"Instrument Serif", serif' }}>{user?.email}</p>
+                          <h3 className="text-base" style={{ fontFamily: '"Finlandica Headline", sans-serif' }}>{user?.first_name} {user?.last_name}</h3>
+                          <p className="text-sm text-gray-400" style={{ fontFamily: '"Finlandica Headline", sans-serif' }}>{user?.email}</p>
                         </div>
                       </> : <></>
                   }
@@ -535,7 +535,7 @@ const Navbar: React.FC = () => {
                       to="/search"
                       onClick={toggleMenu}
                       className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors text-base"
-                      style={{ fontFamily: '"Instrument Serif", serif' }}
+                      style={{ fontFamily: '"Finlandica Headline", sans-serif' }}
                     >
                       <svg
                         className="w-5 h-5 mr-3"
@@ -560,7 +560,7 @@ const Navbar: React.FC = () => {
                           to="/mylearning"
                           onClick={toggleMenu}
                           className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors text-base"
-                          style={{ fontFamily: '"Instrument Serif", serif' }}
+                          style={{ fontFamily: '"Finlandica Headline", sans-serif' }}
                         >
                           < svg
                             className="w-5 h-5 mr-3"
@@ -587,7 +587,7 @@ const Navbar: React.FC = () => {
                           onClick={toggleMenu}
                           to="/profile"
                           className="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors text-base"
-                          style={{ fontFamily: '"Instrument Serif", serif' }}
+                          style={{ fontFamily: '"Finlandica Headline", sans-serif' }}
                         >
                           <svg
                             className="w-5 h-5 mr-3"
@@ -636,7 +636,7 @@ const Navbar: React.FC = () => {
               onKeyDown={handleKeyDown}
               placeholder="Search courses..."
               className="w-full h-[3rem] px-4 py-2 rounded-lg text-lg bg-transparent border border-white/30 focus:border-white focus:ring-1 focus:ring-white/50 transition-all outline-none placeholder-gray-400 text-white"
-              style={{ fontFamily: '"Instrument Serif", serif' }}
+              style={{ fontFamily: '"Finlandica Headline", sans-serif' }}
             />
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -656,7 +656,7 @@ const Navbar: React.FC = () => {
 
           {showSuggestions && filteredSuggestions.length > 0 && (
             <div className="absolute left-0 right-0 mt-2 bg-black/20 backdrop-blur-xl border border-white/20 shadow-2xl rounded-lg overflow-hidden z-50" style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
-              <div className="p-2 font-semibold text-gray-400 border-b border-white/20" style={{ fontFamily: '"Instrument Serif", serif' }}>
+              <div className="p-2 font-semibold text-gray-400 border-b border-white/20" style={{ fontFamily: '"Finlandica Headline", sans-serif' }}>
                 Popular on Edusphere
               </div>
               {filteredSuggestions.map((suggestion, index) => (
@@ -680,7 +680,7 @@ const Navbar: React.FC = () => {
                       d="M21 21l-4.35-4.35M16.5 10a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"
                     />
                   </svg>
-                  <span className="text-white" style={{ fontFamily: '"Instrument Serif", serif' }}>{suggestion}</span>
+                  <span className="text-white" style={{ fontFamily: '"Finlandica Headline", sans-serif' }}>{suggestion}</span>
                 </div>
               ))}
             </div>
