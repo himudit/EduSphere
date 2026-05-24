@@ -38,7 +38,7 @@ const loginStudent = async (req: Request, res: Response, next: NextFunction) => 
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        // console.log("controllers");
+
         const { email, password } = req.body;
         const student = await prisma.students.findFirst({
             where: {
@@ -68,6 +68,7 @@ const getStudentProfile = async (req: any, res: Response, next: NextFunction) =>
     res.status(200).json(req.student);
 }
 
+// not used as of now
 const logoutStudent = async (req: any, res: Response, next: NextFunction) => {
     res.clearCookie('token');
     res.status(200).json({ message: "Logged Out Successfully" })

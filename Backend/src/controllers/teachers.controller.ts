@@ -71,6 +71,7 @@ const getTeacherProfile = async (req: any, res: Response, next: NextFunction) =>
     res.status(200).json(req.teacher);
 }
 
+// not used as of now
 const logoutTeacher = async (req: any, res: Response, next: NextFunction) => {
     res.clearCookie('token');
     res.status(200).json({ message: "Logged Out Successfully" })

@@ -81,6 +81,7 @@ paymentRouter.post('/create/course/:course_id/teacher/:teacher_id', authStudent,
     }
 })
 
+// not used as of now
 paymentRouter.post('/webhook', async (req: any, res: Response, next: NextFunction) => {
     try {
         let i = 0;

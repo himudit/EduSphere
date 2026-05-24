@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+// not used as of now
 export const getTopRatedCourses = async (req: Request, res: Response) => {
     try {
         const courses = await prisma.courses.findMany({
@@ -21,13 +22,6 @@ export const getTopRatedCoursesV3 = async (req: Request, res: Response) => {
     try {
         const cacheKey = 'courses_rating_all_v3';
 
-        // Check Redis Cloud cache
-        // const cachedCourses = await redisCloud.get(cacheKey);
-        // if (cachedCourses) {
-        //     console.log('✅ Cache hit (Redis Cloud)');
-        //     return res.status(200).json(JSON.parse(cachedCourses));
-        // }
-
         // Query from DB if not in cache
         const courses = await prisma.courses.findMany({
             orderBy: {
@@ -35,9 +29,6 @@ export const getTopRatedCoursesV3 = async (req: Request, res: Response) => {
             },
             take: 3,
         });
-
-        // Save result to Redis Cloud with TTL of 1 hour
-        // await redisCloud.set(cacheKey, JSON.stringify(courses), { EX: 3600 });
 
         return res.status(200).json(courses);
     } catch (error) {
@@ -78,6 +69,7 @@ export const getCourseById = async (req: Request, res: Response) => {
     }
 };
 
+// not used as of now
 export const getAllCoursesV1 = async (req: Request, res: Response) => {
     try {
         const allCourses = await prisma.courses.findMany();
@@ -92,17 +84,8 @@ export const getAllCoursesV2 = async (req: Request, res: Response) => {
     try {
         const cacheKey = 'all_courses';
 
-        // Check cache
-        // const cachedCourses = await redisCloud.get(cacheKey);
-        // if (cachedCourses) {
-        //     return res.status(200).json(JSON.parse(cachedCourses));
-        // }
-
         // Cache miss: fetch from DB
         const allCourses = await prisma.courses.findMany();
-
-        // Store in cache with 1-hour TTL
-        // await redisCloud.set(cacheKey, JSON.stringify(allCourses), { EX: 3600 });
 
         console.log('💾 Cache set for /search');
         return res.status(200).json(allCourses);
