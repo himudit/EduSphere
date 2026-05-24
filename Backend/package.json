@@ -4,9 +4,10 @@
   "main": "server.ts",
   "scripts": {
     "dev": "nodemon --exec",
+    "debug": "nodemon --watch src --ext ts,js --exec \"node --inspect -r ts-node/register src/server.ts\"",
     "build": "tsc",
     "prisma:generate": "prisma generate",
-     "vercel-build": "prisma generate && tsc"
+    "vercel-build": "prisma generate && tsc"
   },
   "keywords": [],
   "author": "",
