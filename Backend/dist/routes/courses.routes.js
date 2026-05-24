@@ -11,5 +11,6 @@ router.get('/v3/rating', courses_controller_1.getTopRatedCoursesV3);
 router.get('/course/:course_id', courses_controller_1.getCourseById);
 router.get('/v1/search', courses_controller_1.getAllCoursesV1);
 router.get('/v2/search', courses_controller_1.getAllCoursesV2);
+router.get('/search', courses_controller_1.searchCourses);
 router.get('/filterSearch', courses_controller_1.filterSearchCourses);
 exports.default = router;

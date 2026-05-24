@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.filterSearchCourses = exports.getAllCoursesV2 = exports.getAllCoursesV1 = exports.getCourseById = exports.getTopRatedCoursesV3 = exports.getTopRatedCourses = void 0;
+exports.filterSearchCourses = exports.searchCourses = exports.getAllCoursesV2 = exports.getAllCoursesV1 = exports.getCourseById = exports.getTopRatedCoursesV3 = exports.getTopRatedCourses = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const getTopRatedCourses = async (req, res) => {
@@ -110,6 +110,26 @@ const getAllCoursesV2 = async (req, res) => {
     }
 };
 exports.getAllCoursesV2 = getAllCoursesV2;
+const searchCourses = async (req, res) => {
+    try {
+        const query = (req.query.q || req.query.query);
+        if (!query || typeof query !== 'string') {
+            return res.status(400).json({ error: 'Search query is required' });
+        }
+        const searchTerm = query.toLowerCase();
+        const allCourses = await prisma.courses.findMany();
+        const filteredCourses = allCourses.filter(course => {
+            const matchesTitle = course.course_title && course.course_title.toLowerCase().includes(searchTerm);
+            const matchesKeyword = course.course_keywords && course.course_keywords.some(keyword => keyword.toLowerCase().includes(searchTerm));
+            return matchesTitle || matchesKeyword;
+        });
+        res.status(200).json(filteredCourses);
+    }
+    catch (err) {
+        res.status(500).json({ error: 'Failed to search courses' });
+    }
+};
+exports.searchCourses = searchCourses;
 const filterSearchCourses = async (req, res) => {
     try {
         const { topic, level, rating } = req.query;

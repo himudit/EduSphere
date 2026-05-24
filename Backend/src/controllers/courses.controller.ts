@@ -113,6 +113,33 @@ export const getAllCoursesV2 = async (req: Request, res: Response) => {
     }
 };
 
+export const searchCourses = async (req: Request, res: Response) => {
+    try {
+        const query = (req.query.q || req.query.query) as string;
+
+        if (!query || typeof query !== 'string') {
+            return res.status(400).json({ error: 'Search query is required' });
+        }
+        const searchTerm = query.toLowerCase();
+
+        const allCourses = await prisma.courses.findMany();
+
+        const filteredCourses = allCourses.filter(course => {
+            const matchesTitle = course.course_title && course.course_title.toLowerCase().includes(searchTerm);
+            const matchesDescription = course.course_description && course.course_description.toLowerCase().includes(searchTerm);
+            const matchesKeyword = course.course_keywords && course.course_keywords.some(keyword =>
+                keyword.toLowerCase().includes(searchTerm)
+            );
+            return matchesTitle || matchesDescription || matchesKeyword;
+        });
+
+        res.status(200).json(filteredCourses);
+
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to search courses' });
+    }
+};
+
 export const filterSearchCourses = async (req: Request, res: Response) => {
     try {
         const { topic, level, rating } = req.query;

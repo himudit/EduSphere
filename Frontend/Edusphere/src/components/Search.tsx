@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import CardDisplay from './CardDisplay';
 
@@ -53,39 +53,28 @@ const Search: React.FC = () => {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
+    const location = useLocation();
     const query = new URLSearchParams(location.search).get("q");
-
-    // useEffect(() => {
-    //     if (!query || query.trim() === "") return;
-
-    //     const fetchCourses = async () => {
-    //         try {
-    //             const res = await axios.get<Course[]>(`${import.meta.env.VITE_BASE_URL}/search?query=${query}`);
-    //             setCourseData(res.data);
-    //         } catch (err: any) {
-    //             console.error('Error fetching courses:', err);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-
-    //     fetchCourses();
-    // }, [query]);
-
 
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const response = await axios.get<Course[]>(`${import.meta.env.VITE_BASE_URL}/v2/search`);
+                let url = `${import.meta.env.VITE_BASE_URL}/v2/search`;
+                if (query && query.trim() !== "") {
+                    url = `${import.meta.env.VITE_BASE_URL}/search?query=${query}`;
+                }
+                const response = await axios.get<Course[]>(url);
                 setCourseData(response.data);
             } catch (err) {
                 console.error('Error fetching courses:', err);
+                // Fallback to empty array if not found
+                setCourseData([]);
             } finally {
                 setLoading(false);
             }
         };
         fetchCourses();
-    }, []);
+    }, [query]);
 
     useEffect(() => {
         const fetchFilteredCourses = async () => {
