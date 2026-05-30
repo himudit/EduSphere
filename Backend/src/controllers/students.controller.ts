@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../config/prisma";
 import { createStudent } from "../services/students.service";
 import AuthService from "../services/Authstudents.service";
 import { Request, Response, NextFunction } from "express";
@@ -11,8 +11,6 @@ interface StudentRequest extends Request {
         student_id: string;
     }
 }
-
-const prisma = new PrismaClient();
 
 const registerStudent = async (req: Request, res: Response, next: NextFunction) => {
     try {

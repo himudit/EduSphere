@@ -1,8 +1,6 @@
-import { PrismaClient, students, teachers } from '@prisma/client'
+import { students, teachers } from '@prisma/client'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-
-const prisma = new PrismaClient()
 
 export class AuthService {
     // Hash password before saving

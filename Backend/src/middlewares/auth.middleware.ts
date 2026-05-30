@@ -1,9 +1,8 @@
-import { PrismaClient, students, teachers } from '@prisma/client'
+import { students, teachers } from '@prisma/client'
 import bcrypt from 'bcrypt'
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import { Request, Response, NextFunction } from "express";
-
-const prisma = new PrismaClient()
+import prisma from "../config/prisma";
 
 interface DecodedToken extends JwtPayload {
     student_id: string;

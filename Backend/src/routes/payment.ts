@@ -3,10 +3,8 @@ const paymentRouter = express.Router();
 import { Request, Response, NextFunction } from "express";
 import { authStudent } from '../middlewares/auth.middleware'
 import razorpayinstance from '../services/razorpay'
-import { PrismaClient } from "@prisma/client";
 import { validateWebhookSignature } from 'razorpay/dist/utils/razorpay-utils';
-
-const prisma = new PrismaClient();
+import prisma from "../config/prisma";
 
 interface RazorpayOrderOptions {
     amount: number;        // Amount in paisa (1 INR = 100 paisa)
